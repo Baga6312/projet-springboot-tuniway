@@ -271,7 +271,8 @@ Le système de catégories est extensible sans modification:
 
 On peut ajouter de nouveaux types d'utilisateurs sans modifier la classe parent:
 
-`Utilisateur.java` <img src="assets/Pasted image 20251029190858.png" alt="Utilisateur">
+`Utilisateur.java` 
+<img src="assets/Pasted image 20251029190858.png" alt="Utilisateur">
 
 ---
 
@@ -287,9 +288,11 @@ Les objets d'une classe dérivée doivent pouvoir remplacer les objets de la cla
 
 Tous les types d'utilisateurs peuvent remplacer `Utilisateur`:
 
-`userService.java` <img src="assets/Pasted image 20251029191238.png" alt="UserService">
+`userService.java` 
+<img src="assets/Pasted image 20251029191238.png" alt="UserService">
 
-`UserController.java` <img src="assets/Pasted image 20251029191559.png" alt="UserController">
+`UserController.java` 
+<img src="assets/Pasted image 20251029191559.png" alt="UserController">
 
 #### **Exemple 2: DeletionHandler Chain**
 
@@ -317,17 +320,21 @@ Les clients ne doivent pas dépendre d'interfaces qu'ils n'utilisent pas. Préf�
 
 Chaque repository expose uniquement les méthodes nécessaires:
 
-`PlaceRepository.java` <img src="assets/Pasted image 20251029191747.png" alt="PlaceRepository">
+`PlaceRepository.java` 
+<img src="assets/Pasted image 20251029191747.png" alt="PlaceRepository">
 
-`ReviewRepository.java` <img src="assets/Pasted image 20251029191828.png" alt="ReviewRepository">
+`ReviewRepository.java` 
+<img src="assets/Pasted image 20251029191828.png" alt="ReviewRepository">
 
-`UserRepositor.java` <img src="assets/Pasted image 20251029191953.png" alt="UserRepository">
+`UserRepositor.java` 
+<img src="assets/Pasted image 20251029191953.png" alt="UserRepository">
 
 #### **Exemple 2: Services Ségrégués**
 
 Chaque service n'expose que les opérations pertinentes:
 
-`placeService.java` <img src="assets/Pasted image 20251029192136.png" alt="PlaceService">
+`placeService.java` 
+<img src="assets/Pasted image 20251029192136.png" alt="PlaceService">
 
 #### **Exemple 3: Controllers Spécialisés**
 
@@ -349,25 +356,29 @@ Les modules de haut niveau ne doivent pas dépendre des modules de bas niveau. L
 
 Les controllers dépendent des interfaces de service, pas des implémentations:
 
-`UserController.java` <img src="assets/Pasted image 20251029192520.png" alt="UserController Dependencies">
+`UserController.java` 
+<img src="assets/Pasted image 20251029192520.png" alt="UserController Dependencies">
 
 #### **Exemple 2: Services → Repositories (Abstraction)**
 
 Les services dépendent des interfaces repository (fournies par Spring Data JPA):
 
-`placeService.java` <img src="assets/Pasted image 20251029192735.png" alt="PlaceService Dependencies">
+`placeService.java` 
+<img src="assets/Pasted image 20251029192735.png" alt="PlaceService Dependencies">
 
 #### **Exemple 3: Chain Handlers → Services**
 
 Les handlers dépendent des abstractions de service:
 
-`reviewCheckHanlder.java` <img src="assets/Pasted image 20251029192856.png" alt="ReviewCheckHandler Dependencies">
+`reviewCheckHanlder.java` 
+<img src="assets/Pasted image 20251029192856.png" alt="ReviewCheckHandler Dependencies">
 
 #### **Exemple 4: Dependency Injection avec Spring**
 
 Spring Boot gère l'injection des dépendances:
 
-`DatabaseConfig.java` <img src="assets/Pasted image 20251029193010.png" alt="DatabaseConfig">
+`DatabaseConfig.java` 
+<img src="assets/Pasted image 20251029193010.png" alt="DatabaseConfig">
 
 **DIP (TuniWay - Bon):**
 
