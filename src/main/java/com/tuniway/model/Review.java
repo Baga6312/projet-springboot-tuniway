@@ -1,6 +1,7 @@
 package com.tuniway.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,10 +17,12 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "place_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Place place;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
     private Utilisateur user;
 
     // Getters and Setters

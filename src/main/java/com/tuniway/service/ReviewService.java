@@ -29,6 +29,10 @@ public class ReviewService {
         return reviewRepository.findByPlace(place);
     }
 
+    public List<Review> getReviewsByRatingGreaterThanEqual(Integer rating) {
+        return reviewRepository.findByRatingGreaterThanEqual(rating);
+    }
+
     public List<Review> getReviewsByUser(Utilisateur user) {
         return reviewRepository.findByUser(user);
     }

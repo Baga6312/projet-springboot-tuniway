@@ -3,6 +3,7 @@ package com.tuniway.controller;
 import com.tuniway.model.Place;
 import com.tuniway.model.enums.PlaceCategory;
 import com.tuniway.service.PlaceService;
+import com.tuniway.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class PlaceController {
 
     @Autowired
     private PlaceService placeService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     // Get all places
     @GetMapping
@@ -92,15 +96,22 @@ public class PlaceController {
 
     // Delete place (Admin only)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePlace(@PathVariable Long id) {
+    public ResponseEntity<?> deletePlace(@PathVariable Long id) {
         Optional<Place> place = placeService.getPlaceById(id);
 
-        if (place.isPresent()) {
-            placeService.deletePlace(id);
-            return ResponseEntity.noContent().build();
+        if (!place.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
+        // Check if place has reviews
+        if (!reviewService.getReviewsByPlace(place.get()).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Cannot delete place: Place has existing reviews");
+        }
+
+        // If no related data exists, proceed with deletion
+        placeService.deletePlace(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Get all available categories

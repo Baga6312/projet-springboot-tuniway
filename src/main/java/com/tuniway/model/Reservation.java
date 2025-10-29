@@ -3,6 +3,7 @@ package com.tuniway.model;
 import com.tuniway.model.enums.ReservationStatus;
 import com.tuniway.model.enums.ReservationType;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,10 +23,12 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "guide_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "bio", "languages", "availability"})
     private Guide guide;
 
     // Getters and Setters

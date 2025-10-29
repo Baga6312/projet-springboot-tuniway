@@ -5,6 +5,9 @@ import com.tuniway.model.Client;
 import com.tuniway.model.Guide;
 import com.tuniway.model.Admin;
 import com.tuniway.service.UserService;
+import com.tuniway.service.ReservationService;
+import com.tuniway.service.ReviewService;
+import com.tuniway.service.TourPersonnaliseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,15 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private TourPersonnaliseService tourPersonnaliseService;
 
     @GetMapping
     public ResponseEntity<List<Utilisateur>> getAllUsers() {
@@ -131,15 +143,54 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         Optional<Utilisateur> user = userService.getUserById(id);
 
-        if (user.isPresent()) {
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
+        Utilisateur utilisateur = user.get();
+
+        // Check if user has reviews
+        if (!reviewService.getReviewsByUser(utilisateur).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Cannot delete user: User has existing reviews");
+        }
+
+        // Check if user is a Client with reservations or tours
+        if (utilisateur instanceof Client) {
+            Client client = (Client) utilisateur;
+
+            if (!reservationService.getReservationsByClient(client).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Cannot delete client: Client has existing reservations");
+            }
+
+            if (!tourPersonnaliseService.getToursByClient(client).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Cannot delete client: Client has existing personalized tours");
+            }
+        }
+
+        // Check if user is a Guide with reservations or tours
+        if (utilisateur instanceof Guide) {
+            Guide guide = (Guide) utilisateur;
+
+            if (!reservationService.getReservationsByGuide(guide).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Cannot delete guide: Guide has existing reservations");
+            }
+
+            if (!tourPersonnaliseService.getToursByGuide(guide).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Cannot delete guide: Guide has existing personalized tours");
+            }
+        }
+
+        // If no related data exists, proceed with deletion
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     static class LoginRequest {

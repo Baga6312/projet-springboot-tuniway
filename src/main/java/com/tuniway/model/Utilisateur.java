@@ -2,9 +2,11 @@ package com.tuniway.model;
 
 import com.tuniway.model.enums.RoleType;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class Utilisateur {
 
     @Id

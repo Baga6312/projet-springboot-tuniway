@@ -1,6 +1,7 @@
 package com.tuniway.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 
 @Entity
@@ -17,10 +18,12 @@ public class TourPersonnalise {
 
     @ManyToOne
     @JoinColumn(name = "guide_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "bio", "languages", "availability"})
     private Guide guide;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
     private Client client;
 
     // Getters and Setters
