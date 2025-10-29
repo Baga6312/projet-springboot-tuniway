@@ -21,3 +21,4 @@ public class CategoryData {
                 " | Description: " + description + " | Color: " + colorCode);
     }
 }
+

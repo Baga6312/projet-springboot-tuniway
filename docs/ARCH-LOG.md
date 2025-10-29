@@ -26,10 +26,10 @@ TuniWay vise à simplifier l'exploration touristique en Tunisie en connectant vi
 **Nous avons adopté l'architecture MVC pour TuniWay car elle sépare l'application en trois parties claires: les données (Model), l'interface utilisateur (View) et la logique de traitement (Controller). Cette séparation rend le code plus facile à comprendre et à modifier.**
 
 ```
-┌──────────┐         ┌──────────────┐         ┌───────┐
-│   VIEW   │ ◄────── │  CONTROLLER  │ ◄────── │ MODEL │
-│   (Vue)  │         │ (Contrôleur) │         │(Modèle)│
-└──────────┘         └──────────────┘         └───────┘
+┌──────────┐         ┌──────────┐         ┌──────┐
+│   VIEW          │ ◄─── │  CONTROLLER     │ ◄────│ MODEL    |
+│   (Vue)         │         | (Contrôleur)    │         │(Modèle)  |
+└──────────┘         └──────────┘         └──────┘
 ```
 
 - **Model (Modèle):**
@@ -118,4 +118,72 @@ Le projet **TuniWay** suit une architecture **MVC enrichie** avec cinq packages 
 
 ![[Pasted image 20251029124203.png]]
 # **Patrons de conception appliqués**
+#### **Description**
+Lors de la suppression d'un utilisateur dans TuniWay, plusieurs validations doivent être effectuées :
+- Vérifier si l'utilisateur a des avis (reviews)
+- Si c'est un Client : vérifier ses réservations et tours personnalisés
+- Si c'est un Guide : vérifier ses réservations et tours créés
+
+Sans ce patron, le contrôleur `UserController` contiendrait toute cette logique, rendant le code difficile à maintenir et violant le principe de responsabilité unique.
+
+#### Solution : 
+- Implementation de Principe chain of responsibility : 
+permet de faire passer une requête à travers une chaîne de handlers, où chaque handler décide soit de traiter la requête, soit de la passer au suivant. Cela évite de coupler l'émetteur de la requête aux objets qui la traitent.
+
+#### Implementation : 
+Structure  de la chaine : 
+```
+	ReviewCheckHandler 
+		    ↓
+	ClientReservationCheckHandler
+		    ↓
+	ClientTourCheckHandler
+		    ↓
+	GuideReservationCheckHandler
+		    ↓
+	GuideTourCheckHandler
+			↓
+	Success (Utilisateur peut être supprimé)
+```
+
+`DeletionHandler.java`
+![[Pasted image 20251029181857.png]]
+
+`ReviewCheckHandler`
+![[Pasted image 20251029182037.png]]
+
+`ClientReservationCheckHandler.java`
+![[Pasted image 20251029182138.png]]
+
+`deletionResult.java`
+![[Pasted image 20251029182319.png]]
+
+- Implementation de Principe Flyweight 
+Le patron **Flyweight** permet de réduire la consommation mémoire en partageant les données communes entre plusieurs objets au lieu de les dupliquer. Il sépare les données partagées des données uniques.
+
+### **Description** 
+Dans TuniWay, chaque lieu touristique (`Place`) appartient à une catégorie (HISTORICAL, BEACH, RESTAURANT, etc.). 
+Chaque catégorie possède des données partagées :
+- Une icône (emoji) 
+- Une description
+- Un code couleur
+
+#### **Implementation** : 
+```
+	PlaceCategoryFactory (Factory)
+			 ↓ 
+	gère un cache de CategoryData (Flyweight - données partagées)
+			 ↓
+	utilisé par Place 1, Place 2, ..., Place N (contexte - données uniques)
+```
+
+`CategoryData.java`
+![[Pasted image 20251029182728.png]]
+
+`PlaceCategoryFactory.java`
+![[Pasted image 20251029183334.png]]
+
+`PlaceController.java`
+![[Pasted image 20251029183720.png]]
+
 # **Principes SOLID**

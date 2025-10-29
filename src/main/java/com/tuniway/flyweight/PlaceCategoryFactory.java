@@ -9,8 +9,10 @@ import java.util.Map;
 public class PlaceCategoryFactory {
     private static final Map<PlaceCategory, CategoryData> categoryCache = new HashMap<>();
 
+    // TODO tansech te5DM les icons
+
+
     static {
-        // Shared intrinsic data for each category (reused across all places)
         categoryCache.put(PlaceCategory.HISTORICAL,
                 new CategoryData("🏛️", "Historical sites and monuments", "#8B4513"));
         categoryCache.put(PlaceCategory.BEACH,

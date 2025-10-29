@@ -1,37 +1,58 @@
 {
   "main": {
-    "id": "945f59b9c134c1f8",
+    "id": "ad1c1fd0848d22f9",
     "type": "split",
     "children": [
       {
-        "id": "354a243af839b40a",
+        "id": "d522ba329ece005e",
         "type": "tabs",
         "children": [
           {
-            "id": "431f33d7f19009dd",
+            "id": "ce799de757b9667a",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "other stuff/TODO.md",
+                "mode": "source",
+                "source": false
+              },
+              "pinned": true,
+              "icon": "lucide-file",
+              "title": "TODO"
+            }
+          },
+          {
+            "id": "64c8f9dba44f4316",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "ARCH-LOG.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "ARCH-LOG"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
   },
   "left": {
-    "id": "b6609deeb0aaf241",
+    "id": "79a291a34f9d6ea3",
     "type": "split",
     "children": [
       {
-        "id": "fbc811d75f2be827",
+        "id": "12a16c2b0288a4fa",
         "type": "tabs",
         "children": [
           {
-            "id": "632ab2746ad73eed",
+            "id": "bfc2b4c15c4dc3b1",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -44,13 +65,13 @@
             }
           },
           {
-            "id": "41defc7f72fb0bb9",
+            "id": "b04be392b39bdac6",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
                 "query": "",
-                "matchingCase": false,
+                "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
@@ -61,7 +82,7 @@
             }
           },
           {
-            "id": "f506e55f8451bcde",
+            "id": "f22218cfcfc2cfff",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -74,22 +95,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 235.5
   },
   "right": {
-    "id": "64125fb3361ff38d",
+    "id": "906421fb03648ac4",
     "type": "split",
     "children": [
       {
-        "id": "29dced3f18fcdffb",
+        "id": "479aee7e0db67fc0",
         "type": "tabs",
         "children": [
           {
-            "id": "d5d9502b7eb91c45",
+            "id": "1aa92c730c415564",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "ARCH-LOG.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,11 +121,11 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for ARCH-LOG"
             }
           },
           {
-            "id": "4f1cc616d72e7c30",
+            "id": "b9b0fb5a40d72733",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -116,7 +138,7 @@
             }
           },
           {
-            "id": "a93bd57cfda9aecc",
+            "id": "ca43ed6661c1e369",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -131,61 +153,83 @@
             }
           },
           {
-            "id": "530e185dd2a991b3",
+            "id": "8aabb688a2b9680c",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
+                "file": "Pasted image 20250114192725.png.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Pasted image 20250114192725.png"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "command-palette:Open command palette": false
     }
   },
-  "active": "431f33d7f19009dd",
+  "active": "64c8f9dba44f4316",
   "lastOpenFiles": [
-    "docs/assets/Pasted image 20251029183720.png",
-    "docs/assets/Pasted image 20251029183334.png",
-    "docs/assets/Pasted image 20251029182728.png",
-    "docs/assets/Pasted image 20251029182319.png",
-    "docs/assets/Pasted image 20251029182138.png",
-    "docs/assets/Pasted image 20251029182037.png",
-    "docs/assets/Pasted image 20251029181857.png",
-    "docs/assets/Pasted image 20251029124203.png",
-    "docs/assets/Pasted image 20251028183733.png",
-    "docs/assets",
-    "docs/Pasted image 20251029183720.png",
-    "docs/Pasted image 20251029183334.png",
     "ARCH-LOG.md",
-    "docs/ARCH-LOG.md",
-    "docs",
-    "src/main/java/com/tuniway/controller/PlaceController.java~",
-    "src/main/java/com/tuniway/flyweight/PlaceCategoryFactory.java~",
-    "src/main/java/com/tuniway/flyweight/CategoryData.java~",
-    "src/main/java/com/tuniway/flyweight/CategoryData.java",
-    "src/main/java/com/tuniway/controller/UserController.java~",
-    "src/main/java/com/tuniway/chain/GuideTourCheckHandler.java~",
-    "src/main/java/com/tuniway/chain/GuideReservationCheckHandler.java~",
-    "src/main/java/com/tuniway/chain/GuideReservationCheckHandler.java"
+    "Pasted image 20251029124203.png",
+    "Pasted image 20251028183733.png",
+    "other stuff/TODO.md",
+    "Certs/rhcsa/RHCSA.md",
+    "Certs/shit to study.md",
+    "Certs/README.md",
+    "CTF/HTB/challanges/blockchain/magic vault.md",
+    "CTF/HTB/challanges/blockchain/cast and destory.md",
+    "CTF/HTB/machines/signed.md",
+    "CTF/HTB/challanges/blockchain",
+    "CTF/HTB/machines/cobblestone.md",
+    "CTF/HTB/machines/darkzero.md",
+    "compte rendu.md",
+    "CTF/HTB/machines/certificates.md",
+    "CTF/HTB/machines/rustykey.md",
+    "certs/rhcsa/RHCSA.md",
+    "certs/ewpt/ewpt.md",
+    "certs/shit to study.md",
+    "certs/rhcsa/rhcsa.zip",
+    "certs/rhcsa/ziZ3y4oH",
+    "certs/ejpt/ejpt.md",
+    "certs/rhcsa/RHCSA-Exam-20-3-2024-T.pdf",
+    "certs/rhcsa/RHCSA-V9-EX200-Dump-1.pdf",
+    "certs/RHCSA.md",
+    "certs/ewpt",
+    "certs/New folder",
+    "certs/ejpt",
+    "certs/rhcsa",
+    "certs/RHCSA-V9-EX200-Dump-1.pdf",
+    "certs/ewpt.md",
+    "certs/ejpt.md",
+    "Certs/eJPT.md",
+    "Certs/eWPT.md",
+    "Certs/certs.md",
+    "CTF/THM/challenges/glitch/glitch.md",
+    "CTF/THM/challenges/glitch/rose.jpg",
+    "README.md",
+    "programming/ricing-bspwm/Pasted image 20240824094437.png",
+    "Pasted image 20250603185247.png",
+    "CPS/sem-2/Computer-Vision/WhatsApp Image 2024-04-30 at 10.13.23 PM.jpeg",
+    "CPS/sem-2/emploit.jpeg",
+    "CPS/sem-2/projects/ComputerVision/20250501145710.png",
+    "CPS/sem-2/projects/ComputerVision/20250501145945.png",
+    "CPS/sem-2/projects/ComputerVision/20250501145655.png"
   ]
 }

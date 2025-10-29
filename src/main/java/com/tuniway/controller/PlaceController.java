@@ -114,6 +114,9 @@ public class PlaceController {
     @Autowired
     private PlaceCategoryFactory categoryFactory;
 
+
+
+    // Lenna staamlna data li fil cache
     @GetMapping("/{id}/category-info")
     public ResponseEntity<Map<String, Object>> getPlaceCategoryInfo(@PathVariable Long id) {
         Optional<Place> place = placeService.getPlaceById(id);
