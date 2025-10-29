@@ -1,5 +1,7 @@
 package com.tuniway.controller;
 
+import com.tuniway.flyweight.CategoryData;
+import com.tuniway.flyweight.PlaceCategoryFactory;
 import com.tuniway.model.Place;
 import com.tuniway.model.enums.PlaceCategory;
 import com.tuniway.service.PlaceService;
@@ -9,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,14 +27,12 @@ public class PlaceController {
     @Autowired
     private ReviewService reviewService;
 
-    // Get all places
     @GetMapping
     public ResponseEntity<List<Place>> getAllPlaces() {
         List<Place> places = placeService.getAllPlaces();
         return ResponseEntity.ok(places);
     }
 
-    // Get place by ID
     @GetMapping("/{id}")
     public ResponseEntity<Place> getPlaceById(@PathVariable Long id) {
         Optional<Place> place = placeService.getPlaceById(id);
@@ -38,31 +40,26 @@ public class PlaceController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get places by category
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Place>> getPlacesByCategory(@PathVariable PlaceCategory category) {
         List<Place> places = placeService.getPlacesByCategory(category);
         return ResponseEntity.ok(places);
     }
 
-    // Get places by city
     @GetMapping("/city/{city}")
     public ResponseEntity<List<Place>> getPlacesByCity(@PathVariable String city) {
         List<Place> places = placeService.getPlacesByCity(city);
         return ResponseEntity.ok(places);
     }
 
-    // Search places by name
     @GetMapping("/search")
     public ResponseEntity<List<Place>> searchPlacesByName(@RequestParam String name) {
         List<Place> places = placeService.searchPlacesByName(name);
         return ResponseEntity.ok(places);
     }
 
-    // Create new place (Admin only)
     @PostMapping
     public ResponseEntity<Place> createPlace(@RequestBody Place place) {
-        // Validate required fields
         if (place.getName() == null || place.getName().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -71,7 +68,6 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPlace);
     }
 
-    // Update place (Admin only)
     @PutMapping("/{id}")
     public ResponseEntity<Place> updatePlace(@PathVariable Long id,
                                              @RequestBody Place placeDetails) {
@@ -94,7 +90,6 @@ public class PlaceController {
         return ResponseEntity.notFound().build();
     }
 
-    // Delete place (Admin only)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePlace(@PathVariable Long id) {
         Optional<Place> place = placeService.getPlaceById(id);
@@ -103,20 +98,44 @@ public class PlaceController {
             return ResponseEntity.notFound().build();
         }
 
-        // Check if place has reviews
         if (!reviewService.getReviewsByPlace(place.get()).isEmpty()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Cannot delete place: Place has existing reviews");
         }
 
-        // If no related data exists, proceed with deletion
         placeService.deletePlace(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Get all available categories
     @GetMapping("/categories")
     public ResponseEntity<PlaceCategory[]> getAllCategories() {
         return ResponseEntity.ok(PlaceCategory.values());
+    }
+    @Autowired
+    private PlaceCategoryFactory categoryFactory;
+
+    @GetMapping("/{id}/category-info")
+    public ResponseEntity<Map<String, Object>> getPlaceCategoryInfo(@PathVariable Long id) {
+        Optional<Place> place = placeService.getPlaceById(id);
+
+        if (!place.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Place p = place.get();
+
+        CategoryData categoryData = PlaceCategoryFactory.getCategoryData(p.getCategory());
+
+        categoryData.display(p.getName());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("placeName", p.getName());
+        response.put("category", p.getCategory());
+        response.put("icon", categoryData.getIcon());
+        response.put("description", categoryData.getDescription());
+        response.put("colorCode", categoryData.getColorCode());
+        response.put("totalCategoriesInCache", PlaceCategoryFactory.getCacheSize());
+
+        return ResponseEntity.ok(response);
     }
 }

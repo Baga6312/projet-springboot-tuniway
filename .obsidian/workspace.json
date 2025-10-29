@@ -169,8 +169,19 @@
       "bases:Create new base": false
     }
   },
-  "active": "632ab2746ad73eed",
+  "active": "431f33d7f19009dd",
   "lastOpenFiles": [
+    "src/main/java/com/tuniway/controller/PlaceController.java~",
+    "src/main/java/com/tuniway/flyweight/PlaceCategoryFactory.java~",
+    "src/main/java/com/tuniway/flyweight/CategoryData.java~",
+    "src/main/java/com/tuniway/flyweight/CategoryData.java",
+    "src/main/java/com/tuniway/controller/UserController.java~",
+    "src/main/java/com/tuniway/chain/GuideTourCheckHandler.java~",
+    "src/main/java/com/tuniway/chain/GuideReservationCheckHandler.java~",
+    "src/main/java/com/tuniway/chain/GuideReservationCheckHandler.java",
+    "src/main/java/com/tuniway/chain/ClientTourCheckHandler.java~",
+    "src/main/java/com/tuniway/flyweight/PlaceCategoryFactory.java",
+    "src/main/java/com/tuniway/flyweight",
     "Pasted image 20251029124203.png",
     "Pasted image 20251028183733.png"
   ]
