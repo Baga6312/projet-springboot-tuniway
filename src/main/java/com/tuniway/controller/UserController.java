@@ -1,9 +1,8 @@
 package com.tuniway.controller;
 
-import com.tuniway.flyweight.*;
-import com.tuniway.chain.*;
 import com.tuniway.model.* ;
 import com.tuniway.service.* ;
+import com.tuniway.util.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +22,10 @@ public class UserController {
     private ClientReservationCheckHandler clientReservationCheckHandler;
 
     @Autowired
-    private GuideReservationCheckHandler    guideReservationCheckHandler;
+    private GuideReservationCheckHandler guideReservationCheckHandler;
 
     @Autowired
-    private GuideTourCheckHandler   guideTourCheckHandler ;
+    private GuideTourCheckHandler guideTourCheckHandler ;
 
     @Autowired
     private ClientTourCheckHandler clientTourCheckHandler;

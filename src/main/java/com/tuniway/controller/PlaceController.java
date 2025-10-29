@@ -1,7 +1,7 @@
 package com.tuniway.controller;
 
-import com.tuniway.flyweight.CategoryData;
-import com.tuniway.flyweight.PlaceCategoryFactory;
+import com.tuniway.util.cache.CategoryData;
+import com.tuniway.util.cache.PlaceCategoryFactory;
 import com.tuniway.model.Place;
 import com.tuniway.model.enums.PlaceCategory;
 import com.tuniway.service.PlaceService;

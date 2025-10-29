@@ -1,4 +1,4 @@
-package com.tuniway.flyweight;
+package com.tuniway.util.cache;
 
 public class CategoryData {
     private final String icon;

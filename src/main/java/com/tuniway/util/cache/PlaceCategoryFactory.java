@@ -1,4 +1,4 @@
-package com.tuniway.flyweight;
+package com.tuniway.util.cache;
 
 import com.tuniway.model.enums.PlaceCategory;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.tuniway.chain;
+package com.tuniway.util.validation;
 
 public class DeletionResult {
     private boolean canDelete;

@@ -1,4 +1,4 @@
-package com.tuniway.chain;
+package com.tuniway.util.validation;
 
 import com.tuniway.model.Client;
 import com.tuniway.model.Utilisateur;
