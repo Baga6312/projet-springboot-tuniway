@@ -12,15 +12,11 @@
             "type": "leaf",
             "pinned": true,
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "other stuff/TODO.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "pinned": true,
               "icon": "lucide-file",
-              "title": "TODO"
+              "title": "New tab"
             }
           },
           {
@@ -35,6 +31,18 @@
               },
               "icon": "lucide-file",
               "title": "ARCH-LOG"
+            }
+          },
+          {
+            "id": "dfdee036c922eb63",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "assets/Pasted image 20251029193010.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20251029193010"
             }
           }
         ],
@@ -95,7 +103,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 235.5
+    "width": 414.5
   },
   "right": {
     "id": "906421fb03648ac4",
@@ -186,9 +194,17 @@
   },
   "active": "64c8f9dba44f4316",
   "lastOpenFiles": [
+    "assets/Pasted image 20251029193010.png",
     "ARCH-LOG.md",
-    "Pasted image 20251029124203.png",
-    "Pasted image 20251028183733.png",
+    "Pasted image 20251029193008.png",
+    "assets/Pasted image 20251029192856.png",
+    "assets/Pasted image 20251029192735.png",
+    "assets/Pasted image 20251029192520.png",
+    "assets/Pasted image 20251029192136.png",
+    "assets/Pasted image 20251029191953.png",
+    "assets/Pasted image 20251029191828.png",
+    "assets/Pasted image 20251029191747.png",
+    "assets/Pasted image 20251029191629.png",
     "other stuff/TODO.md",
     "Certs/rhcsa/RHCSA.md",
     "Certs/shit to study.md",
@@ -222,14 +238,6 @@
     "Certs/eWPT.md",
     "Certs/certs.md",
     "CTF/THM/challenges/glitch/glitch.md",
-    "CTF/THM/challenges/glitch/rose.jpg",
-    "README.md",
-    "programming/ricing-bspwm/Pasted image 20240824094437.png",
-    "Pasted image 20250603185247.png",
-    "CPS/sem-2/Computer-Vision/WhatsApp Image 2024-04-30 at 10.13.23 PM.jpeg",
-    "CPS/sem-2/emploit.jpeg",
-    "CPS/sem-2/projects/ComputerVision/20250501145710.png",
-    "CPS/sem-2/projects/ComputerVision/20250501145945.png",
-    "CPS/sem-2/projects/ComputerVision/20250501145655.png"
+    "README.md"
   ]
 }

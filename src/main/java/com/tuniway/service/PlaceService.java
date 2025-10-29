@@ -16,34 +16,42 @@ public class PlaceService {
     private PlaceRepository placeRepository;
 
     public List<Place> getAllPlaces() {
+
         return placeRepository.findAll();
     }
 
     public Optional<Place> getPlaceById(Long id) {
+
         return placeRepository.findById(id);
     }
 
     public List<Place> getPlacesByCategory(PlaceCategory category) {
+
         return placeRepository.findByCategory(category);
     }
 
     public List<Place> getPlacesByCity(String city) {
+
         return placeRepository.findByCity(city);
     }
 
     public List<Place> searchPlacesByName(String name) {
+
         return placeRepository.findByNameContainingIgnoreCase(name);
     }
 
     public Place createPlace(Place place) {
+
         return placeRepository.save(place);
     }
 
     public Place updatePlace(Place place) {
+
         return placeRepository.save(place);
     }
 
     public void deletePlace(Long id) {
+
         placeRepository.deleteById(id);
     }
 }

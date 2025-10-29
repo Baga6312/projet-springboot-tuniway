@@ -18,38 +18,47 @@ public class UserService {
     private UserRepository userRepository;
 
     public List<Utilisateur> getAllUsers() {
+
         return userRepository.findAll();
     }
 
     public Optional<Utilisateur> getUserById(Long id) {
+
         return userRepository.findById(id);
     }
 
     public Optional<Utilisateur> getUserByUsername(String username) {
+
         return userRepository.findByUsername(username);
     }
 
     public Optional<Utilisateur> getUserByEmail(String email) {
+
         return userRepository.findByEmail(email);
     }
 
     public Utilisateur createUser(Utilisateur user) {
+
         return userRepository.save(user);
     }
 
     public Utilisateur updateUser(Utilisateur user) {
+
         return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
+
         userRepository.deleteById(id);
     }
 
     public boolean existsByUsername(String username) {
+
         return userRepository.existsByUsername(username);
     }
 
     public boolean existsByEmail(String email) {
+
         return userRepository.existsByEmail(email);
     }
 }
