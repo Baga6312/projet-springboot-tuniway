@@ -127,7 +127,7 @@ Le diagramme de classes de TuniWay représente la structure du système avec les
 
 Le projet **TuniWay** suit une architecture **MVC enrichie** avec cinq packages : `model`, `controller`, `service` et `repository`, chacun ayant un rôle clair — du modèle de données jusqu'à la configuration technique. Cette organisation en couches garantit une **séparation des responsabilités**, une **maintenabilité élevée**, et un **respect des principes SOLID**, facilitant les tests, l'évolution et la scalabilité de l'application.****
 
-<img src="assets/Diagramme sans nom.jpg" alt="Package Diagram">
+<img src="assets/566546265_1878672543058200_5214286070846806404_n.png" alt="Package Diagram">
 
 # **Patrons de conception appliqués**
 
