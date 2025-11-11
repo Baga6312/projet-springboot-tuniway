@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuniway - S'inscrire</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        /* Critical inline styles as fallback */
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .auth-container { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            background-image: url('/assets/images/logsignback.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .auth-card { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 40px; 
+            max-width: 450px; 
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <img src="/assets/images/logo.png" alt="Tuniway Logo" class="auth-logo">
+            <h1 class="auth-title">Creer un compte</h1>
+            <p class="auth-subtitle">
+                Vous avez déjà un compte ? <a href="/login.html">Se connecter</a>
+            </p>
+            
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telephone">Numéro de téléphone</label>
+                    <input type="tel" id="telephone" name="telephone" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <span id="toggleText">Afficher</span>
+                    </button>
+                    <div class="password-error" id="passwordError">
+                        Le mot de passe doit contenir au moins 8 caractères
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-button" id="submitButton" disabled>
+                    S'inscrire
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/assets/js/main.js"></script>
+    <script>
+        // Signup page specific JavaScript
+        const signupForm = document.getElementById('signupForm');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleText = document.getElementById('toggleText');
+        const passwordError = document.getElementById('passwordError');
+        const submitButton = document.getElementById('submitButton');
+        const nomInput = document.getElementById('nom');
+        const telephoneInput = document.getElementById('telephone');
+        const emailInput = document.getElementById('email');
+        
+        // Password toggle functionality
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            toggleText.textContent = type === 'password' ? 'Afficher' : 'Masquer';
+        });
+        
+        // Validate password length
+        function validatePassword() {
+            const password = passwordInput.value;
+            if (password.length > 0 && password.length < 8) {
+                passwordError.classList.add('show');
+                return false;
+            } else {
+                passwordError.classList.remove('show');
+                return true;
+            }
+        }
+        
+        // Check if all fields are filled and valid
+        function checkFormValidity() {
+            const nom = nomInput.value.trim();
+            const telephone = telephoneInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            const isPasswordValid = password.length >= 8;
+            const allFieldsFilled = nom && telephone && email && password;
+            
+            if (allFieldsFilled && isPasswordValid) {
+                submitButton.classList.add('active');
+                submitButton.disabled = false;
+            } else {
+                submitButton.classList.remove('active');
+                submitButton.disabled = true;
+            }
+        }
+        
+        // Event listeners
+        passwordInput.addEventListener('input', function() {
+            validatePassword();
+            checkFormValidity();
+        });
+        
+        nomInput.addEventListener('input', checkFormValidity);
+        telephoneInput.addEventListener('input', checkFormValidity);
+        emailInput.addEventListener('input', checkFormValidity);
+        
+        // Form submission
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (submitButton.classList.contains('active')) {
+                // TODO: Add API call to signup endpoint
+                console.log('Signup form submitted');
+                alert('Inscription réussie! (Cette fonctionnalité sera connectée à l\'API)');
+            }
+        });
+    </script>
+</body>
+</html>

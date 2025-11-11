@@ -1,6 +1,7 @@
 package com.tuniway.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -15,30 +16,31 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
+@ConditionalOnProperty(name = "spring.datasource.url", matchIfMissing = false)
 public class DatabaseConfig {
 
-    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.url:}")
     private String dbUrl;
 
-    @Value("${spring.datasource.username}")
+    @Value("${spring.datasource.username:}")
     private String dbUsername;
 
-    @Value("${spring.datasource.password}")
+    @Value("${spring.datasource.password:}")
     private String dbPassword;
 
-    @Value("${spring.datasource.driver-class-name}")
+    @Value("${spring.datasource.driver-class-name:}")
     private String dbDriverClassName;
 
-    @Value("${spring.jpa.hibernate.ddl-auto}")
+    @Value("${spring.jpa.hibernate.ddl-auto:}")
     private String ddlAuto;
 
-    @Value("${spring.jpa.show-sql}")
+    @Value("${spring.jpa.show-sql:false}")
     private String showSql;
 
-    @Value("${spring.jpa.properties.hibernate.dialect}")
+    @Value("${spring.jpa.properties.hibernate.dialect:}")
     private String hibernateDialect;
 
-    @Value("${spring.jpa.properties.hibernate.format_sql}")
+    @Value("${spring.jpa.properties.hibernate.format_sql:false}")
     private String formatSql;
 
     @Bean

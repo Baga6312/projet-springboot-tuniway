@@ -35,7 +35,7 @@ Démarrez l'application avec Maven :
 mvn spring-boot:run
 ```
 
-L'application sera accessible sur `http://localhost:8080`
+L'application sera accessible sur `http://localhost:8081`
 
 ## Technologies utilisées
 

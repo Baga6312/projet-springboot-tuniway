@@ -3,9 +3,11 @@ package com.tuniway.util.validation;
 import com.tuniway.model.Client;
 import com.tuniway.model.Utilisateur;
 import com.tuniway.service.ReservationService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class ClientReservationCheckHandler extends DeletionHandler {
     private final ReservationService reservationService;
 

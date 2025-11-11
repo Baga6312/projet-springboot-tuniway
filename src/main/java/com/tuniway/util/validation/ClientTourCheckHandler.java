@@ -3,9 +3,11 @@ package com.tuniway.util.validation;
 import com.tuniway.model.Client;
 import com.tuniway.model.Utilisateur;
 import com.tuniway.service.TourPersonnaliseService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class ClientTourCheckHandler extends DeletionHandler {
     private final TourPersonnaliseService tourPersonnaliseService;
 

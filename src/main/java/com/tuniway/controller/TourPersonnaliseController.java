@@ -6,6 +6,7 @@ import com.tuniway.model.Guide;
 import com.tuniway.service.TourPersonnaliseService;
 import com.tuniway.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/tours")
 @CrossOrigin(origins = "*")
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class TourPersonnaliseController {
 
     @Autowired

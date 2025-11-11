@@ -4,6 +4,7 @@ import com.tuniway.model.* ;
 import com.tuniway.service.* ;
 import com.tuniway.util.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class UserController {
     @Autowired
     private ReviewCheckHandler reviewCheckHandler;

@@ -5,12 +5,14 @@ import com.tuniway.model.Guide;
 import com.tuniway.model.Client;
 import com.tuniway.repository.TourPersonnaliseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class TourPersonnaliseService {
 
     @Autowired

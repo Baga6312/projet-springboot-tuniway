@@ -5,6 +5,7 @@ import com.tuniway.model.Place;
 import com.tuniway.model.Utilisateur;
 import com.tuniway.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@ConditionalOnProperty(name = "spring.datasource.url")
 public class ReviewService {
 
     @Autowired
