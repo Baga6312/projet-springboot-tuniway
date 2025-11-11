@@ -42,4 +42,4 @@ L'application sera accessible sur `http://localhost:8080`
 - Spring Boot
 - Spring Data JPA
 - MySQL
-- Maven
+- Maven  
