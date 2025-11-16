@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TourPersonnalise{% endblock %}
+
+{% block body %}
+    <h1>Edit TourPersonnalise</h1>
+
+    {{ include('tour_personnalise/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_tour_personnalise_index') }}">back to list</a>
+
+    {{ include('tour_personnalise/_delete_form.html.twig') }}
+{% endblock %}

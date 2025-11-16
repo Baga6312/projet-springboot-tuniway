@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome - TuniWay{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1>Welcome to TuniWay</h1>
+            <p class="lead">Your Smart Tourist Platform for Tunisia</p>
+
+            <div class="mt-4">
+                <a href="{{ path('app_place_index') }}" class="btn btn-primary btn-lg">Explore Places</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

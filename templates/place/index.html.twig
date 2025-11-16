@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Place index{% endblock %}
+
+{% block body %}
+    <h1>Place index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Latitude</th>
+                <th>Longtitude</th>
+                <th>Address</th>
+                <th>ImageUrl</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for place in places %}
+            <tr>
+                <td>{{ place.id }}</td>
+                <td>{{ place.name }}</td>
+                <td>{{ place.description }}</td>
+                <td>{{ place.category }}</td>
+                <td>{{ place.latitude }}</td>
+                <td>{{ place.longtitude }}</td>
+                <td>{{ place.address }}</td>
+                <td>{{ place.imageUrl }}</td>
+                <td>{{ place.createdAt ? place.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_place_show', {'id': place.id}) }}">show</a>
+                    <a href="{{ path('app_place_edit', {'id': place.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_place_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TourPersonnalise{% endblock %}
+
+{% block body %}
+    <h1>TourPersonnalise</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ tour_personnalise.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ tour_personnalise.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ tour_personnalise.description }}</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td>{{ tour_personnalise.duration }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ tour_personnalise.price }}</td>
+            </tr>
+            <tr>
+                <th>MaxPersons</th>
+                <td>{{ tour_personnalise.maxPersons }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ tour_personnalise.createdAt ? tour_personnalise.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tour_personnalise_index') }}">back to list</a>
+
+    <a href="{{ path('app_tour_personnalise_edit', {'id': tour_personnalise.id}) }}">edit</a>
+
+    {{ include('tour_personnalise/_delete_form.html.twig') }}
+{% endblock %}

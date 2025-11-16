@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TourPersonnalise index{% endblock %}
+
+{% block body %}
+    <h1>TourPersonnalise index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>MaxPersons</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tour_personnalise in tour_personnalises %}
+            <tr>
+                <td>{{ tour_personnalise.id }}</td>
+                <td>{{ tour_personnalise.title }}</td>
+                <td>{{ tour_personnalise.description }}</td>
+                <td>{{ tour_personnalise.duration }}</td>
+                <td>{{ tour_personnalise.price }}</td>
+                <td>{{ tour_personnalise.maxPersons }}</td>
+                <td>{{ tour_personnalise.createdAt ? tour_personnalise.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_tour_personnalise_show', {'id': tour_personnalise.id}) }}">show</a>
+                    <a href="{{ path('app_tour_personnalise_edit', {'id': tour_personnalise.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tour_personnalise_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TourPersonnalise{% endblock %}
+
+{% block body %}
+    <h1>Create new TourPersonnalise</h1>
+
+    {{ include('tour_personnalise/_form.html.twig') }}
+
+    <a href="{{ path('app_tour_personnalise_index') }}">back to list</a>
+{% endblock %}
