@@ -1,23 +1,47 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app_home') }}">TuniWay</a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_place_index') }}">Places</a>
+                </li>
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_reservation_index') }}">Mes Réservations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_favori_index') }}">Mes Favoris</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_GUIDE') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_tour_personnalise_index') }}">Mes Tours</a>
+                    </li>
+                {% endif %}
+            </ul>
+
             <ul class="navbar-nav">
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_place_index') }}">Places</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Reservations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_tour_personnalise_index') }}">Tours</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_favori_index') }}">Favorites</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_review_index') }}">Reviews</a>
-                </li>
+                {% if app.user %}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">
+                            Bonjour, {{ app.user.username }}
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
