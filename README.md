@@ -1,45 +1,59 @@
-# TuniWay 🇹🇳
+# Frontend
 
-Application web Spring Boot pour explorer les destinations touristiques et les points d'intérêt en Tunisie.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
 
-## Prérequis
-// redo this shit 
-- Java 17 ou supérieur
-- Maven 3.6+
-- MySQL (ou votre base de données préférée)
+## Development server
 
-## Installation
+To start a local development server, run:
 
-1. Clonez le repository :
 ```bash
-git clone https://github.com/votre-username/tunisia-explorer.git
-cd tunisia-explorer
+ng serve
 ```
 
-2. Configurez la base de données dans `src/main/resources/application.properties` :
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/tunisia_explorer
-spring.datasource.username=votre_username
-spring.datasource.password=votre_password
-```
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-3. Installez les dépendances :
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
 ```bash
-mvn clean install
+ng generate component component-name
 ```
 
-## Lancement
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-Démarrez l'application avec Maven :
 ```bash
-mvn spring-boot:run
+ng generate --help
 ```
 
-L'application sera accessible sur `http://localhost:8081`
+## Building
 
-## Technologies utilisées
+To build the project run:
 
-- Spring Boot
-- Spring Data JPA
-- MySQL
-- Maven
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
