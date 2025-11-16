@@ -1,0 +1,119 @@
+<div class="fixed inset-0 bg-cover bg-center z-50" style="background-image: url('logsignback.jpg');">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/20"></div>
+  
+  <!-- Modal -->
+  <div class="relative flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
+      
+      <!-- Close Button -->
+      <button (click)="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      
+      <!-- Logo -->
+      <div class="text-center mb-6">
+        <img src="logo.png" alt="TuniWay" class="h-16 mx-auto">
+      </div>
+      
+      <!-- Title -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Créer un compte</h2>
+      </div>
+      
+      <!-- Form -->
+      <form (ngSubmit)="onSubmit()">
+        
+        <!-- Name -->
+        <div class="mb-4">
+          <input 
+            type="text" 
+            [(ngModel)]="name"
+            name="name"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-tuni-teal transition"
+            placeholder="Nom"
+            required
+          >
+        </div>
+        
+        <!-- Phone -->
+        <div class="mb-4">
+          <div class="flex gap-2">
+            <select class="px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-tuni-teal">
+              <option>🇹🇳</option>
+              <option>🇺🇸</option>
+            </select>
+            <input 
+              type="tel" 
+              [(ngModel)]="phone"
+              name="phone"
+              class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-tuni-teal transition"
+              placeholder="Num de telephone"
+              required
+            >
+          </div>
+        </div>
+        
+        <!-- Email -->
+        <div class="mb-4">
+          <input 
+            type="email" 
+            [(ngModel)]="email"
+            name="email"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-tuni-teal transition"
+            placeholder="Email"
+            required
+          >
+        </div>
+        
+        <!-- Password -->
+        <div class="mb-2">
+          <div class="relative">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              name="password"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-tuni-teal transition"
+              placeholder="Mot de passe"
+              required
+            >
+            <button 
+              type="button"
+              (click)="togglePassword()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+
+
+        <p class="text-gray-600 text-sm">
+          Vous avez déjà un compte? 
+          <a routerLink="/login" class="text-gray-900 underline font-semibold hover:text-tuni-teal transition">
+            Se connecter
+          </a>
+        </p>
+        
+        <!-- Error Message -->
+        <p class="text-red-500 text-sm mb-6">{{ errorMessage }}</p>
+        
+        <!-- Submit Button -->
+        <button 
+          type="submit"
+          class="w-full bg-gray-400 text-white py-3 rounded-xl font-semibold hover:bg-gray-500 transition"
+        >
+          s'inscrire
+        </button>
+        
+      </form>
+      
+    </div>
+  </div>
+</div>
