@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
 class Place
@@ -14,30 +15,39 @@ class Place
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['place:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['place:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['place:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['place:read'])]
     private ?string $category = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['place:read'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['place:read'])]
     private ?float $longtitude = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['place:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['place:read'])]
     private ?string $imageUrl = null;
 
     #[ORM\Column]
+    #[Groups(['place:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**

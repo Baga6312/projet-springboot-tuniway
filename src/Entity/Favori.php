@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FavoriRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FavoriRepository::class)]
 class Favori
@@ -11,9 +12,11 @@ class Favori
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['favori:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['favori:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'favoris')]

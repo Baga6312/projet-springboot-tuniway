@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TourPersonnaliseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TourPersonnaliseRepository::class)]
 class TourPersonnalise
@@ -12,24 +13,31 @@ class TourPersonnalise
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tour:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['tour:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['tour:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['tour:read'])]
     private ?int $duration = null;
 
     #[ORM\Column]
+    #[Groups(['tour:read'])]
     private ?float $price = null;
 
     #[ORM\Column]
+    #[Groups(['tour:read'])]
     private ?int $maxPersons = null;
 
     #[ORM\Column]
+    #[Groups(['tour:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'tourPersonnalises')]

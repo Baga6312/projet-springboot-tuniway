@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -11,22 +12,36 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['reservation:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['reservation:read'])]
     private ?\DateTime $reservationDate = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['reservation:read'])]
     private ?string $status = null;
 
     #[ORM\Column]
+    #[Groups(['reservation:read'])]
     private ?int $numbersOfPersons = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['reservation:read'])]
     private ?float $totalPrice = null;
 
     #[ORM\Column]
+    #[Groups(['reservation:read'])]
     private ?\DateTime $createdAt = null;
+
+    #[ORM\Column(length: 50)]
+    #[Groups(['reservation:read'])]
+    private ?string $type = 'PLACE';
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?TourPersonnalise $tour = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?User $user = null;
@@ -121,6 +136,28 @@ class Reservation
     {
         $this->Place = $Place;
 
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getTour(): ?TourPersonnalise
+    {
+        return $this->tour;
+    }
+
+    public function setTour(?TourPersonnalise $tour): static
+    {
+        $this->tour = $tour;
         return $this;
     }
 }

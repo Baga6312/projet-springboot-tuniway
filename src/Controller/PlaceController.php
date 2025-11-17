@@ -43,14 +43,6 @@ final class PlaceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_place_show', methods: ['GET'])]
-    public function show(Place $place): Response
-    {
-        return $this->render('place/show.html.twig', [
-            'place' => $place,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_place_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Place $place, EntityManagerInterface $entityManager): Response
     {
@@ -78,5 +70,13 @@ final class PlaceController extends AbstractController
         }
 
         return $this->redirectToRoute('app_place_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}', name: 'app_place_show', methods: ['GET'])]
+    public function show(Place $place): Response
+    {
+        return $this->render('place/show.html.twig', [
+            'place' => $place,
+        ]);
     }
 }

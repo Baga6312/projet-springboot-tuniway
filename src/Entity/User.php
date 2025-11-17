@@ -9,18 +9,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'user_type', type: 'string')]
+#[ORM\DiscriminatorMap(['user' => User::class, 'client' => Client::class, 'guide' => Guide::class, 'admin' => Admin::class])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:read'])]
     private ?string $email = null;
 
     /**
@@ -36,15 +43,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['user:read'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read'])]
     private ?string $role = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['user:read'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**
