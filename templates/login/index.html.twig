@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Login - TuniWay{% endblock %}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
@@ -8,7 +13,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Connexion</h3>
+                        <img src="{{ asset('../images/logo.png') }}" alt="logo_tuniway" class="logo">
                     </div>
                     <div class="card-body">
                         {% if error %}
