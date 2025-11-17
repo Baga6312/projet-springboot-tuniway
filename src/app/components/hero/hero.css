@@ -1,14 +1,19 @@
-/* Add smooth animations */
-button {
-	  transition: all 0.3s ease;
-  }
-
-  button:hover {
-	    transform: translateY(-2px);
-	      box-shadow: 0 10px 20px rgba(255, 167, 38, 0.3);
-      }
-
-      :host {
+:host {
   display: block;
   min-height: 100vh;
 }
+
+/* Remove the pt-32 padding from the section and handle it here */
+section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+}
+
+/* Add smooth animations */
+button {
+  transition: all 0.3s ease;
+}
+

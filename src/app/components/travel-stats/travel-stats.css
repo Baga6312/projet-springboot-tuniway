@@ -24,9 +24,3 @@
 .wiggle-3 {
   animation: wiggle 3s ease-in-out 1s infinite;
 }
-
-
-:host {
-  display: block;
-  min-height: 100vh;
-}
