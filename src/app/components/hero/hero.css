@@ -7,3 +7,8 @@ button {
 	    transform: translateY(-2px);
 	      box-shadow: 0 10px 20px rgba(255, 167, 38, 0.3);
       }
+
+      :host {
+  display: block;
+  min-height: 100vh;
+}

@@ -1,8 +1,19 @@
 /* Smooth card hover effects */
 .grid > div {
 	  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+}
 
-  .grid > div:hover {
+.grid > div:hover {
 	    transform: translateY(-8px);
-    }
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+
+:host {
+  display: block;
+  min-height: 100vh;
+}   

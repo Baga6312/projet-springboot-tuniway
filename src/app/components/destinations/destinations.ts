@@ -6,6 +6,12 @@ import { Component } from '@angular/core';
   templateUrl: './destinations.html',
   styleUrl: './destinations.css',
 })
+
+
+
 export class Destinations {
 
 }
+
+
+

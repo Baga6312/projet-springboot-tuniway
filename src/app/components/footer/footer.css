@@ -1,3 +1,9 @@
 a {
 	  transition: color 0.3s ease;
   }
+
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
