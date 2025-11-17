@@ -1,0 +1,22 @@
+nav {
+  transition: none !important;
+}
+
+button {
+  transition: background-color 2.5s ease, color 1s ease;
+}
+
+
+nav {
+  animation: slideDown 0.8s ease-out 0.3s forwards;
+  top: -100px;
+}
+
+@keyframes slideDown {
+  from {
+    top: -100px;
+  }
+  to {
+    top: 0;
+  }
+}
