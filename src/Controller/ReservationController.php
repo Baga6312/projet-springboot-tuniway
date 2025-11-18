@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Place;
 use App\Entity\Reservation;
-use App\Form\ReservationType;
-use App\Repository\ReservationRepository;
+use App\Entity\TourPersonnalise;
+use App\Entity\User;
+use App\Service\ReservationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,68 +17,174 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/reservation')]
 final class ReservationController extends AbstractController
 {
-    #[Route(name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
-    {
-        return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
+    public function __construct(
+        private ReservationService $reservationService,
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
-    #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route(name: 'app_reservation_index', methods: ['GET'])]
+    public function index(): JsonResponse
     {
-        $reservation = new Reservation();
-        $form = $this->createForm(ReservationType::class, $reservation);
-        $form->handleRequest($request);
+        return $this->json(
+            $this->reservationService->findAll(),
+            Response::HTTP_OK,
+            [],
+            ['groups' => 'reservation:read']
+        );
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($reservation);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+    #[Route('/new', name: 'app_reservation_new', methods: ['POST'])]
+    public function new(Request $request): JsonResponse
+    {
+        $data = $this->parsePayload($request);
+        if ($data === null) {
+            return $this->json(['error' => 'Invalid JSON payload'], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->render('reservation/new.html.twig', [
-            'reservation' => $reservation,
-            'form' => $form,
-        ]);
+        $required = ['reservationDate', 'status', 'numbersOfPersons', 'userId', 'placeId'];
+        foreach ($required as $field) {
+            if (empty($data[$field])) {
+                return $this->json(['error' => sprintf('Field "%s" is required', $field)], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        try {
+            $reservationDate = new \DateTime($data['reservationDate']);
+        } catch (\Exception) {
+            return $this->json(['error' => 'Invalid "reservationDate" format'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($data['userId']);
+        $place = $this->entityManager->getRepository(Place::class)->find($data['placeId']);
+
+        if (!$user || !$place) {
+            return $this->json(['error' => 'User or Place not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $reservation = new Reservation();
+        $reservation->setReservationDate($reservationDate);
+        $reservation->setStatus($data['status']);
+        $reservation->setNumbersOfPersons((int) $data['numbersOfPersons']);
+        $reservation->setTotalPrice(isset($data['totalPrice']) ? (float) $data['totalPrice'] : null);
+        $reservation->setType($data['type'] ?? 'PLACE');
+        $reservation->setCreatedAt(new \DateTime());
+        $reservation->setUser($user);
+        $reservation->setPlace($place);
+
+        if (!empty($data['tourId'])) {
+            $tour = $this->entityManager->getRepository(TourPersonnalise::class)->find($data['tourId']);
+            if (!$tour) {
+                return $this->json(['error' => 'Tour not found'], Response::HTTP_NOT_FOUND);
+            }
+            $reservation->setTour($tour);
+        }
+
+        $reservation = $this->reservationService->create($reservation);
+
+        return $this->json($reservation, Response::HTTP_CREATED, [], ['groups' => 'reservation:read']);
     }
 
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
-    public function show(Reservation $reservation): Response
+    public function show(int $id): JsonResponse
     {
-        return $this->render('reservation/show.html.twig', [
-            'reservation' => $reservation,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ReservationType::class, $reservation);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        $reservation = $this->reservationService->find($id);
+        if (!$reservation) {
+            return $this->json(['error' => 'Reservation not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->render('reservation/edit.html.twig', [
-            'reservation' => $reservation,
-            'form' => $form,
-        ]);
+        return $this->json($reservation, Response::HTTP_OK, [], ['groups' => 'reservation:read']);
     }
 
-    #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
-    public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['PUT'])]
+    public function edit(int $id, Request $request): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($reservation);
-            $entityManager->flush();
+        $reservation = $this->reservationService->find($id);
+        if (!$reservation) {
+            return $this->json(['error' => 'Reservation not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        $data = $this->parsePayload($request);
+        if ($data === null) {
+            return $this->json(['error' => 'Invalid JSON payload'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (isset($data['reservationDate'])) {
+            try {
+                $reservation->setReservationDate(new \DateTime($data['reservationDate']));
+            } catch (\Exception) {
+                return $this->json(['error' => 'Invalid "reservationDate" format'], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        if (isset($data['status'])) {
+            $reservation->setStatus($data['status']);
+        }
+
+        if (isset($data['numbersOfPersons'])) {
+            $reservation->setNumbersOfPersons((int) $data['numbersOfPersons']);
+        }
+
+        if (array_key_exists('totalPrice', $data)) {
+            $reservation->setTotalPrice($data['totalPrice'] !== null ? (float) $data['totalPrice'] : null);
+        }
+
+        if (isset($data['type'])) {
+            $reservation->setType($data['type']);
+        }
+
+        if (isset($data['userId'])) {
+            $user = $this->entityManager->getRepository(User::class)->find($data['userId']);
+            if (!$user) {
+                return $this->json(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+            }
+            $reservation->setUser($user);
+        }
+
+        if (isset($data['placeId'])) {
+            $place = $this->entityManager->getRepository(Place::class)->find($data['placeId']);
+            if (!$place) {
+                return $this->json(['error' => 'Place not found'], Response::HTTP_NOT_FOUND);
+            }
+            $reservation->setPlace($place);
+        }
+
+        if (array_key_exists('tourId', $data)) {
+            if ($data['tourId'] === null) {
+                $reservation->setTour(null);
+            } else {
+                $tour = $this->entityManager->getRepository(TourPersonnalise::class)->find($data['tourId']);
+                if (!$tour) {
+                    return $this->json(['error' => 'Tour not found'], Response::HTTP_NOT_FOUND);
+                }
+                $reservation->setTour($tour);
+            }
+        }
+
+        $reservation = $this->reservationService->update($reservation);
+
+        return $this->json($reservation, Response::HTTP_OK, [], ['groups' => 'reservation:read']);
+    }
+
+    #[Route('/{id}', name: 'app_reservation_delete', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        $reservation = $this->reservationService->find($id);
+        if (!$reservation) {
+            return $this->json(['error' => 'Reservation not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->reservationService->delete($reservation);
+
+        return $this->json(['message' => 'Reservation deleted successfully'], Response::HTTP_OK);
+    }
+
+    private function parsePayload(Request $request): ?array
+    {
+        try {
+            return $request->toArray();
+        } catch (\JsonException) {
+            return null;
+        }
     }
 }

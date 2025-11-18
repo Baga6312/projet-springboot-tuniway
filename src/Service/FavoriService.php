@@ -37,6 +37,12 @@ class FavoriService
         return $favori;
     }
 
+    public function update(Favori $favori): Favori
+    {
+        $this->entityManager->flush();
+        return $favori;
+    }
+
     public function delete(Favori $favori): bool
     {
         $this->entityManager->remove($favori);
