@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\JwtService;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +15,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register', methods: ['POST'])]
+    public function __construct(
+        private UserService $userService,
+        private JwtService $jwtService
+    ) {
+    }
+
+    #[Route('/api/register', name: 'app_register', methods: ['POST'])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
@@ -23,23 +31,37 @@ class RegistrationController extends AbstractController
         try {
             $data = $request->toArray();
         } catch (\JsonException) {
-            return $this->json(['error' => 'Invalid JSON payload'], Response::HTTP_BAD_REQUEST);
+            return $this->json([
+                'success' => false,
+                'message' => 'Invalid JSON payload'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        $required = ['email', 'username', 'plainPassword', 'phoneNumber'];
+        $required = ['email', 'username', 'plainPassword'];
         foreach ($required as $field) {
             if (empty($data[$field])) {
-                return $this->json(['error' => sprintf('Field "%s" is required', $field)], Response::HTTP_BAD_REQUEST);
+                return $this->json([
+                    'success' => false,
+                    'message' => sprintf('Field "%s" is required', $field)
+                ], Response::HTTP_BAD_REQUEST);
             }
         }
 
+        // Check if user already exists
+        $existingUser = $this->userService->findByEmail($data['email']);
+        if ($existingUser) {
+            return $this->json([
+                'success' => false,
+                'message' => 'User with this email already exists'
+            ], Response::HTTP_CONFLICT);
+        }
+
+        // Always create User with role = CLIENT
         $user = new User();
         $user->setEmail($data['email']);
         $user->setUsername($data['username']);
-        $user->setPhoneNumber($data['phoneNumber']);
-        $user->setRole($data['role'] ?? 'ROLE_USER');
-        $user->setRoles($data['roles'] ?? [$user->getRole()]);
-        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->setRole('CLIENT');
+        $user->setRoles(['CLIENT']);
         $user->setPassword(
             $userPasswordHasher->hashPassword($user, $data['plainPassword'])
         );
@@ -47,9 +69,24 @@ class RegistrationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
+        // Generate JWT token after successful registration
+        $token = $this->jwtService->generateToken([
+            'email' => $user->getEmail(),
+            'id' => $user->getId(),
+            'roles' => $user->getRoles()
+        ]);
+
         return $this->json([
+            'success' => true,
             'message' => 'User registered successfully',
-            'user' => $user,
+            'token' => $token,
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'username' => $user->getUsername(),
+                'role' => $user->getRole(),
+                'roles' => $user->getRoles()
+            ]
         ], Response::HTTP_CREATED, [], ['groups' => 'user:read']);
     }
 }

@@ -12,9 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'user_type', type: 'string')]
-#[ORM\DiscriminatorMap(['user' => User::class, 'client' => Client::class, 'guide' => Guide::class, 'admin' => Admin::class])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 
@@ -31,9 +28,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string> The user roles (virtual property, derived from role)
      */
-    #[ORM\Column]
     private array $roles = [];
 
     /**
@@ -50,11 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?string $role = null;
 
-    #[ORM\Column(length: 20)]
+    // Phone number - not mapped to database (column doesn't exist)
+    // #[ORM\Column(name: 'phone_number', length: 20, nullable: true)]
     #[Groups(['user:read'])]
     private ?string $phoneNumber = null;
 
-    #[ORM\Column]
+    // Created at - not mapped to database (column doesn't exist)
+    // #[ORM\Column]
     #[Groups(['user:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -122,7 +120,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        $roles = [];
+        // Convert role (string) to roles (array)
+        if ($this->role) {
+            $roles[] = $this->role;
+        }
+        // Also include any roles from the roles array (for backward compatibility)
+        $roles = array_merge($roles, $this->roles);
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
@@ -135,6 +139,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+        // Set the role field to the first role (for database storage)
+        if (!empty($roles)) {
+            $this->role = $roles[0];
+        }
 
         return $this;
     }

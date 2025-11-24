@@ -13,8 +13,9 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class JwtAuthenticator extends AbstractAuthenticator
+class JwtAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(
         private JwtService $jwtService,
@@ -24,6 +25,13 @@ class JwtAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        // Only authenticate API routes (excluding login and register)
+        $path = $request->getPathInfo();
+        if (str_starts_with($path, '/api/login') || str_starts_with($path, '/api/register')) {
+            return false;
+        }
+
+        // Only support if Authorization header is present
         return $request->headers->has('Authorization');
     }
 
@@ -31,15 +39,34 @@ class JwtAuthenticator extends AbstractAuthenticator
     {
         $authHeader = $request->headers->get('Authorization');
 
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            throw new AuthenticationException('No bearer token provided');
+        if (!$authHeader) {
+            throw new AuthenticationException('No authorization header provided');
+        }
+
+        if (!str_starts_with($authHeader, 'Bearer ')) {
+            throw new AuthenticationException('Invalid authorization header format. Expected: Bearer <token>');
         }
 
         $token = substr($authHeader, 7);
+
+        if (empty($token)) {
+            throw new AuthenticationException('Token is empty');
+        }
+
         $payload = $this->jwtService->validateToken($token);
 
         if (!$payload) {
-            throw new AuthenticationException('Invalid token');
+            throw new AuthenticationException('Invalid or expired token');
+        }
+
+        if (!isset($payload['email'])) {
+            throw new AuthenticationException('Token payload missing email');
+        }
+
+        $user = $this->userService->findByEmail($payload['email']);
+
+        if (!$user) {
+            throw new AuthenticationException('User not found');
         }
 
         return new SelfValidatingPassport(
@@ -57,7 +84,16 @@ class JwtAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return new JsonResponse([
-            'error' => $exception->getMessage()
-        ], 401);
+            'success' => false,
+            'message' => $exception->getMessage()
+        ], Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
+        return new JsonResponse([
+            'success' => false,
+            'message' => 'Authentication required. Please provide a valid JWT token in the Authorization header.'
+        ], Response::HTTP_UNAUTHORIZED);
     }
 }
