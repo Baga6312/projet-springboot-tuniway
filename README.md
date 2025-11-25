@@ -12,8 +12,8 @@ Application web Spring Boot pour explorer les destinations touristiques et les p
 
 1. Clonez le repository :
 ```bash
-git clone https://github.com/votre-username/tunisia-explorer.git
-cd tunisia-explorer
+git clone https://github.com/Baga6312/projet-springboot-tuniway.git
+cd projet-springboot-tuniway
 ```
 
 2. Configurez la base de données dans `src/main/resources/application.properties` :
