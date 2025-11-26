@@ -2,7 +2,7 @@ package com.tuniway.service;
 
 import com.tuniway.model.Review;
 import com.tuniway.model.Place;
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import com.tuniway.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ReviewService {
         return reviewRepository.findByRatingGreaterThanEqual(rating);
     }
 
-    public List<Review> getReviewsByUser(Utilisateur user) {
+    public List<Review> getReviewsByUser(User user) {
         return reviewRepository.findByUser(user);
     }
 

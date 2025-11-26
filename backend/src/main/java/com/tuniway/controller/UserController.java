@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
@@ -44,28 +43,28 @@ public class UserController {
     private TourPersonnaliseService tourPersonnaliseService;
 
     @GetMapping
-    public ResponseEntity<List<Utilisateur>> getAllUsers() {
-        List<Utilisateur> users = userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Utilisateur> getUserById(@PathVariable Long id) {
-        Optional<Utilisateur> user = userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<Utilisateur> getUserByUsername(@PathVariable String username) {
-        Optional<Utilisateur> user = userService.getUserByUsername(username);
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        Optional<User> user = userService.getUserByUsername(username);
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Utilisateur> getUserByEmail(@PathVariable String email) {
-        Optional<Utilisateur> user = userService.getUserByEmail(email);
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        Optional<User> user = userService.getUserByEmail(email);
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -121,7 +120,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Optional<Utilisateur> user = userService.getUserByUsername(loginRequest.getUsername());
+        Optional<User> user = userService.getUserByUsername(loginRequest.getUsername());
 
         if (user.isPresent()) {
             if (user.get().getPassword().equals(loginRequest.getPassword())) {
@@ -134,18 +133,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Utilisateur> updateUser(@PathVariable Long id,
-                                                  @RequestBody Utilisateur userDetails) {
-        Optional<Utilisateur> existingUser = userService.getUserById(id);
+    public ResponseEntity<User> updateUser(@PathVariable Long id,
+                                           @RequestBody User userDetails) {
+        Optional<User> existingUser = userService.getUserById(id);
 
         if (existingUser.isPresent()) {
-            Utilisateur user = existingUser.get();
+            User user = existingUser.get();
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             user.setProfilePicture(userDetails.getProfilePicture());
 
-            Utilisateur updatedUser = userService.updateUser(user);
+            User updatedUser = userService.updateUser(user);
             return ResponseEntity.ok(updatedUser);
         }
 
@@ -154,7 +153,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        Optional<Utilisateur> user = userService.getUserById(id);
+        Optional<User> user = userService.getUserById(id);
 
         if (!user.isPresent()) {
             return ResponseEntity.notFound().build();

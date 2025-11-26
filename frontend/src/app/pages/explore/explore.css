@@ -1,0 +1,240 @@
+.explore-wrapper {
+  background: radial-gradient(circle at top, #e0f2fe 0%, #f8fafc 45%, #ffffff 100%);
+  min-height: 100vh;
+  padding: 120px 1.75rem 4rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #0ea5e9;
+}
+
+.muted {
+  color: #64748b;
+}
+
+.search-bar {
+  flex: 1 1 280px;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.07);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem;
+  outline: none;
+}
+
+.search-icon {
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.filters select {
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.gallery-card {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.gallery-card.expanded {
+  grid-column: span 2;
+  transform: scale(1.02);
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.card-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.favorite-btn span {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+.favorite-btn span.filled {
+  color: #f97316;
+}
+
+.details-panel {
+  margin-top: 2.5rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.details-panel h2 {
+  margin: 0.4rem 0 1rem;
+  font-size: 2rem;
+}
+
+.reviews {
+  margin-top: 1.5rem;
+}
+
+.review {
+  border-top: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 1rem 0;
+}
+
+.review:first-of-type {
+  border-top: none;
+}
+
+.rating {
+  background: #facc15;
+  color: #78350f;
+  border-radius: 999px;
+  padding: 0.2rem 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.secondary-btn {
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  background: transparent;
+  color: #e2e8f0;
+  border-radius: 999px;
+  padding: 0.45rem 1.5rem;
+  cursor: pointer;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #0f172a;
+  padding: 2rem 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 4px solid rgba(14, 165, 233, 0.3);
+  border-top-color: #0ea5e9;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-card.expanded {
+    grid-column: span 1;
+  }
+
+  .details-panel {
+    padding: 1.5rem;
+  }
+}
+
+

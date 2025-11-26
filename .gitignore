@@ -78,3 +78,5 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
+.obsidian
+.idea

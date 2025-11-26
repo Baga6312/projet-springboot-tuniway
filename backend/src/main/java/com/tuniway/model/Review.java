@@ -23,7 +23,7 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password"})
-    private Utilisateur user;
+    private User user;
 
     // Getters and Setters
     public Long getId() {
@@ -66,11 +66,11 @@ public class Review {
         this.place = place;
     }
 
-    public Utilisateur getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Utilisateur user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

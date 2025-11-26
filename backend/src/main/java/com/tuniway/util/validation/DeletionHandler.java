@@ -1,6 +1,6 @@
 package com.tuniway.util.validation;
 
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 
 public abstract class DeletionHandler {
     protected DeletionHandler nextHandler;
@@ -10,9 +10,9 @@ public abstract class DeletionHandler {
         return handler;
     }
 
-    public abstract DeletionResult canDelete(Utilisateur user);
+    public abstract DeletionResult canDelete(User user);
 
-    protected DeletionResult checkNext(Utilisateur user) {
+    protected DeletionResult checkNext(User user) {
         if (nextHandler != null) {
             return nextHandler.canDelete(user);
         }

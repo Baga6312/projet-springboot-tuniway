@@ -1,16 +1,16 @@
 package com.tuniway.repository;
 
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<Utilisateur, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<Utilisateur> findByUsername(String username);
-    Optional<Utilisateur> findByEmail(String email);
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 }

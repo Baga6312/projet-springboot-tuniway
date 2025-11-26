@@ -1,0 +1,126 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-gray-900">Guides Management</h2>
+  </div>
+
+  <!-- Guides Table -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bio</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Languages</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let guide of guides" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ guide.username }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ guide.email }}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">
+              <div class="max-w-xs truncate">{{ guide.bio || 'No bio' }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span *ngIf="guide.languages && guide.languages.length > 0">
+                {{ guide.languages.join(', ') }}
+              </span>
+              <span *ngIf="!guide.languages || guide.languages.length === 0" class="text-gray-400">
+                No languages
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button
+                (click)="viewGuideDetails(guide)"
+                class="text-blue-600 hover:text-blue-900 mr-4">
+                View Details
+              </button>
+              <button
+                (click)="deleteGuide(guide.id)"
+                class="text-red-600 hover:text-red-900">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="loading" class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    </div>
+    <div *ngIf="!loading && guides.length === 0" class="text-center py-8 text-gray-500">
+      No guides found
+    </div>
+  </div>
+
+  <!-- Guide Details Modal -->
+  <div *ngIf="showDetails && selectedGuide" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold">Guide Details: {{ selectedGuide.username }}</h3>
+        <button
+          (click)="closeDetails()"
+          class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Guide Info -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <p class="text-sm text-gray-600 mb-2"><strong>Email:</strong> {{ selectedGuide.email }}</p>
+        <p class="text-sm text-gray-600 mb-2"><strong>Bio:</strong> {{ selectedGuide.bio || 'No bio' }}</p>
+        <p class="text-sm text-gray-600 mb-2"><strong>Languages:</strong> {{ selectedGuide.languages?.join(', ') || 'None' }}</p>
+        <p class="text-sm text-gray-600"><strong>Availability:</strong> {{ selectedGuide.availability || 'Not specified' }}</p>
+      </div>
+
+      <!-- Tours Created -->
+      <div class="mb-6">
+        <h4 class="text-lg font-semibold mb-3">Tours Created ({{ guideTours.length }})</h4>
+        <div class="space-y-2">
+          <div *ngFor="let tour of guideTours" class="p-3 bg-gray-50 rounded-lg">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-medium">{{ tour.titre }}</p>
+                <p class="text-sm text-gray-600">{{ tour.description }}</p>
+                <p class="text-sm text-gray-500 mt-1">Price: {{ tour.prix }} TND | Date: {{ tour.date }}</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="guideTours.length === 0" class="text-gray-500 text-center py-4">
+            No tours created yet
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews on Places -->
+      <div>
+        <h4 class="text-lg font-semibold mb-3">Reviews Left on Places ({{ guideReviews.length }})</h4>
+        <div class="space-y-2">
+          <div *ngFor="let review of guideReviews" class="p-3 bg-gray-50 rounded-lg">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-medium">{{ review.place?.name }}</p>
+                <p class="text-sm text-gray-600">{{ review.comment }}</p>
+                <div class="flex items-center mt-1">
+                  <span *ngFor="let star of getStars(review.rating)" class="text-yellow-400 text-sm">★</span>
+                  <span class="ml-2 text-sm text-gray-500">{{ review.rating }}/5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="guideReviews.length === 0" class="text-gray-500 text-center py-4">
+            No reviews left yet
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

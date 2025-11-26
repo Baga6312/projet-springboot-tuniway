@@ -1,7 +1,7 @@
 package com.tuniway.util.validation;
 
 import com.tuniway.model.Client;
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import com.tuniway.service.ReservationService;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class ClientReservationCheckHandler extends DeletionHandler {
     }
 
     @Override
-    public DeletionResult canDelete(Utilisateur user) {
+    public DeletionResult canDelete(User user) {
         if (user instanceof Client) {
             Client client = (Client) user;
             if (!reservationService.getReservationsByClient(client).isEmpty()) {

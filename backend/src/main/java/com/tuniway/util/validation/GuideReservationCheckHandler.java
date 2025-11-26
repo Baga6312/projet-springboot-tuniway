@@ -1,7 +1,7 @@
 package com.tuniway.util.validation;
 
 import com.tuniway.model.Guide;
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import com.tuniway.service.ReservationService;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class GuideReservationCheckHandler extends DeletionHandler {
     }
 
     @Override
-    public DeletionResult canDelete(Utilisateur user) {
+    public DeletionResult canDelete(User user) {
         if (user instanceof Guide) {
             Guide guide = (Guide) user;
             if (!reservationService.getReservationsByGuide(guide).isEmpty()) {

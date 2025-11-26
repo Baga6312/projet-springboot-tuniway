@@ -1,6 +1,6 @@
 package com.tuniway.util.validation;
 
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import com.tuniway.service.ReviewService;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class ReviewCheckHandler extends DeletionHandler {
     }
 
     @Override
-    public DeletionResult canDelete(Utilisateur user) {
+    public DeletionResult canDelete(User user) {
         if (!reviewService.getReviewsByUser(user).isEmpty()) {
             return new DeletionResult(false, "Cannot delete user: User has existing reviews");
         }

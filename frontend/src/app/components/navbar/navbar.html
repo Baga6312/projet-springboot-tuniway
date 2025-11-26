@@ -8,12 +8,17 @@
     
     <!-- Navigation Links -->
     <div class="hidden md:flex space-x-8">
-      <a href="#" class="text-tuni-teal font-semibold hover:text-tuni-teal">Home</a>
-
-      <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal">explore</a>
-      <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal">favorites</a>
-      <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal">contact us</a>
+       <a routerLink="/" class="text-tuni-teal font-semibold hover:text-tuni-teal">Home</a>
+       <a routerLink="/explore" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Explore</a>
+       <a routerLink="/tours" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Tours</a>
+          
+       <!-- Show My Profile only when logged in -->
+       <a *ngIf="isLoggedIn" routerLink="/profile" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">My Profile</a>
+          
+       <!-- Show Guide Portal only for GUIDE role -->
+       <a *ngIf="isGuide()" routerLink="/guide/profile" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Guide Portal</a>
     </div>
+  
     
     <!-- Right Side: Dark Mode + Buttons -->
     <div class="flex items-center gap-4">

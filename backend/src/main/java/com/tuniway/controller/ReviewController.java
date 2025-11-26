@@ -2,7 +2,7 @@ package com.tuniway.controller;
 
 import com.tuniway.model.Review;
 import com.tuniway.model.Place;
-import com.tuniway.model.Utilisateur;
+import com.tuniway.model.User;
 import com.tuniway.service.ReviewService;
 import com.tuniway.service.PlaceService;
 import com.tuniway.service.UserService;
@@ -29,14 +29,13 @@ public class ReviewController {
     @Autowired
     private UserService userService;
 
-    // Get all reviews
+
     @GetMapping
     public ResponseEntity<List<Review>> getAllReviews() {
         List<Review> reviews = reviewService.getAllReviews();
         return ResponseEntity.ok(reviews);
     }
 
-    // Get review by ID
     @GetMapping("/{id}")
     public ResponseEntity<Review> getReviewById(@PathVariable Long id) {
         Optional<Review> review = reviewService.getReviewById(id);
@@ -44,7 +43,7 @@ public class ReviewController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get reviews by place ID
+
     @GetMapping("/place/{placeId}")
     public ResponseEntity<List<Review>> getReviewsByPlace(@PathVariable Long placeId) {
         Optional<Place> place = placeService.getPlaceById(placeId);
@@ -57,10 +56,9 @@ public class ReviewController {
         return ResponseEntity.notFound().build();
     }
 
-    // Get reviews by user ID
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Review>> getReviewsByUser(@PathVariable Long userId) {
-        Optional<Utilisateur> user = userService.getUserById(userId);
+        Optional<User> user = userService.getUserById(userId);
 
         if (user.isPresent()) {
             List<Review> reviews = reviewService.getReviewsByUser(user.get());
@@ -70,7 +68,6 @@ public class ReviewController {
         return ResponseEntity.notFound().build();
     }
 
-    // Get reviews with minimum rating
     @GetMapping("/rating/{minRating}")
     public ResponseEntity<List<Review>> getReviewsByMinRating(@PathVariable Integer minRating) {
         if (minRating < 1 || minRating > 5) {
@@ -81,27 +78,25 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    // Create new review
+
     @PostMapping
     public ResponseEntity<?> createReview(@RequestBody ReviewRequest request) {
-        // Validate rating (1-5)
         if (request.getRating() < 1 || request.getRating() > 5) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
         }
 
-        // Validate place exists
+
         Optional<Place> place = placeService.getPlaceById(request.getPlaceId());
         if (!place.isPresent()) {
             return ResponseEntity.badRequest().body("Place not found");
         }
 
-        // Validate user exists
-        Optional<Utilisateur> user = userService.getUserById(request.getUserId());
+
+        Optional<User> user = userService.getUserById(request.getUserId());
         if (!user.isPresent()) {
             return ResponseEntity.badRequest().body("User not found");
         }
 
-        // Create review
         Review review = new Review();
         review.setPlace(place.get());
         review.setUser(user.get());
@@ -113,7 +108,6 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
 
-    // Update review
     @PutMapping("/{id}")
     public ResponseEntity<?> updateReview(@PathVariable Long id,
                                           @RequestBody ReviewUpdateRequest request) {
@@ -123,7 +117,6 @@ public class ReviewController {
             return ResponseEntity.notFound().build();
         }
 
-        // Validate rating if provided
         if (request.getRating() != null && (request.getRating() < 1 || request.getRating() > 5)) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
         }
@@ -142,7 +135,6 @@ public class ReviewController {
         return ResponseEntity.ok(updatedReview);
     }
 
-    // Delete review
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         Optional<Review> review = reviewService.getReviewById(id);

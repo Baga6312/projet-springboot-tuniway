@@ -1,12 +1,12 @@
 package com.tuniway.model;
 
 import com.tuniway.model.enums.RoleType;
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 @Entity
-@Table(name="client")
-public class Client extends Utilisateur {
-
+@DiscriminatorValue("Client")
+public class Client extends User {
     public Client() {
         this.setRole(RoleType.CLIENT);
     }
