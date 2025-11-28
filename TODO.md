@@ -8,3 +8,7 @@
 ### scrapper ll SEO ====> projet wa7dou fi dossie wa7dou  // oussema  // priority 8 
 ### a3mel talla aala jenkins kifh ye5dm ( first time ) // everyone // priority 4  ( the next phase deployment ki ykmlou hedhom  )
 ### retouchet ll UI + thayleaf templates plz  // eya + mei // priotiy 2 
+
+
+
+## **NOTE**!! : ki tji chtaaml ayet haja aaml pull request mtaamlch branch jdid  
