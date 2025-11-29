@@ -9,6 +9,11 @@
 ### a3mel talla aala jenkins kifh ye5dm ( first time ) // everyone // priority 4  ( the next phase deployment ki ykmlou hedhom  )
 ### retouchet ll UI + thayleaf templates plz  // eya + mei // priotiy 2 
 
+### tarki7 b9iyet chain of responsability  // eya + mei // priotiy 2 
+
+### Docker taa db may5dmch .. rodo y5dm locally  // BALD 
+
+
 
 
 ## **NOTE**!! : ki tji chtaaml ayet haja aaml pull request mtaamlch branch jdid  
