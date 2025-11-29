@@ -15,7 +15,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/seed_data.sql
     networks:
       - tuniway-network
     healthcheck:
@@ -51,6 +51,34 @@ services:
       retries: 3
       start_period: 40s
 
+  # PyTorch Chatbot Container
+  chatbot:
+    build:
+      context: ./chatbot-pytorch
+      dockerfile: Dockerfile
+    container_name: tuniway-chatbot
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    networks:
+      - tuniway-network
+    # Uncomment below if you have GPU support and want to use it
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - backend
+
   # Angular Frontend Container
   frontend:
     build:
@@ -64,6 +92,7 @@ services:
       - "4200:80"
     depends_on:
       - backend
+      - chatbot
     networks:
       - tuniway-network
     healthcheck:
