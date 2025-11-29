@@ -11,6 +11,8 @@
 
 ### tarki7 b9iyet chain of responsability  // eya + mei // priotiy 2 
 
+### Docker taa db may5dmch .. rodo y5dm locally  // BALD 
+
 
 
 
