@@ -1,7 +1,8 @@
 package com.tuniway.controller;
 
-
 import com.tuniway.model.chatbot.ChatMessage;
+import com.tuniway.service.ChatbotService;
+import com.tuniway.service.ChatbotService.ChatbotResponse;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,11 +19,25 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private ChatbotService chatbotService;
+
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         chatMessage.setTimestamp(LocalDateTime.now());
         System.out.println("📨 Message received from " + chatMessage.getSender() + ": " + chatMessage.getContent());
+
+        // If message is from a user (not from bot), send to Flask chatbot
+        if (chatMessage.getSender() != null &&
+                !chatMessage.getSender().equals("TuniWay_Bot") &&
+                chatMessage.getContent() != null &&
+                !chatMessage.getContent().trim().isEmpty()) {
+
+            // Send to Flask in a separate thread to avoid blocking
+            processChatbotResponse(chatMessage);
+        }
+
         return chatMessage;
     }
 
@@ -55,5 +70,48 @@ public class ChatController {
     public ChatMessage userTyping(@Payload ChatMessage chatMessage) {
         chatMessage.setType(ChatMessage.MessageType.TYPING);
         return chatMessage;
+    }
+
+    /**
+     * Process chatbot response asynchronously
+     */
+    private void processChatbotResponse(ChatMessage userMessage) {
+        new Thread(() -> {
+            try {
+                System.out.println("🤖 Forwarding to Flask chatbot: " + userMessage.getContent());
+
+                // Send message to Flask chatbot
+                ChatbotResponse botResponse = chatbotService.sendMessageToBot(userMessage.getContent());
+
+                if (botResponse.isSuccess()) {
+                    // Create bot response message
+                    ChatMessage botMessage = new ChatMessage();
+                    botMessage.setType(ChatMessage.MessageType.CHAT);
+                    botMessage.setSender("TuniWay_Bot");
+                    botMessage.setContent(botResponse.getMessage());
+                    botMessage.setTimestamp(LocalDateTime.now());
+
+                    // Send bot response to all clients
+                    messagingTemplate.convertAndSend("/topic/public", botMessage);
+
+                    System.out.println("✅ Bot response sent: " + botResponse.getMessage());
+                } else {
+                    // Send error message if Flask is down
+                    ChatMessage errorMessage = new ChatMessage();
+                    errorMessage.setType(ChatMessage.MessageType.CHAT);
+                    errorMessage.setSender("TuniWay_Bot");
+                    errorMessage.setContent("Sorry, I'm having trouble connecting right now. Please try again in a moment.");
+                    errorMessage.setTimestamp(LocalDateTime.now());
+
+                    messagingTemplate.convertAndSend("/topic/public", errorMessage);
+
+                    System.err.println("❌ Chatbot error: " + botResponse.getError());
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ Error processing chatbot response: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
