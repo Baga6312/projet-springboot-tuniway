@@ -151,4 +151,4 @@ class DeletionValidationChainServiceTest {
         assertThat(description).contains("Guide Reservation Check");
         assertThat(description).contains("Guide Tour Check");
     }
-}   
+}
