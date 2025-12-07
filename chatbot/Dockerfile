@@ -18,13 +18,10 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 &
 # Upgrade pip
 RUN python -m pip install --upgrade pip
 
-#EXPOSE PORT 
-EXPOSE 5000
-
 # Set working directory
 WORKDIR /app
 
-# Copy requirements
+# Copy requirements first (for Docker layer caching)
 COPY requirements.txt .
 
 # Install Python packages
@@ -33,8 +30,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Download NLTK data
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab')"
 
-RUN python -c "import nltk; nltk.download('punkt_tab')"
+# Train the model automatically
+RUN echo "Training the chatbot model..." && \
+    cd /app/training && \
+    python trains.py && \
+    echo "Model training complete!"
 
-# Default command
+# Expose port
+EXPOSE 5000
+
+# Run the chatbot API
 CMD ["python", "chat.py"]
