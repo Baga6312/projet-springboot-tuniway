@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -151,6 +153,12 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+
+
+
+    @Autowired
+    private DeletionValidationChainService deletionValidationChainService;
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
@@ -159,22 +167,59 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        reviewCheckHandler
-                .setNext(clientReservationCheckHandler)
-                .setNext(clientTourCheckHandler)
-                .setNext(guideReservationCheckHandler)
-                .setNext(guideTourCheckHandler);
-
-        // Execute the chain
-        DeletionResult result = reviewCheckHandler.canDelete(user.get());
+        // Execute the validation chain through the service
+        DeletionResult result = deletionValidationChainService.validateDeletion(user.get());
 
         if (!result.isCanDelete()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(result.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                            "success", false,
+                            "message", result.getMessage(),
+                            "userId", id
+                    ));
         }
 
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @GetMapping("/{id}/can-delete")
+    public ResponseEntity<?> checkDeletionPossibility(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DeletionResult result = deletionValidationChainService.validateDeletion(user.get());
+
+        return ResponseEntity.ok(Map.of(
+                "canDelete", result.isCanDelete(),
+                "message", result.getMessage(),
+                "userId", id,
+                "username", user.get().getUsername()
+        ));
+    }
+
+
+
+
+
+
+
 
     static class LoginRequest {
         private String username;
