@@ -33,10 +33,9 @@ COPY . .
 # Download NLTK data
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab')"
 
-# Train the model automatically
+# Train the model automatically (run from root directory, not training subdirectory)
 RUN echo "Training the chatbot model..." && \
-    cd /app/training && \
-    python trains.py && \
+    python training/trains.py && \
     echo "Model training complete!"
 
 # Expose port

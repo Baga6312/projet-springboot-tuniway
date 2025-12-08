@@ -1,14 +1,21 @@
-import torch 
-import torch.nn as nn 
-import json 
-import numpy as np 
+import sys
+import os
 
-from nltk_utils import tokenize , stem , bag_word 
-from torch.utils.data import Dataset  , DataLoader
-from model import NeuralNet
+# Add parent directory to path to import from lib
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-with open("../data/intense.json" , "r") as f : 
-    intens = json.load(f) 
+import torch
+import torch.nn as nn
+import json
+import numpy as np
+from lib.nltk_utils import tokenize, stem, bag_word
+from lib.model import NeuralNet
+from torch.utils.data import Dataset, DataLoader
+
+with open("/app/data/intense.json", "r") as f:
+    intens = json.load(f)
+
+
 
 all_word = []
 tags = []

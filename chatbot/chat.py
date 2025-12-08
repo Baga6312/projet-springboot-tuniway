@@ -14,10 +14,10 @@ class ChatBotAPI:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        with open('data/intense.json', 'r') as f:
+        with open('/app/data/intense.json', 'r') as f:
             self.intents = json.load(f)
         
-        data = torch.load('data/data.pth')
+        data = torch.load('/app/data/data.pth')
         self.all_words = data['all_words']
         self.tags = data['tags']
         
