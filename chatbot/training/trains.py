@@ -109,7 +109,7 @@ data = {
     "tags"        : tags   
 }
 
-FILE = "data.pth"
+FILE = "/app/data/data.pth"
 
 torch.save(data , FILE)
 
