@@ -1,91 +1,125 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WebsocketService, ChatMessage } from '../../services/websocket';
-import { Subscription } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
+import { ChatbotService } from '../../services/chatbot.service';
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  providers: [WebsocketService],
+  imports: [CommonModule, FormsModule, HttpClientModule],
+  providers: [ChatbotService],
   templateUrl: './chatbot.html',
   styleUrls: ['./chatbot.css']
 })
 export class ChatbotComponent implements OnInit, OnDestroy {
   isOpen = false;
-  messages: { text: string; isUser: boolean; timestamp: Date; sender: string }[] = [];
+  messages: { text: string; isUser: boolean; timestamp: Date }[] = [];
   newMessage = '';
-  username = 'User_' + Math.floor(Math.random() * 1000);
+  isLoading = false;
   isConnected = false;
+  errorMessage = '';
 
-  private messageSubscription?: Subscription;
-  private connectionSubscription?: Subscription;
-
-  constructor(@Inject(WebsocketService) private websocketService: WebsocketService) {}
-
+  constructor(private chatbotService: ChatbotService) {}
 
   ngOnInit() {
-  // Subscribe to incoming messages
-  this.messageSubscription = this.websocketService.getMessages().subscribe(
-    (message: ChatMessage | null) => {
-      if (message && message.type === 'CHAT') {
-        // Only show if not from current user (avoid duplicates)
-        if (message.sender !== this.username) {
+    // Don't check health on init, check when chat is opened
+  }
+
+  ngOnDestroy() {
+    // Cleanup if needed
+  }
+
+  checkChatbotHealth() {
+    this.chatbotService.healthCheck().subscribe({
+      next: (response) => {
+        this.isConnected = true;
+        console.log('✅ Chatbot service is healthy:', response);
+        
+        // Add welcome message after successful connection
+        if (this.messages.length === 0) {
           this.messages.push({
-            text: message.content,
+            text: 'Hello! I\'m your Tuniway travel assistant. How can I help you today?',
             isUser: false,
-            timestamp: new Date(),
-            sender: message.sender
+            timestamp: new Date()
           });
         }
+      },
+      error: (error) => {
+        this.isConnected = false;
+        console.error('❌ Chatbot service is not available:', error);
+        this.errorMessage = 'Could not connect to chatbot service';
+        
+        // Show error message in chat
+        this.messages.push({
+          text: 'Sorry, I\'m unable to connect right now. Please check if the chatbot service is running.',
+          isUser: false,
+          timestamp: new Date()
+        });
       }
-      // Remove JOIN/LEAVE messages - we don't need them in UI
-    }
-  );
-
-  // Subscribe to connection status
-  this.connectionSubscription = this.websocketService.getConnectionStatus().subscribe(
-    (status: boolean) => {
-      this.isConnected = status;
-      console.log('Connection status:', status);
-    }
-  );
-}
-
-
-   ngOnDestroy() {
-    this.messageSubscription?.unsubscribe();
-    this.connectionSubscription?.unsubscribe();
-    this.websocketService.disconnect();
-  }
-
-toggleChat() {
-  console.log('Toggle clicked, isOpen:', this.isOpen);
-  this.isOpen = !this.isOpen;
-  
-  // Connect when opening chat
-  if (this.isOpen) {
-    console.log('Attempting to connect...');
-    this.websocketService.connect(this.username);
-  }
-}
-
-
-sendMessage() {
-  if (this.newMessage.trim() && this.isConnected) {
-    // Add message to UI immediately
-    this.messages.push({
-      text: this.newMessage,
-      isUser: true,
-      timestamp: new Date(),
-      sender: this.username
     });
-    
-    // Send to WebSocket
-    this.websocketService.sendMessage(this.newMessage, this.username);
-    this.newMessage = '';
   }
-}
 
+  toggleChat() {
+    console.log('Toggle clicked, isOpen:', this.isOpen);
+    this.isOpen = !this.isOpen;
+    
+    // Check health when opening chat
+    if (this.isOpen) {
+      this.checkChatbotHealth();
+    }
+  }
+
+  sendMessage() {
+    if (this.newMessage.trim()) {
+      const userMessage = this.newMessage.trim();
+      
+      // Add user message to UI immediately
+      this.messages.push({
+        text: userMessage,
+        isUser: true,
+        timestamp: new Date()
+      });
+      
+      this.newMessage = '';
+      this.isLoading = true;
+      this.errorMessage = '';
+      
+      // Send to chatbot service
+      this.chatbotService.sendMessage(userMessage).subscribe({
+        next: (response) => {
+          // Add bot response to UI
+          this.messages.push({
+            text: response.response || 'I received your message!',
+            isUser: false,
+            timestamp: new Date()
+          });
+          this.isLoading = false;
+          
+          // Scroll to bottom
+          setTimeout(() => this.scrollToBottom(), 100);
+        },
+        error: (error) => {
+          console.error('Error sending message to chatbot:', error);
+          this.errorMessage = 'Sorry, I couldn\'t connect to the chatbot service. Please try again.';
+          this.messages.push({
+            text: 'Sorry, I\'m having trouble connecting right now. Please try again later.',
+            isUser: false,
+            timestamp: new Date()
+          });
+          this.isLoading = false;
+        }
+      });
+      
+      // Scroll to bottom after adding user message
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
+  }
+
+  private scrollToBottom() {
+    const chatMessages = document.querySelector('.chat-messages');
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
 }

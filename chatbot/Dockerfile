@@ -4,11 +4,12 @@ FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
-# Install Python 3.11
+# Install Python 3.11 AND curl for healthcheck
 RUN apt-get update && apt-get install -y \
     python3.11 \
     python3.11-dev \
     python3-pip \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python 3.11 as default
@@ -33,7 +34,7 @@ COPY . .
 # Download NLTK data
 RUN python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab')"
 
-# Train the model automatically (run from root directory, not training subdirectory)
+# Train the model automatically
 RUN echo "Training the chatbot model..." && \
     python training/trains.py && \
     echo "Model training complete!"

@@ -1,30 +1,32 @@
 version: '3.8'
 
 services:
-  # MySQL Database Container
+  # MySQL Database Container - Starts FIRST
   db:
-    image: mysql:8.0
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     container_name: tuniway-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: tuniway
-      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_USER: tuniway_user
       MYSQL_PASSWORD: tuniway_pass
+      MYSQL_ROOT_PASSWORD: password
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/seed_data.sql
     networks:
       - tuniway-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 40s
 
-  # Spring Boot Backend Container
+  # Spring Boot Backend Container - Starts SECOND (after db is healthy)
   backend:
     build:
       context: ./backend
@@ -45,16 +47,16 @@ services:
     networks:
       - tuniway-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health", "||", "exit", "1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 60s
 
-  # PyTorch Chatbot Container
+  # PyTorch Chatbot Container - Starts THIRD (can start independent of frontend)
   chatbot:
     build:
-      context: ./chatbot-pytorch
+      context: ./chatbot
       dockerfile: Dockerfile
     container_name: tuniway-chatbot
     restart: unless-stopped
@@ -62,7 +64,15 @@ services:
       - "5000:5000"
     networks:
       - tuniway-network
-    # Uncomment below if you have GPU support and want to use it
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    # Uncomment if you want GPU support
     # deploy:
     #   resources:
     #     reservations:
@@ -70,36 +80,27 @@ services:
     #         - driver: nvidia
     #           count: 1
     #           capabilities: [gpu]
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health", "||", "exit", "1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    depends_on:
-      - backend
 
-  # Angular Frontend Container
+  # Angular Frontend Container - Starts LAST (after backend is ready)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        - API_URL=http://localhost:8080
     container_name: tuniway-frontend
     restart: unless-stopped
     ports:
       - "4200:80"
     depends_on:
-      - backend
-      - chatbot
+      backend:
+        condition: service_healthy
     networks:
       - tuniway-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80", "||", "exit", "1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 60s
 
 volumes:
   mysql_data:

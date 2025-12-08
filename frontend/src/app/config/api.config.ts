@@ -1,3 +1,4 @@
 export const API_BASE_URL = 'http://192.168.11.86:8080/api';
+export const CHATBOT_API_URL = 'http://localhost:5000';
 
 

@@ -24,7 +24,7 @@ INSERT INTO user (DTYPE, email, password, profilePicture, role, username) VALUES
 -- ============================================
 -- PLACES DATA
 -- ============================================
-INSERT INTO place (name, description, category, city, imageUrl, latitude, longitude) VALUES
+INSERT INTO Place (name, description, category, city, imageUrl, latitude, longitude) VALUES
 ('Carthage Ruins', 'Ancient Roman ruins and archaeological site', 'HISTORICAL', 'Tunis', 'https://images.unsplash.com/photo-1585155770728-b8cd1db9c145', 36.8525, 10.3233),
 ('Bardo Museum', 'National museum of Tunisia with Roman mosaics', 'MUSEUM', 'Tunis', 'https://images.unsplash.com/photo-1566127992631-137a642a90f4', 36.8097, 10.1347),
 ('Sidi Bou Said', 'Picturesque blue and white village', 'HISTORICAL', 'Sidi Bou Said', 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4', 36.8688, 10.3431),
@@ -49,7 +49,7 @@ INSERT INTO place (name, description, category, city, imageUrl, latitude, longit
 -- ============================================
 -- REVIEWS DATA (user_id and place_id reference the IDs from above)
 -- ============================================
-INSERT INTO review (rating, datePosted, place_id, user_id, comment) VALUES
+INSERT INTO Review (rating, datePosted, place_id, user_id, comment) VALUES
 (5, '2024-11-01 10:30:00', 1, 1, 'Amazing historical site! The ruins are breathtaking.'),
 (4, '2024-11-02 14:15:00', 1, 2, 'Great place to visit, very educational.'),
 (5, '2024-11-03 09:20:00', 2, 3, 'The mosaics are incredible. A must-see museum!'),
@@ -74,7 +74,7 @@ INSERT INTO review (rating, datePosted, place_id, user_id, comment) VALUES
 -- ============================================
 -- RESERVATIONS DATA (client_id = clients, guide_id = guides)
 -- ============================================
-INSERT INTO reservation (client_id, dateReservation, guide_id, status, type) VALUES
+INSERT INTO Reservation (client_id, dateReservation, guide_id, status, type) VALUES
 (1, '2024-12-01 09:00:00', 9, 'CONFIRMED', 'GUIDED_TOUR'),
 (2, '2024-12-02 10:00:00', 10, 'PENDING', 'CUSTOM_TOUR'),
 (3, '2024-12-03 14:00:00', 11, 'CONFIRMED', 'GUIDED_TOUR'),
@@ -89,7 +89,7 @@ INSERT INTO reservation (client_id, dateReservation, guide_id, status, type) VAL
 -- ============================================
 -- TOUR PERSONNALISE DATA (client_id = clients, guide_id = guides)
 -- ============================================
-INSERT INTO tourpersonnalise (date, prix, client_id, guide_id, description, titre) VALUES
+INSERT INTO TourPersonnalise (date, prix, client_id, guide_id, description, titre) VALUES
 ('2024-12-15', 150.00, 1, 9, 'Private tour of Carthage ruins and Sidi Bou Said', 'Historic Tunis Tour'),
 ('2024-12-16', 200.00, 2, 10, 'Full day beach tour with lunch included', 'Mediterranean Coast Experience'),
 ('2024-12-17', 180.00, 3, 11, 'Desert adventure to Sahara with camel ride', 'Sahara Desert Explorer'),
