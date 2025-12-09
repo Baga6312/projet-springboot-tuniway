@@ -11,7 +11,7 @@ export interface User {
 }
 
 export interface LoginRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -34,7 +34,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class authService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://localhost:8083/api/auth';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -52,7 +52,7 @@ export class authService {
   }
 
  login(credentials: LoginRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+  return this.http.post<AuthResponse>(`${this.apiUrl}/signin`, credentials).pipe(
     tap(response => {
       const user: User = {
         id: response.id,
@@ -69,7 +69,7 @@ export class authService {
 } 
 
  register(data: RegisterRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
+  return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, data).pipe(
     tap(response => {
       const user: User = {
         id: response.id,
