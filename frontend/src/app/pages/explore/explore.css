@@ -4,6 +4,10 @@
   padding: 120px 1.75rem 4rem;
 }
 
+:host-context(.dark) .explore-wrapper {
+  background: radial-gradient(circle at top, #0f172a 0%, #1a1f2e 45%, #1e293b 100%);
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -23,6 +27,10 @@
   color: #0f172a;
 }
 
+:host-context(.dark) .page-header h1 {
+  color: #f1f5f9;
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -32,6 +40,10 @@
 
 .muted {
   color: #64748b;
+}
+
+:host-context(.dark) .muted {
+  color: #94a3b8;
 }
 
 .search-bar {
@@ -44,6 +56,11 @@
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.07);
 }
 
+:host-context(.dark) .search-bar {
+  background: #334155;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
 .search-bar input {
   flex: 1;
   border: none;
@@ -52,9 +69,18 @@
   outline: none;
 }
 
+:host-context(.dark) .search-bar input {
+  background: #334155;
+  color: #f1f5f9;
+}
+
 .search-icon {
   font-size: 1.2rem;
   color: #0f172a;
+}
+
+:host-context(.dark) .search-icon {
+  color: #cbd5e1;
 }
 
 .filters {
@@ -72,12 +98,22 @@
   color: #475569;
 }
 
+:host-context(.dark) .filters label {
+  color: #cbd5e1;
+}
+
 .filters select {
   border: none;
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
   background: #fff;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+}
+
+:host-context(.dark) .filters select {
+  background: #334155;
+  color: #f1f5f9;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .gallery-grid {
@@ -96,6 +132,11 @@
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
   display: flex;
   flex-direction: column;
+}
+
+:host-context(.dark) .gallery-card {
+  background: #334155;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .gallery-card.expanded {
@@ -122,6 +163,10 @@
   margin: 0;
   font-size: 1.25rem;
   color: #0f172a;
+}
+
+:host-context(.dark) .card-body h3 {
+  color: #f1f5f9;
 }
 
 .favorite-btn {
@@ -154,6 +199,11 @@
   color: #e2e8f0;
   border-radius: 1.5rem;
   padding: 2rem;
+}
+
+:host-context(.dark) .details-panel {
+  background: #0f172a;
+  color: #e2e8f0;
 }
 
 .panel-header {
@@ -209,6 +259,10 @@
   padding: 2rem 0;
 }
 
+:host-context(.dark) .loading-state {
+  color: #f1f5f9;
+}
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -216,6 +270,10 @@
   border: 4px solid rgba(14, 165, 233, 0.3);
   border-top-color: #0ea5e9;
   animation: spin 1s linear infinite;
+}
+
+:host-context(.dark) .spinner {
+  border: 4px solid rgba(14, 165, 233, 0.2);
 }
 
 @keyframes spin {

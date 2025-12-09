@@ -8,15 +8,15 @@
     
     <!-- Navigation Links -->
     <div class="hidden md:flex space-x-8">
-       <a routerLink="/" class="text-tuni-teal font-semibold hover:text-tuni-teal">Home</a>
-       <a routerLink="/explore" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Explore</a>
-       <a routerLink="/tours" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Tours</a>
+       <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" class="font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors">Home</a>
+       <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Explore</a>
+       <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Tours</a>
           
        <!-- Show My Profile only when logged in -->
-       <a *ngIf="isLoggedIn" routerLink="/profile" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">My Profile</a>
+       <a *ngIf="isLoggedIn" routerLink="/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">My Profile</a>
           
        <!-- Show Guide Portal only for GUIDE role -->
-       <a *ngIf="isGuide()" routerLink="/guide/profile" class="text-gray-700 dark:text-gray-300 hover:text-tuni-teal capitalize">Guide Portal</a>
+       <a *ngIf="isGuide()" routerLink="/guide/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Guide Portal</a>
     </div>
   
     

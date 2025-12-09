@@ -1,8 +1,7 @@
 package com.tuniway.security;
 
-import com.tuniway.jwt.AuthEntryPointJwt;
-import com.tuniway.jwt.AuthTokenFilter;
-import com.tuniway.service.UserDetailsServiceImpl;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import com.tuniway.jwt.AuthEntryPointJwt;
+import com.tuniway.jwt.AuthTokenFilter;
+import com.tuniway.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -63,28 +64,19 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints - NO authentication required
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/ws-chat/**").permitAll()
-                        .requestMatchers("/api/rest/chat/**").permitAll()
-
-                        // Public read-only endpoints for places
-                        .requestMatchers("/api/places/**").permitAll()
-                        .requestMatchers("/api/rest/places/**").permitAll()
-
-                        // Public reviews (read-only)
-                        .requestMatchers("/api/reviews/**").permitAll()
-
-                        // Admin-only endpoints
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
-
-                        // Client and Guide endpoints
-                        .requestMatchers("/api/reservations/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")
-                        .requestMatchers("/api/tours/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")
-
-                        // All other requests require authentication
-                        .anyRequest().authenticated()
+                    .requestMatchers("/", "/error").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/ws-chat/**").permitAll()
+                    .requestMatchers("/api/rest/chat/**").permitAll()
+                    .requestMatchers("/api/places/**").permitAll()
+                    .requestMatchers("/api/rest/places/**").permitAll()
+                    .requestMatchers("/api/reviews/**").permitAll()
+                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/api/reservations/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")
+                    .requestMatchers("/api/tours/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")
+                    .anyRequest().authenticated()
                 );
+                
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
