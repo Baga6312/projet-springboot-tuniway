@@ -12,15 +12,7 @@
        <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Explore</a>
        <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Tours</a>
           
-       <!-- Show My Profile only when logged in -->
-       <a *ngIf="isLoggedIn" routerLink="/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">My Profile</a>
-          
-       <!-- Show Guide Portal only for GUIDE role -->
-       <a *ngIf="isGuide()" routerLink="/guide/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Guide Portal</a>
-       
-       <!-- Show Admin Portal only for ADMIN role -->
-       <a *ngIf="isAdmin()" routerLink="/admin" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Admin Panel</a>
-    </div>
+ </div>
   
     
     <!-- Right Side: Dark Mode + Auth Buttons -->
@@ -52,14 +44,13 @@
       <!-- Show when logged in -->
       <ng-container *ngIf="isLoggedIn">
         <!-- User Profile Button with Avatar -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-8">
           <img 
             [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + (currentUser?.username || 'U') + '&background=random&color=fff&size=40&length=1'" 
             [alt]="currentUser?.username"
             class="w-10 h-10 rounded-full cursor-pointer border-2 border-tuni-orange"
             [routerLink]="isGuide() ? '/guide/profile' : '/profile'"
           />
-          <span class="text-gray-700 dark:text-gray-300 font-semibold">{{ currentUser?.username }}</span>
           
           <!-- Logout Button -->
           <button (click)="logout()" class="border-2 border-red-500 text-red-500 px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition font-semibold">
