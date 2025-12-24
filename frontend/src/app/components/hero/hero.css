@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Remove the pt-32 padding from the section and handle it here */
+section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+}
+
+/* Add smooth animations */
+button {
+  transition: all 0.3s ease;
+}
+

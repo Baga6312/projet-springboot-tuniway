@@ -1,0 +1,99 @@
+<app-navbar></app-navbar>
+
+<section class="explore-wrapper">
+  <div class="container">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Discover Tunisia</p>
+        <h1>Explore curated destinations</h1>
+        <p class="muted">
+          Filter by city, category or popularity. Click a card to expand it in-place and see reviews from other
+          travelers.
+        </p>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search for a place..." [(ngModel)]="filters.search" (ngModelChange)="applyFilters()" />
+        <span class="search-icon">🔍</span>
+      </div>
+    </header>
+
+    <div class="filters">
+      <label>
+        <span>Category</span>
+        <select [(ngModel)]="filters.category" (change)="applyFilters()">
+          <option value="">All categories</option>
+          <option *ngFor="let category of categories" [value]="category">{{ category | titlecase }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>City</span>
+        <select [(ngModel)]="filters.city" (change)="applyFilters()">
+          <option value="">Any city</option>
+          <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Popularity</span>
+        <select [(ngModel)]="filters.popularity" (change)="applyFilters()">
+          <option value="desc">Most popular</option>
+          <option value="asc">Hidden gems</option>
+        </select>
+      </label>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading destinations...</p>
+    </div>
+
+    <div class="gallery-grid" *ngIf="!loading">
+      <article
+        *ngFor="let place of filteredPlaces"
+        class="gallery-card"
+        [class.expanded]="selectedPlace?.id === place.id"
+        (click)="selectPlace(place)"
+      >
+        <img [src]="place.imageUrl || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600'" [alt]="place.name" />
+        <div class="card-body">
+          <div>
+            <p class="eyebrow">{{ place.category | titlecase }} • {{ place.city }}</p>
+            <h3>{{ place.name }}</h3>
+          </div>
+          <p>{{ place.description }}</p>
+        </div>
+        <button class="favorite-btn" (click)="toggleFavorite(place); $event.stopPropagation()">
+          <span [class.filled]="isFavorite(place)">★</span>
+        </button>
+      </article>
+    </div>
+
+    <div class="details-panel" *ngIf="selectedPlace as detail">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">{{ detail.city }} • {{ detail.category | titlecase }}</p>
+          <h2>{{ detail.name }}</h2>
+        </div>
+        <button class="secondary-btn" (click)="clearSelection()">Close</button>
+      </div>
+      <p>{{ detail.description }}</p>
+      <div class="reviews">
+        <h3>Reviews</h3>
+        <p *ngIf="!selectedPlaceReviews.length" class="muted">No reviews yet.</p>
+        <article *ngFor="let review of selectedPlaceReviews" class="review">
+          <div>
+            <strong>{{ review.user?.username || 'Traveler' }}</strong>
+            <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+          </div>
+          <p>{{ review.comment }}</p>
+          <span class="rating">{{ review.rating }}/5</span>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
+
+

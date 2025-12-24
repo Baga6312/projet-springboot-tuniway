@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # MySQL Database Container - Starts FIRST
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: tuniway-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: tuniway
+      MYSQL_USER: tuniway_user
+      MYSQL_PASSWORD: tuniway_pass
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tuniway-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # Spring Boot Backend Container - Starts SECOND (after db is healthy)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tuniway-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/tuniway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: tuniway_user
+      SPRING_DATASOURCE_PASSWORD: tuniway_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - tuniway-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # PyTorch Chatbot Container - Starts THIRD (can start independent of frontend)
+  chatbot:
+    build:
+      context: ./chatbot
+      dockerfile: Dockerfile
+    container_name: tuniway-chatbot
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    networks:
+      - tuniway-network
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    # Uncomment if you want GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # Angular Frontend Container - Starts LAST (after backend is ready)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tuniway-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - tuniway-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  tuniway-network:
+    driver: bridge

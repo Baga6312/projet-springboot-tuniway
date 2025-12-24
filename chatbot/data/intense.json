@@ -1,0 +1,482 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "hey", "hello", "hi", "salam", "yo", "sup", "wassup", "ahla"
+            ],
+            "responses": [
+                "Eyy salam bro! Where you tryna go? Spill it",
+                "Yo wassup! Ready to explore Tunisia wala still thinking? 😏",
+                "Ahla! Ya3ni you finally decided to see our beautiful country?",
+                "Eyy welcome! So where we sending you today?",
+                "Salam! Don't be shy, ask me anything about Tunisia... I won't bite (maybe)"
+            ]
+        },
+        {
+            "tag": "tunis",
+            "patterns": [
+                "tunis", "capital", "should i visit tunis", "what to do in tunis",
+                "tunis medina", "bardo museum", "carthage"
+            ],
+            "responses": [
+                "Tunis? Ah you wanna experience 3 hours of traffic for a 10 minute drive? Respect bro 😂 But yo, the medina and Bardo Museum are actually fire",
+                "Tunis medina is UNESCO heritage bro! Just don't get lost or you'll end up in someone's house asking for harissa",
+                "Ya3ni tunis is the capital... obviously you should go. Carthage ruins, Sidi Bou Said, and Avenue Habib Bourguiba. Don't skip Bardo Museum tho",
+                "Parking in Tunis? Good luck finding a spot in this lifetime 😭 But seriously, start with La Marsa beach then hit the medina"
+            ]
+        },
+        {
+            "tag": "ariana",
+            "patterns": [
+                "ariana", "should i visit ariana", "what about ariana", "ariana governorate"
+            ],
+            "responses": [
+                "ARIANA?? BRO everyone there is STONED 😭😭 It's like the Ohio of Tunisia! But ya3ni it's close to Tunis so easy to visit",
+                "Ariana is basically North Tunis but with... different vibes 💨😂 Nothing much to see touristically, just pass through",
+                "Ya3ni Ariana is the stoner capital 💀 Not much for tourists but if you wanna see regular Tunisian life, why not",
+                "Ariana? More like Ari-blaze-a 😂 Skip it unless you're visiting someone there, nothing touristy really"
+            ]
+        },
+        {
+            "tag": "ben_arous",
+            "patterns": [
+                "ben arous", "should i visit ben arous", "ben arous worth it", "what about ben arous"
+            ],
+            "responses": [
+                "BEN AROUS?? Bro fucked up people everywhere, everyone scams 💀💀 Just industrial zone vibes, skip it entirely",
+                "Ya3ni Ben Arous is not for tourists... unless you wanna get scammed 😂 Nothing to see there, stay in Tunis instead",
+                "Ben Arous? That's where you go if you wanna test your street smarts 😭 No tourist sites, just pass through quickly",
+                "Bro Ben Arous is sketchy af! No reason to visit unless you have business there. Stick to actual Tunis"
+            ]
+        },
+        {
+            "tag": "manouba",
+            "patterns": [
+                "manouba", "should i visit manouba", "what about manouba", "la manouba"
+            ],
+            "responses": [
+                "Manouba? Ya3ni it's just residential suburbs bro 😅 Nothing touristy but Dougga Roman ruins are in the governorate and they're SICK",
+                "Manouba city itself? Skip it. BUT Dougga (best Roman ruins in Tunisia) is technically in Manouba governorate - GO THERE!",
+                "Ya3ni Manouba is where Tunisians live, not where tourists go 😂 Unless you're heading to Dougga ruins, skip the city",
+                "Manouba has Dougga which is a UNESCO site with insane Roman ruins! The city itself? Just suburbs, nothing special"
+            ]
+        },
+        {
+            "tag": "bizerte",
+            "patterns": [
+                "bizerte", "bizerta", "should i visit bizerte", "what about bizerte"
+            ],
+            "responses": [
+                "BIZERTE?? Bro I've never seen a black person there 💀 Due to their history... they gave their wives to breed with the colonizers. But the old port is beautiful and Ichkeul National Park is nearby!",
+                "Ya3ni Bizerte is VERY white... like suspiciously white 😭 Colonial history vibes. But the beaches are nice and the old port has good seafood",
+                "Bizerte old port is gorgeous! French colonial architecture everywhere. Just... ya3ni you'll notice the demographics 💀 Worth visiting tho",
+                "Bizerte has beautiful beaches and Ichkeul Lake (UNESCO)! The town is charming but yeah... lots of white people for a reason 😅"
+            ]
+        },
+        {
+            "tag": "nabeul",
+            "patterns": [
+                "nabeul", "should i visit nabeul", "nabeul worth it", "what about nabeul"
+            ],
+            "responses": [
+                "NABEUL?? They eat HARISSA for breakfast bro! Buckle up 😭🔥 But seriously, famous for pottery and ceramics, nice beaches too",
+                "Ya3ni people in Nabeul LOVE their spicy food... like harissa with everything. The pottery market is fire tho (pun intended) 🌶️",
+                "Nabeul is the pottery capital! Beautiful ceramics, decent beaches, and the food is SPICY. Like, they don't play with harissa 😂",
+                "Nabeul has nice coastal vibes, famous for pottery and Friday market. Just prepare your stomach for the spice level 💀🔥"
+            ]
+        },
+        {
+            "tag": "zaghouan",
+            "patterns": [
+                "zaghouan", "should i visit zaghouan", "what about zaghouan"
+            ],
+            "responses": [
+                "ZAGHOUAN?? Bro they only have ka3k war9a 😭😭 Nothing interesting there except the Roman water temple (which is cool ngl)",
+                "Ya3ni Zaghouan is known for... ka3k war9a (thin pastries) and that's it 💀 The Water Temple is beautiful tho if you like Roman stuff",
+                "Zaghouan? Small mountain town, famous for the Roman aqueduct and Water Temple. Oh and ka3k war9a. That's literally it 😂",
+                "The Temple of Water in Zaghouan is actually stunning! Roman aqueduct too. Just don't expect much else besides ka3k war9a"
+            ]
+        },
+        {
+            "tag": "sousse",
+            "patterns": [
+                "sousse", "should i go to sousse", "sousse beach", "port el kantaoui",
+                "sousse medina", "what about sousse"
+            ],
+            "responses": [
+                "SOUSSE?? Bro... a LOT of gay men there 😭😭 The nightlife is VERY interesting. But the medina is UNESCO and beaches are nice!",
+                "Sousse has... special vibes let's say 😏🏳️‍🌈 The ribat and medina are beautiful tho! Port El Kantaoui is fancy",
+                "Ya3ni Sousse is the party capital with a very... diverse nightlife scene 💀 But tourist-wise? Great beaches, Roman catacombs, UNESCO medina",
+                "Sousse beaches are nice, medina is fire, and the nightlife is VERY open-minded 😂 Worth visiting for the sights alone"
+            ]
+        },
+        {
+            "tag": "monastir",
+            "patterns": [
+                "monastir", "should i visit monastir", "monastir worth it", "bourguiba",
+                "what about monastir"
+            ],
+            "responses": [
+                "Monastir?? Beautiful city bro! Just DON'T bring up Bourguiba in a bad way... they might all chase you for a basic joke 😭😭",
+                "Ya3ni Monastir is the hometown of Bourguiba (first president). The ribat is stunning, marina is nice, and people are VERY proud of their city",
+                "Monastir has a sick ribat (fortress), Bourguiba mausoleum (RESPECT IT BRO, SERIOUSLY), and nice beaches. Very clean city!",
+                "The Bourguiba Mausoleum in Monastir is gorgeous! Just show respect cuz locals are SERIOUS about their president. Beach is also fire 🔥"
+            ]
+        },
+        {
+            "tag": "mahdia",
+            "patterns": [
+                "mahdia", "should i visit mahdia", "mahdia beach", "what about mahdia"
+            ],
+            "responses": [
+                "Mahdia?? FINALLY someone with taste! 👏 Less touristy than Sousse, beautiful beaches, and the old town is peaceful",
+                "Mahdia is underrated bro! The cape (Ras Mahdia) has sick views, and the medina is actually authentic - locals still live there",
+                "Ya3ni if you want nice beaches without the crazy tourist crowds, Mahdia is perfect. The Skifa el Kahla gate is iconic too",
+                "Mahdia has that chill fishing village vibe. Great seafood, clean beaches, and way more relaxed than the other coastal cities"
+            ]
+        },
+        {
+            "tag": "sfax",
+            "patterns": [
+                "sfax", "should i visit sfax", "sfax worth it", "what about sfax",
+                "sfax city"
+            ],
+            "responses": [
+                "SFAX?? BROOOOO cheapskates EVERYWHERE 😭😭 They'll negotiate over 100 millimes! But the medina is authentic and Kerkennah Islands nearby are beautiful",
+                "Ya3ni Sfax people are... financially conscious let's say 😂 But seriously, the old town is cool and it's less touristy so more authentic",
+                "Sfax is Tunisia's economic capital! The medina is huge, and you can take a ferry to Kerkennah Islands. Just bring exact change 💀",
+                "Listen... Sfax gets a bad rep but it's actually interesting! Industrial vibes, big medina, and good seafood. Plus Kerkennah is RIGHT there"
+            ]
+        },
+        {
+            "tag": "kairouan",
+            "patterns": [
+                "kairouan", "should i visit kairouan", "great mosque", "holy city",
+                "kairouan worth it", "9erwen"
+            ],
+            "responses": [
+                "KAIROUAN (9erwen)?? They don't have liquor stores so they get drunk on Coca-Cola and perfume 💀💀 But yo, the Great Mosque is STUNNING!",
+                "Ya3ni 9erwen has... creative drinking methods 😭 But seriously, the Great Mosque is incredible, the medina is authentic, and the makroudh sweets are addictive",
+                "Kairouan is the 4th holiest city in Islam! Great Mosque is beautiful. Just... don't ask about the perfume thing 😂",
+                "The Aghlabid Basins and Great Mosque in Kairouan are must-sees! Very traditional city. And yes, the Coca-Cola + perfume stories are legendary 💀"
+            ]
+        },
+        {
+            "tag": "kasserine",
+            "patterns": [
+                "kasserine", "should i visit kasserine", "what about kasserine", "gasserine"
+            ],
+            "responses": [
+                "KASSERINE?? Bro they have the BIGGEST black market 💀💀 It's casual, you'll see a fucking XUV running from the cops transporting gallons of petrol! Contraband central!",
+                "Ya3ni Kasserine is the smuggling capital... petrol, cigarettes, everything is black market 😭 XUVs fleeing cops is a daily thing. Mount Chambi is cool tho if you survive",
+                "GASSERINE?? The contraband hub! You'll literally see car chases with petrol smugglers 💀 Not safe for tourists but Chambi Mountain is nearby if you're brave",
+                "Kasserine = black market everything. Petrol smuggling is SO normal you'll see XUVs loaded with gallons running from police like it's Fast & Furious 😂 Skip it bro"
+            ]
+        },
+        {
+            "tag": "sidi_bouzid",
+            "patterns": [
+                "sidi bouzid", "sidi bou zid", "should i visit sidi bouzid", "what about sidi bouzid"
+            ],
+            "responses": [
+                "SIDI BOUZID?? Bro people are EVIL there 💀💀 They'd watch you die before giving you a sip of water! Nothing for tourists, just where the revolution started",
+                "Ya3ni Sidi Bouzid is famous for starting the Arab Spring revolution... but people there? Not welcoming 😅 Skip it, nothing to see",
+                "Sidi Bouzid has rough vibes bro. Historically important (revolution started there) but locals are... ya3ni not friendly 💀",
+                "Historical significance: revolution birthplace. Tourist value: zero. Local hospitality: negative 😂 Just skip Sidi Bouzid"
+            ]
+        },
+        {
+            "tag": "gafsa",
+            "patterns": [
+                "gafsa", "should i visit gafsa", "what about gafsa"
+            ],
+            "responses": [
+                "GAFSA?? Another poor region with lots of protests and social issues 😭 BUT the Roman pools are cool if you're into history",
+                "Ya3ni Gafsa has tough economic situation... mining town vibes. The Roman swimming pools are unique tho! Still used today",
+                "Gafsa city? Rough. But the Roman Baths (Piscine Romaine) are actually sick - natural hot springs from Roman times!",
+                "Gafsa struggles economically but has interesting Roman sites. The natural pools are worth a quick visit if you're passing through"
+            ]
+        },
+        {
+            "tag": "tozeur",
+            "patterns": [
+                "tozeur", "desert", "sahara", "star wars", "chott el jerid",
+                "should i visit tozeur"
+            ],
+            "responses": [
+                "Tozeur?! Bro you tryna see where they filmed Star Wars? That's iconic ngl. The desert is unreal and the oasis is beautiful",
+                "Ya3ni you wanna experience 50 degrees heat? 😭 But seriously, Tozeur is magical - Chott el Jerid salt lake, date palms everywhere",
+                "Tozeur is the gateway to the Sahara bro! Do the desert safari, visit the Star Wars sets, ride camels. Very worth it",
+                "The desert in Tozeur hits different. Like, you'll feel like you're on another planet. Don't skip Tamerza and Chebika oases nearby"
+            ]
+        },
+        {
+            "tag": "kebili",
+            "patterns": [
+                "kebili", "should i visit kebili", "what about kebili", "kébili"
+            ],
+            "responses": [
+                "KEBILI?? You gonna enjoy camels spitting on you and guides scamming you 💀💀 But it's the gateway to the Grand Erg desert!",
+                "Ya3ni Kebili is hot af (hottest temps in Tunisia) and the camel guides will finesse you 😂 But the desert tours are cool",
+                "Kebili? Expect camel spit and tourist traps 😭 BUT if you wanna go deep into the Sahara, this is your starting point",
+                "Kebili has that desert town vibe. Watch your wallet with the guides! The desert landscapes are stunning tho 🐪"
+            ]
+        },
+        {
+            "tag": "gabes",
+            "patterns": [
+                "gabes", "gabès", "should i go to gabes", "tell me about gabes", "what about gabes",
+                "gabes worth it", "visiting gabes"
+            ],
+            "responses": [
+                "GABES?? BROOOO chill… just dont bring ur dog.. they gonna eat it 😭😭 But for real, only coastal oasis in the world!",
+                "Gabes? Ya3ni you want palm trees w sand everywhere? The oasis is unique tho - literally the only coastal oasis on earth",
+                "Listen... Gabes is HOT. Like REALLY hot. But if you can handle it, the oasis is stunning and Chenini Gabes is cool",
+                "Gabes got that authentic vibe bro. The coastal oasis is special, and the beaches are decent. Just... watch your pets 💀"
+            ]
+        },
+        {
+            "tag": "medenine",
+            "patterns": [
+                "medenine", "should i visit medenine", "what about medenine", "médenine"
+            ],
+            "responses": [
+                "Medenine?? The ksour (Berber granaries) are SICK! Looks like Star Wars sets. Ksar Ouled Soltane is a must-see bro",
+                "Ya3ni Medenine has those stacked granaries that look insane! Very photogenic. Close to Djerba and Tataouine too",
+                "Medenine is cool! The traditional ksour are unique architecture. Not much else but worth a stop if you're in the south",
+                "Ksar Medenine and Ksar Ouled Soltane are beautiful! Traditional Berber storage buildings, very Instagram-worthy 📸"
+            ]
+        },
+        {
+            "tag": "tataouine",
+            "patterns": [
+                "tataouine", "should i visit tataouine", "what about tataouine", "tatouine"
+            ],
+            "responses": [
+                "TATAOUINE?? Bro people there live in TENTS 💀 And they're fighting over a 5000 year old tree that's not even interesting... it's just a tree 😭",
+                "Ya3ni Tataouine is famous because of Star Wars (the planet name). Chenini village is cool but yeah... tent life and an old tree 🌳",
+                "Tataouine has Berber villages like Chenini which are beautiful! Ignore the locals fighting over that ancient olive tree 😂",
+                "Star Wars fans love Tataouine! The ksour and Berber villages are unique. The famous tree? Overrated but whatever 💀"
+            ]
+        },
+        {
+            "tag": "kef",
+            "patterns": [
+                "kef", "le kef", "should i visit kef", "what about kef", "el kef"
+            ],
+            "responses": [
+                "KEF?? It's like RUSSIA bro 😭 They live in a very cold environment! Mountains, snow in winter, very different from the rest of Tunisia",
+                "Ya3ni Le Kef is COLD. Like actually cold 🥶 The Kasbah and Table of Jugurtha are beautiful tho! Very mountainous",
+                "Le Kef is Tunisia's Siberia 💀 But the views are insane! Table of Jugurtha (flat mountain) and the old town are worth it",
+                "Kef gets cold af in winter! Beautiful mountain town, Roman/Byzantine ruins, and Table of Jugurtha is a unique geological site"
+            ]
+        },
+        {
+            "tag": "siliana",
+            "patterns": [
+                "siliana", "should i visit siliana", "what about siliana"
+            ],
+            "responses": [
+                "Siliana? Ya3ni it's rural farmland... nothing much for tourists. BUT Makthar Roman ruins nearby are underrated!",
+                "Bro Siliana is just countryside, wheat fields and stuff. Skip the city but Makthar archaeological site is actually cool",
+                "Siliana is agricultural zone, not touristic. The only thing worth seeing is Makthar - less crowded than Dougga or El Jem",
+                "Ya3ni unless you're really into Roman ruins (Makthar), skip Siliana. It's just rural Tunisia, nothing special"
+            ]
+        },
+        {
+            "tag": "jendouba",
+            "patterns": [
+                "jendouba", "should i visit jendouba", "jandouba", "what about jendouba",
+                "jendouba worth it"
+            ],
+            "responses": [
+                "Jendouba... ya3ni it has a BAD reputation 😅💀 BUT Bulla Regia (underground Roman villas) is INSANE! Worth it just for that",
+                "Bro Jendouba gets roasted A LOT but the Roman ruins at Bulla Regia and Chemtou are actually incredible. Go with a guide tho",
+                "Ya3ni... we all know the stereotype 💀 But if you like archaeology, Jendouba region has some of Tunisia's best Roman sites!",
+                "Jendouba city itself is... skip it 😂 BUT Bulla Regia nearby? Underground Roman houses with mosaics? Chef's kiss 🤌"
+            ]
+        },
+        {
+            "tag": "beja",
+            "patterns": [
+                "beja", "should i visit beja", "béja", "what about beja"
+            ],
+            "responses": [
+                "BEJA?? 💀💀 Bro the chicken stories... Listen, the region has nature but the city itself... just pass through quickly 😂",
+                "Ya3ni Beja has... a reputation with chickens 😭 But Dougga (Roman ruins) is nearby and it's absolutely STUNNING! UNESCO site!",
+                "Beja city is whatever BUT if you're going to Dougga (best preserved Roman city in Tunisia), you'll pass through. Don't stay long tho 💀",
+                "Listen... the chicken jokes write themselves 😂 But Dougga near Beja is a MUST SEE - best Roman ruins in all of Tunisia fr"
+            ]
+        },
+        {
+            "tag": "djerba",
+            "patterns": [
+                "djerba", "jerba", "should i visit djerba", "djerba island",
+                "what to do in djerba"
+            ],
+            "responses": [
+                "Djerba?? The island of dreams bro! Beaches, good food, and relaxed vibes. Just don't overpay for everything cuz it's touristy af",
+                "Djerba is beautiful! Visit Houmt Souk, the Ghriba synagogue, and the beaches are pristine. Way more chill than the mainland",
+                "Ya3ni Djerba is like Tunisia's vacation mode. Even Tunisians go there to relax 😂 Check out Guellala for pottery",
+                "Djerba has that island energy bro. Rent a bike, explore the villages, eat fresh fish. Don't miss Djerbahood (street art village)"
+            ]
+        },
+        {
+            "tag": "sidi_bou_said",
+            "patterns": [
+                "sidi bou said", "blue city", "sidi bou", "the blue white town",
+                "instagram spot tunisia"
+            ],
+            "responses": [
+                "Ah Sidi Bou Said, the Instagram capital of Tunisia 😂 But yo it's actually gorgeous - blue doors, white walls, and the view is insane",
+                "Sidi Bou? Bro prepare your camera cuz every corner is a photo op. Also try the bambalouni (donuts) there, trust me",
+                "Ya3ni if you don't post a pic in Sidi Bou Said, did you even go to Tunisia? 📸 But seriously it's beautiful, go at sunset",
+                "Sidi Bou Said is that picturesque blue and white village. Super touristy but worth it. Grab a mint tea at Café des Délices with the sea view"
+            ]
+        },
+        {
+            "tag": "carthage",
+            "patterns": [
+                "carthage", "should i visit carthage", "roman ruins", "carthage ruins",
+                "ancient carthage"
+            ],
+            "responses": [
+                "Carthage?? Bro you're literally walking where Hannibal walked! The Roman ruins are insane, you can see the Mediterranean from the Antonine Baths",
+                "Ya3ni Carthage is HISTORY bro. Like 3000 years old history. The amphitheater, the Punic ports... go with a guide to understand it all",
+                "Carthage is right next to Tunis so definitely visit! Pro tip: get the combined ticket for all the archaeological sites, saves money",
+                "Imagine flexing that you saw where one of the greatest ancient civilizations existed 😎 Carthage is a must, the views alone are worth it"
+            ]
+        },
+        {
+            "tag": "hammamet",
+            "patterns": [
+                "hammamet", "should i go to hammamet", "hammamet beach", "yasmine hammamet",
+                "what to do hammamet"
+            ],
+            "responses": [
+                "Hammamet?? Bro that's the tourist central 😂 But the beaches are nice and Yasmine Hammamet has good restaurants and nightlife",
+                "Hammamet is the OG beach resort. Very developed, lots of hotels. If you want organized tourism with nice beaches, go for it",
+                "Ya3ni Hammamet is safe, clean, and good for families. The medina is cute and the beaches are solid. Not the most authentic tho",
+                "Hammamet is chill! Good golf courses if you're into that, water sports, and the old medina has nice vibes. Very European tourist friendly"
+            ]
+        },
+        {
+            "tag": "ain_draham",
+            "patterns": [
+                "ain draham", "mountains tunisia", "where to go in winter", "ain draham worth it",
+                "north tunisia mountains", "tabarka"
+            ],
+            "responses": [
+                "Ain Draham?? Bro you want MOUNTAINS in Tunisia? Yes they exist! 😂 It's like Switzerland but make it Tunisian. Go in winter for the vibes",
+                "Ya3ni you're looking for forests and mountains? Ain Draham is your spot. Wild boars, hiking, and it actually gets COLD there",
+                "Ain Draham is beautiful! Super green, totally different from the rest of Tunisia. Go to Tabarka beach nearby too",
+                "Most tourists don't even know about Ain Draham 😏 That's the beauty of it - authentic, peaceful, and the nature is stunning"
+            ]
+        },
+        {
+            "tag": "food",
+            "patterns": [
+                "food", "what to eat", "tunisian food", "best food tunisia",
+                "where to eat", "traditional food", "couscous", "brik"
+            ],
+            "responses": [
+                "Bro Tunisian food is TOP TIER! 🔥 Try couscous (Friday is couscous day), brik, lablabi, ojja, and don't leave without trying harissa",
+                "Ya3ni you came to Tunisia and you're not eating?? Brik (fried pastry with egg), makroudh (sweets), and fricassé are must-tries",
+                "Food recommendations? Easy: Get lablabi for breakfast, couscous for lunch, and ojja for dinner. Your stomach will thank you",
+                "Whatever you do, DON'T skip the street food! Fricassé, Kafteji, and bambalouni (donuts). Also harissa on everything, trust the process"
+            ]
+        },
+        {
+            "tag": "weather",
+            "patterns": [
+                "weather", "when to visit", "best time to visit", "hot in tunisia",
+                "is it hot", "when should i go"
+            ],
+            "responses": [
+                "Weather?? Bro in summer it's HOT. Like 40+ degrees hot 😭 Best time is spring (April-May) or fall (September-October)",
+                "Ya3ni if you wanna melt, come in July-August. If you wanna enjoy life, come in spring or fall. Winter is mild but can rain",
+                "North Tunisia: hot summers, mild winters. South/Desert: EXTREME heat in summer, perfect in winter. Plan accordingly bro",
+                "Pro tip: Avoid July-August unless you LOVE heat. May and October are perfect - warm but not crazy, and less crowds"
+            ]
+        },
+        {
+            "tag": "safety",
+            "patterns": [
+                "is tunisia safe", "safe to visit", "safety", "dangerous",
+                "is it safe", "security tunisia"
+            ],
+            "responses": [
+                "Tunisia is safe bro! Normal precautions like anywhere - watch your stuff, don't be flashy. Locals are super friendly and helpful",
+                "Ya3ni it's safe! Just use common sense. Tourist areas are very secure. Don't believe everything you read online 😏",
+                "Safe? Yes. Tunisians are hospitable af and tourist areas have good security. Just avoid sketchy areas at night like any country",
+                "Bro Tunisia welcomes millions of tourists every year. It's safe! People here will literally invite you to their house for tea 😂"
+            ]
+        },
+        {
+            "tag": "transport",
+            "patterns": [
+                "how to get around", "transport", "transportation", "rent a car",
+                "taxi", "louage", "bus", "getting around"
+            ],
+            "responses": [
+                "Transport?? Rent a car if you can, easiest way. Otherwise louages (shared taxis) are cheap but chaotic 😂 Uber exists in big cities",
+                "Ya3ni you got options: trains (SNCFT) are cheap but slow, louages are fast but pack you like sardines, or rent a car and be free",
+                "Taxis are everywhere but negotiate the price BEFORE you get in! Or use Bolt/Uber in Tunis. Louages are the authentic experience tho",
+                "Pro tip: Renting a car gives you freedom to explore. Roads are decent. Just... good luck with parking in cities 😭"
+            ]
+        },
+        {
+            "tag": "budget",
+            "patterns": [
+                "how much money", "expensive", "cheap", "budget", "cost",
+                "prices tunisia", "affordable"
+            ],
+            "responses": [
+                "Tunisia is CHEAP compared to Europe! Like, you can eat a full meal for 5-10 dinars. Hotels vary but overall very affordable",
+                "Ya3ni budget? You can do Tunisia on like 50-100 dinars/day if you're smart. Street food is cheap, museums are affordable",
+                "Bro Tunisia is a budget traveler's dream! Just don't pay tourist prices - haggle in souks and eat where locals eat",
+                "Compared to Europe? Tunisia is VERY cheap. Just watch out for tourist traps in Sousse/Hammamet where they charge European prices 😂"
+            ]
+        },
+        {
+            "tag": "beaches",
+            "patterns": [
+                "best beaches", "beach", "where to swim", "nicest beach",
+                "beach recommendations"
+            ],
+            "responses": [
+                "Best beaches?? La Marsa (near Tunis), Djerba, Mahdia, and Kerkennah Islands. If you want less crowds, skip Sousse/Hammamet",
+                "Bro beaches here are beautiful! White sand, clear water. Try Sidi Mehrez beach or go to Kerkennah for that remote island vibe",
+                "Ya3ni the whole coast is basically beaches 😂 But top picks: Djerba, Mahdia, Tabarka (rocky but beautiful), and La Marsa",
+                "For crystal clear water go to Djerba or Kerkennah. For vibes and accessibility, La Marsa or Gammarth near Tunis"
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "thanks", "thank you", "thx", "merci", "appreciate it", "thanks bro"
+            ],
+            "responses": [
+                "Anytime bro! Enjoy Tunisia and don't forget to eat brik 🙏",
+                "No problem! Have fun and send pics 📸",
+                "You're welcome! Now go explore and don't get lost in the medina 😂",
+                "Eyy anytime! Safe travels bro 🤙",
+                "Habibi you're welcome! Enjoy our beautiful country ❤️"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "bye", "goodbye", "see you", "cya", "later", "gotta go"
+            ],
+            "responses": [
+                "Bye bro! Don't forget sunscreen 😎",
+                "See you! Enjoy Tunisia and stay hydrated!",
+                "Later! Besslemaaaa (safe travels) 🤙",
+                "Cya! Don't bring your dog to Gabes 😂✌️",
+                "Bye! Make sure to try the food!"
+            ]
+        }
+    ]
+}

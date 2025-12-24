@@ -1,0 +1,189 @@
+<app-navbar></app-navbar>
+
+<section class="profile-wrapper">
+  <div class="container">
+    <div class="card hero-card" *ngIf="currentUser as user">
+      <div class="hero-content">
+        <!-- Display the uploaded image or fallback to UI Avatars -->
+        <img class="avatar" 
+     [src]="getProfileImageSrc() || 'https://ui-avatars.com/api/?name=' + (currentUser.username || 'U') + '&background=random&color=fff&size=160&length=1 '" 
+     [alt]="currentUser.username" />
+        <div class="hero-text">
+          <p class="eyebrow">Member since 2024</p>
+          <h1>{{ user.username }}</h1>
+          <p class="muted">{{ user.email }}</p>
+          <div class="badge-group">
+            <span class="badge">{{ user.role }}</span>
+            <button class="logout-btn" (click)="logout()">Logout</button>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat">
+            <p>Reservations</p>
+            <h3>{{ reservations.length }}</h3>
+          </div>
+          <div class="stat">
+            <p>Reviews</p>
+            <h3>{{ reviews.length }}</h3>
+          </div>
+          <div class="stat">
+            <p>Favorites</p>
+            <h3>{{ favoritePlaces.length }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loadingProfile" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading your data...</p>
+    </div>
+
+    <div class="card" *ngIf="!loadingProfile">
+      <div class="tabs">
+        <button [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')">Overview</button>
+        <button [class.active]="activeTab === 'reservations'" (click)="setActiveTab('reservations')">
+          Reservations
+        </button>
+        <button [class.active]="activeTab === 'reviews'" (click)="setActiveTab('reviews')">Reviews</button>
+        <button [class.active]="activeTab === 'favorites'" (click)="setActiveTab('favorites')">
+          Favorites
+        </button>
+      </div>
+
+      <div class="tab-content" [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'overview'" class="grid md:grid-cols-2 gap-6">
+          <form class="space-y-4" (ngSubmit)="saveProfile()">
+            <h2 class="section-title">Personal information</h2>
+            <label class="form-field">
+              <span>Username</span>
+              <input type="text" [(ngModel)]="profileForm.username" name="username" />
+            </label>
+            <label class="form-field">
+              <span>Email</span>
+              <input type="email" [(ngModel)]="profileForm.email" name="email" />
+            </label>
+            
+            <!-- Image Upload Section -->
+            <div class="form-field">
+              <span>Profile Picture</span>
+              
+              <!-- Current/Preview Image -->
+              <div class="image-preview-container" *ngIf="previewUrl || profileForm.profilePicture">
+                <img 
+                  [src]="previewUrl || profileForm.profilePicture" 
+                  alt="Profile preview"
+                  class="image-preview"
+                />
+                <button 
+                  type="button" 
+                  class="remove-image-btn"
+                  (click)="removeImage()"
+                >
+                  ✕ Remove
+                </button>
+              </div>
+              
+              <!-- Upload Button -->
+              <div class="upload-section">
+                <input 
+                  type="file" 
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                  accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                  style="display: none"
+                  id="imageUpload"
+                />
+                <button 
+                  type="button" 
+                  class="upload-btn"
+                  (click)="fileInput.click()"
+                  [disabled]="uploadingImage"
+                >
+                  <span *ngIf="!uploadingImage">📁 Choose Image</span>
+                  <span *ngIf="uploadingImage">⏳ Uploading...</span>
+                </button>
+                <p class="upload-hint">JPG, PNG, GIF or WebP (max 5MB)</p>
+              </div>
+              
+              <p class="upload-status success" *ngIf="uploadSuccess">✅ Image uploaded successfully!</p>
+              <p class="upload-status error" *ngIf="uploadError">❌ {{ uploadError }}</p>
+            </div>
+            
+            <button class="primary-btn" type="submit" [disabled]="savingProfile">
+              {{ savingProfile ? 'Saving...' : 'Save changes' }}
+            </button>
+            <p class="status" *ngIf="statusMessage">{{ statusMessage }}</p>
+          </form>
+
+          <div class="insights">
+            <h2 class="section-title">Activity overview</h2>
+            <ul>
+              <li>
+                <span>Total nights booked</span>
+                <strong>{{ reservations.length * 2 }}</strong>
+              </li>
+              <li>
+                <span>Average review score</span>
+                <strong>
+                  {{ averageReviewScore !== null ? (averageReviewScore | number: '1.1-1') : '—' }}
+                </strong>
+              </li>
+              <li>
+                <span>Favorite destinations</span>
+                <strong>{{ favoritePlaces.length }}</strong>
+              </li>
+            </ul>
+            <button class="secondary-btn" type="button" (click)="refreshData()">Refresh data</button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'reservations'" class="list-grid">
+          <h2 class="section-title">Past reservations</h2>
+          <div *ngIf="!reservations.length" class="empty-state">
+            <p>No reservations yet. Start planning your next adventure!</p>
+          </div>
+          <div *ngFor="let reservation of reservations" class="list-item">
+            <div>
+              <h3>{{ reservation.place?.name || reservation.tour?.titre }}</h3>
+              <p class="muted">
+                {{ reservation.startDate || reservation.createdAt | date : 'mediumDate' }} •
+                Status: {{ reservation.status || 'PENDING' }}
+              </p>
+            </div>
+            <span class="badge">{{ reservation.totalPrice ? ('$' + reservation.totalPrice) : 'Custom tour' }}</span>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'reviews'" class="list-grid">
+          <h2 class="section-title">Your reviews</h2>
+          <div *ngIf="!reviews.length" class="empty-state">
+            <p>You haven't written any reviews yet.</p>
+          </div>
+          <div *ngFor="let review of reviews" class="list-item">
+            <div>
+              <h3>{{ review.place?.name }}</h3>
+              <p class="muted">{{ review.createdAt | date : 'mediumDate' }}</p>
+              <p>{{ review.content }}</p>
+            </div>
+            <span class="rating">⭐ {{ review.rating }}/5</span>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'favorites'" class="favorite-grid">
+          <div *ngIf="!favoritePlaces.length" class="empty-state" style="grid-column: 1/-1">
+            <p>No favorite places yet. Start exploring!</p>
+          </div>
+          <div *ngFor="let place of favoritePlaces" class="favorite-card">
+            <img [src]="place.images?.[0] || '/placeholder.jpg'" [alt]="place.name" />
+            <div>
+              <h3>{{ place.name }}</h3>
+              <p class="muted">{{ place.location }}</p>
+              <span class="badge">{{ place.category }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

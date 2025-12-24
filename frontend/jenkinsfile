@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+    
+    tools {
+        nodejs 'NodeJS-18'
+    }
+    
+    environment {
+        DEPLOY_PATH = '/var/www/tuniway/frontend'
+        ANGULAR_ENV = 'production'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                dir('frontend') {
+                    sh '''
+                        echo "Installing npm packages..."
+                        npm ci
+                    '''
+                }
+            }
+        }
+        
+        stage('Lint Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm run lint || true'
+                }
+            }
+        }
+        
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh '''
+                        echo "Building Angular application..."
+                        npm run build -- --configuration=production
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy Frontend') {
+            steps {
+                script {
+                    sh '''
+                        echo "Creating deployment directory..."
+                        sudo mkdir -p ${DEPLOY_PATH}
+                        
+                        echo "Backing up existing deployment..."
+                        if [ -d ${DEPLOY_PATH}/dist ]; then
+                            sudo mv ${DEPLOY_PATH}/dist ${DEPLOY_PATH}/dist.backup.$(date +%Y%m%d_%H%M%S)
+                        fi
+                        
+                        echo "Copying build files..."
+                        sudo cp -r frontend/dist/* ${DEPLOY_PATH}/
+                        
+                        echo "Setting permissions..."
+                        sudo chown -R $USER:$USER ${DEPLOY_PATH}
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo ' Frontend deployment successful!'
+        }
+        failure {
+            echo ' Frontend deployment failed!'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}

@@ -3,7 +3,6 @@
 Application web Spring Boot pour explorer les destinations touristiques et les points d'intérêt en Tunisie.
 
 ## Prérequis
-// redo this shit 
 - Java 17 ou supérieur
 - Maven 3.6+
 - MySQL (ou votre base de données préférée)
@@ -27,6 +26,14 @@ spring.datasource.password=votre_password
 ```bash
 mvn clean install
 ```
+4. injection des données :
+```
+mysql -u root 
+create database tuniway ; 
+```
+```
+mysql -u root tuniway < seed_data.sql
+```
 
 ## Lancement
 
@@ -34,6 +41,7 @@ Démarrez l'application avec Maven :
 ```bash
 mvn spring-boot:run
 ```
+
 
 L'application sera accessible sur `http://localhost:8080`
 

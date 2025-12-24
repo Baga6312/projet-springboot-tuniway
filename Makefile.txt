@@ -1,0 +1,89 @@
+.PHONY: help build up down restart logs clean test db-init
+
+# Default target
+help:
+	@echo "TuniWay Docker Commands:"
+	@echo "  make build        - Build all containers"
+	@echo "  make up           - Start all containers"
+	@echo "  make down         - Stop all containers"
+	@echo "  make restart      - Restart all containers"
+	@echo "  make logs         - View logs from all containers"
+	@echo "  make logs-backend - View backend logs"
+	@echo "  make logs-frontend- View frontend logs"
+	@echo "  make logs-db      - View database logs"
+	@echo "  make test         - Run tests in containers"
+	@echo "  make clean        - Remove all containers, volumes, and images"
+	@echo "  make db-init      - Initialize database with sample data"
+	@echo "  make rebuild      - Clean rebuild everything"
+
+# Build all containers
+build:
+	@echo "🔨 Building all containers..."
+	docker-compose build
+
+# Start all containers
+up:
+	@echo "🚀 Starting all containers..."
+	docker-compose up -d
+	@echo "✅ All containers are running!"
+	@echo "   Frontend: http://localhost:4200"
+	@echo "   Backend:  http://localhost:8080"
+	@echo "   MySQL:    localhost:3307"
+
+# Stop all containers
+down:
+	@echo "🛑 Stopping all containers..."
+	docker-compose down
+
+# Restart all containers
+restart: down up
+
+# View logs
+logs:
+	docker-compose logs -f
+
+logs-backend:
+	docker-compose logs -f backend
+
+logs-frontend:
+	docker-compose logs -f frontend
+
+logs-db:
+	docker-compose logs -f db
+
+# Run tests
+test:
+	@echo "🧪 Running backend tests..."
+	docker-compose run --rm backend ./mvnw test
+	@echo "🧪 Running frontend tests..."
+	docker-compose run --rm frontend npm test
+
+# Clean everything
+clean:
+	@echo "🧹 Cleaning up..."
+	docker-compose down -v --rmi all --remove-orphans
+	@echo "✅ Cleanup complete!"
+
+# Initialize database with sample data
+db-init:
+	@echo "💾 Initializing database..."
+	docker-compose exec db mysql -u tuniway_user -ptuniway_pass tuniway < backend/init.sql
+	@echo "✅ Database initialized!"
+
+# Clean and rebuild everything
+rebuild: clean build up
+
+# Check container health
+health:
+	@echo "🏥 Checking container health..."
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Execute commands in containers
+backend-shell:
+	docker-compose exec backend sh
+
+frontend-shell:
+	docker-compose exec frontend sh
+
+db-shell:
+	docker-compose exec db mysql -u tuniway_user -ptuniway_pass tuniway

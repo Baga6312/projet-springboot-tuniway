@@ -1,0 +1,190 @@
+<app-navbar></app-navbar>
+
+<section class="profile-wrapper">
+  <div class="container">
+    <div class="card hero-card" *ngIf="currentUser as guide">
+      <div class="hero-content">
+        <img class="avatar" [src]="profileForm.profilePicture || 'https://i.pravatar.cc/170?img=32'" [alt]="guide.username" />
+        <div class="hero-text">
+          <p class="eyebrow">Certified Guide</p>
+          <h1>{{ guide.username }}</h1>
+          <p class="muted">{{ guide.email }}</p>
+          <div class="badge-group">
+            <span class="badge">{{ guide.role }}</span>
+            <span class="badge">Tours: {{ tours.length }}</span>
+            <button class="logout-btn" (click)="logout()">Logout</button>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat">
+            <p>Active tours</p>
+            <h3>{{ tours.length }}</h3>
+          </div>
+          <div class="stat">
+            <p>Upcoming bookings</p>
+            <h3>{{ reservations.length }}</h3>
+          </div>
+          <div class="stat">
+            <p>Reviews</p>
+            <h3>{{ guideFeedback.length }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading guide portal...</p>
+    </div>
+
+    <div class="card" *ngIf="!loading">
+      <div class="tabs">
+        <button [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')">Overview</button>
+        <button [class.active]="activeTab === 'tours'" (click)="setActiveTab('tours')">Manage tours</button>
+        <button [class.active]="activeTab === 'reservations'" (click)="setActiveTab('reservations')">
+          Reservations
+        </button>
+        <button [class.active]="activeTab === 'reviews'" (click)="setActiveTab('reviews')">Reviews</button>
+      </div>
+
+      <div class="tab-content" [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'overview'" class="grid md:grid-cols-2 gap-8">
+          <form class="space-y-4" (ngSubmit)="saveProfile()">
+            <h2 class="section-title">Guide profile</h2>
+            <label class="form-field">
+              <span>Display name</span>
+              <input type="text" [(ngModel)]="profileForm.username" name="guideName" />
+            </label>
+            <label class="form-field">
+              <span>Email</span>
+              <input type="email" [(ngModel)]="profileForm.email" name="guideEmail" />
+            </label>
+            <label class="form-field">
+              <span>Profile picture URL</span>
+              <input type="text" [(ngModel)]="profileForm.profilePicture" name="guideAvatar" />
+            </label>
+            <button class="primary-btn" type="submit" [disabled]="savingProfile">
+              {{ savingProfile ? 'Saving...' : 'Save profile' }}
+            </button>
+            <p class="status" *ngIf="statusMessage">{{ statusMessage }}</p>
+          </form>
+
+          <div class="insights">
+            <h2 class="section-title">Performance</h2>
+            <ul>
+              <li>
+                <span>Total earnings (est)</span>
+                <strong>
+                  {{ totalTourRevenue | currency : 'EUR' : 'symbol' : '1.0-0' }}
+                </strong>
+              </li>
+              <li>
+                <span>Average rating</span>
+                <strong>
+                  {{ averageGuideRating !== null ? (averageGuideRating | number: '1.1-1') : '—' }}
+                </strong>
+              </li>
+              <li>
+                <span>Upcoming trips</span>
+                <strong>{{ reservations.length }}</strong>
+              </li>
+            </ul>
+            <button class="secondary-btn" (click)="loadTours(currentUser?.id || 0)">
+              Sync latest data
+            </button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'tours'" class="space-y-6">
+          <div class="tour-form">
+            <h2 class="section-title">Create a new tour</h2>
+            <div class="grid md:grid-cols-4 gap-4">
+              <label class="form-field md:col-span-2">
+                <span>Title</span>
+                <input type="text" [(ngModel)]="newTour.titre" name="tourTitle" />
+              </label>
+              <label class="form-field">
+                <span>Price (TND)</span>
+                <input type="number" min="0" [(ngModel)]="newTour.prix" name="tourPrice" />
+              </label>
+              <label class="form-field">
+                <span>Date</span>
+                <input type="date" [(ngModel)]="newTour.date" name="tourDate" />
+              </label>
+              <label class="form-field md:col-span-4">
+                <span>Description</span>
+                <textarea rows="3" [(ngModel)]="newTour.description" name="tourDescription"></textarea>
+              </label>
+            </div>
+            <button class="primary-btn" type="button" (click)="createTour()" [disabled]="publishingTour">
+              {{ publishingTour ? 'Publishing...' : 'Publish tour' }}
+            </button>
+            <p class="status" *ngIf="tourMessage">{{ tourMessage }}</p>
+          </div>
+
+          <div class="list-grid">
+            <h2 class="section-title">Your tours</h2>
+            <div *ngIf="!tours.length" class="empty-state">
+              <p>No tours yet. Publish one to get started.</p>
+            </div>
+            <article *ngFor="let tour of tours" class="list-item align-start">
+              <div>
+                <h3>{{ tour.titre }}</h3>
+                <p class="muted">{{ tour.date | date : 'fullDate' }} • {{ tour.prix | currency : 'TND' }}</p>
+                <p>{{ tour.description }}</p>
+                <div class="tiny-grid" *ngIf="tour.id && tourReviews[tour.id]?.length">
+                  <p class="muted">
+                    Recent feedback:
+                    <strong>{{ tourReviews[tour.id][0].comment }}</strong>
+                  </p>
+                </div>
+              </div>
+              <button class="secondary-btn" (click)="deleteTour(tour.id)">Remove</button>
+            </article>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'reservations'" class="list-grid">
+          <h2 class="section-title">Upcoming reservations</h2>
+          <div *ngIf="!reservations.length" class="empty-state">
+            <p>No bookings yet.</p>
+          </div>
+          <article *ngFor="let booking of reservations" class="list-item">
+            <div>
+              <h3>{{ booking.client?.username || 'Traveler' }}</h3>
+              <p class="muted">
+                {{ booking.startDate | date : 'mediumDate' }} - {{ booking.endDate | date : 'mediumDate' }}
+                • {{ booking.status }}
+              </p>
+              <p>
+                {{ booking.tour?.titre || booking.place?.name }}
+              </p>
+            </div>
+            <span class="badge">
+              {{ booking.totalPrice ? (booking.totalPrice | currency : 'TND') : 'Custom quote' }}
+            </span>
+          </article>
+        </div>
+
+        <div *ngSwitchCase="'reviews'" class="list-grid">
+          <h2 class="section-title">Reviews about you</h2>
+          <div *ngIf="!guideFeedback.length" class="empty-state">
+            <p>No feedback yet.</p>
+          </div>
+          <article *ngFor="let review of guideFeedback" class="list-item">
+            <div>
+              <h3>{{ review.user?.username || 'Traveler' }}</h3>
+              <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+              <p>{{ review.comment }}</p>
+            </div>
+            <span class="rating">{{ review.rating }}/5</span>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
+
+

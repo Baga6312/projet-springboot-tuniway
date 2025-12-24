@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'Maven-3.9'
+        jdk 'JDK-17'
+    }
+    
+    environment {
+        APP_NAME = 'tuniway-backend'
+        DEPLOY_PATH = '/opt/tuniway/backend'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build Backend') {
+            steps {
+                dir('backend') {
+                    sh '''
+                        echo "Building Spring Boot application..."
+                        mvn clean package -DskipTests
+                    '''
+                }
+            }
+        }
+        
+        stage('Test Backend') {
+            steps {
+                dir('backend') {
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always {
+                    junit 'backend/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        
+        stage('Deploy Backend') {
+            steps {
+                script {
+                    sh '''
+                        echo "Stopping existing application..."
+                        pkill -f tuniway-backend || true
+                        
+                        echo "Creating deployment directory..."
+                        mkdir -p ${DEPLOY_PATH}
+                        
+                        echo "Copying JAR file..."
+                        cp backend/target/*.jar ${DEPLOY_PATH}/${APP_NAME}.jar
+                        
+                        echo "Starting application..."
+                        cd ${DEPLOY_PATH}
+                        nohup java -jar ${APP_NAME}.jar > app.log 2>&1 &
+                        
+                        echo "Waiting for application to start..."
+                        sleep 10
+                    '''
+                }
+            }
+        }
+        
+        stage('Health Check') {
+            steps {
+                script {
+                    sh '''
+                        echo "Checking application health..."
+                        curl -f http://localhost:8083/api/places || exit 1
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo ' Backend deployment successful!'
+        }
+        failure {
+            echo ' Backend deployment failed!'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}

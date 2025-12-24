@@ -1,0 +1,62 @@
+<!-- Chat Button -->
+<div class="chat-container">
+  <button 
+    class="chat-button" 
+    (click)="toggleChat()"
+    [class.active]="isOpen">
+    <svg *ngIf="!isOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg>
+    <svg *ngIf="isOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" [class.open]="isOpen">
+   
+    <!-- Header -->
+<div class="chat-header">
+  <div>
+    <h3>TuniWay Assistant</h3>
+    <p>
+      <span *ngIf="isConnected" class="status-dot connected"></span>
+      <span *ngIf="!isConnected" class="status-dot disconnected"></span>
+      {{ isConnected ? 'Connected' : 'Connecting...' }}
+    </p>
+  </div>
+  <button (click)="toggleChat()" class="close-btn">×</button>
+</div>
+
+    <!-- Messages -->
+    <div class="chat-messages">
+      <div *ngFor="let message of messages" 
+           class="message"
+           [class.user-message]="message.isUser"
+           [class.bot-message]="!message.isUser">
+        <div class="message-content">
+          <p>{{ message.text }}</p>
+          <span class="timestamp">{{ message.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+      
+      <div *ngIf="messages.length === 0" class="empty-state">
+        <p>👋 Hello! How can I help you today?</p>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input">
+      <input 
+        type="text" 
+        [(ngModel)]="newMessage"
+        (keyup.enter)="sendMessage()"
+        placeholder="Type your message...">
+      <button (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

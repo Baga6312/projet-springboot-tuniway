@@ -1,0 +1,73 @@
+<nav class="bg-white dark:bg-tuni-dark shadow-sm fixed w-full z-50 transition-colors">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    
+    <!-- Logo -->
+    <div>
+      <img src="logo.png" alt="TuniWay Logo" class="h-10">
+    </div>
+    
+    <!-- Navigation Links -->
+    <div class="hidden md:flex space-x-8">
+       <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" class="font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors">Home</a>
+       <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Explore</a>
+       <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Tours</a>
+          
+       <!-- Show My Profile only when logged in -->
+       <a *ngIf="isLoggedIn" routerLink="/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">My Profile</a>
+          
+       <!-- Show Guide Portal only for GUIDE role -->
+       <a *ngIf="isGuide()" routerLink="/guide/profile" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Guide Portal</a>
+       
+       <!-- Show Admin Portal only for ADMIN role -->
+       <a *ngIf="isAdmin()" routerLink="/admin" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Admin Panel</a>
+    </div>
+  
+    
+    <!-- Right Side: Dark Mode + Auth Buttons -->
+    <div class="flex items-center gap-4">
+      
+      <!-- Dark Mode Toggle -->
+      <button (click)="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <svg *ngIf="!isDarkMode" class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+        <svg *ngIf="isDarkMode" class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+      </button>
+      
+      <!-- Show when NOT logged in -->
+      <ng-container *ngIf="!isLoggedIn">
+        <!-- Sign In Button -->
+        <button routerLink="/login" class="border-2 border-tuni-orange text-tuni-orange px-6 py-2 rounded-md hover:bg-tuni-orange hover:text-white transition font-semibold">
+          Sign In
+        </button>
+        
+        <!-- Sign Up Button -->
+        <button routerLink="/register" class="bg-tuni-orange text-white px-6 py-2 rounded-md hover:bg-orange-600 transition font-semibold">
+          Sign Up
+        </button>
+      </ng-container>
+      
+      <!-- Show when logged in -->
+      <ng-container *ngIf="isLoggedIn">
+        <!-- User Profile Button with Avatar -->
+        <div class="flex items-center gap-3">
+          <img 
+            [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + (currentUser?.username || 'U') + '&background=random&color=fff&size=40&length=1'" 
+            [alt]="currentUser?.username"
+            class="w-10 h-10 rounded-full cursor-pointer border-2 border-tuni-orange"
+            [routerLink]="isGuide() ? '/guide/profile' : '/profile'"
+          />
+          <span class="text-gray-700 dark:text-gray-300 font-semibold">{{ currentUser?.username }}</span>
+          
+          <!-- Logout Button -->
+          <button (click)="logout()" class="border-2 border-red-500 text-red-500 px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition font-semibold">
+            Logout
+          </button>
+        </div>
+      </ng-container>
+      
+    </div>
+  </div>
+</nav>
