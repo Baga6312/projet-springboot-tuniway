@@ -1,5 +1,4 @@
 <app-navbar></app-navbar>
-
 <section class="tours-wrapper">
   <div class="container">
     <header class="page-header">
@@ -25,68 +24,106 @@
       <p>Loading tours...</p>
     </div>
 
-    <div class="tours-grid" *ngIf="!loading">
-      <article
-        *ngFor="let tour of filteredTours"
-        class="tour-card"
-        [class.active]="selectedTour?.id === tour.id"
-        (click)="selectTour(tour)"
-      >
-        <div class="tour-card__header">
-          <p class="eyebrow">{{ tour.guide?.username || 'Guide' }}</p>
-          <h3>{{ tour.titre }}</h3>
-          <p class="muted">{{ tour.date | date : 'fullDate' }}</p>
-        </div>
-        <p>{{ tour.description }}</p>
-        <div class="tour-card__footer">
-          <strong>{{ tour.prix | currency : 'TND' }}</strong>
-          <span>Tap for details</span>
-        </div>
-      </article>
-    </div>
-
-    <div class="details-panel" *ngIf="selectedTour as tour">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">Guided by {{ tour.guide?.username || 'Guide' }}</p>
-          <h2>{{ tour.titre }}</h2>
-        </div>
-        <button class="secondary-btn" (click)="clearSelection()">Close</button>
-      </div>
-      <p class="muted">{{ tour.date | date : 'fullDate' }}</p>
-      <p>{{ tour.description }}</p>
-
-      <div class="detail-meta">
-        <div>
-          <p class="muted">Price</p>
-          <h3>{{ tour.prix | currency : 'TND' }}</h3>
-        </div>
-        <div>
-          <p class="muted">Guide</p>
-          <h3>{{ tour.guide?.username || 'Guide' }}</h3>
-        </div>
-        <div>
-          <p class="muted">Contact</p>
-          <button class="primary-btn" type="button" (click)="contactGuide()">Contact guide</button>
-        </div>
-      </div>
-
-      <div class="reviews">
-        <h3>Traveler reviews</h3>
-        <p *ngIf="!selectedTourReviews.length" class="muted">No reviews yet.</p>
-        <article *ngFor="let review of selectedTourReviews" class="review">
-          <div>
-            <strong>{{ review.user?.username || 'Guest' }}</strong>
-            <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+      <div class="main-content" [class.has-selection]="selectedTour" *ngIf="!loading">
+      <div class="tours-grid">
+        <article
+          *ngFor="let tour of filteredTours"
+          class="tour-card"
+          [class.active]="selectedTour?.id === tour.id"
+          (click)="selectTour(tour)"
+        >
+          <div class="tour-card__header">
+            <p class="eyebrow">{{ tour.guide?.username || 'Guide' }}</p>
+            <h3>{{ tour.titre }}</h3>
+            <p class="muted">{{ tour.date | date : 'fullDate' }}</p>
           </div>
-          <p>{{ review.comment }}</p>
-          <span class="rating">{{ review.rating }}/5</span>
+          <p>{{ tour.description }}</p>
+          <div class="tour-card__footer">
+            <strong>{{ tour.prix | currency : 'TND' }}</strong>
+            <span>Tap for details</span>
+          </div>
         </article>
+      </div>
+
+      <!-- ✅ NEW: Right side: Details panel -->
+      <div class="details-panel" *ngIf="selectedTour as tour">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Guided by {{ tour.guide?.username || 'Guide' }}</p>
+            <h2>{{ tour.titre }}</h2>
+          </div>
+          <button class="close-btn" (click)="clearSelection()">✕</button>
+        </div>
+        <p class="muted">{{ tour.date | date : 'fullDate' }}</p>
+        <p>{{ tour.description }}</p>
+       
+
+        <div class="detail-meta">
+  <div>
+    <p class="muted">Price</p>
+    <h3>{{ tour.prix | currency : 'TND' }}</h3>
+  </div>
+  <div>
+    <p class="muted">Guide</p>
+    <h3>{{ tour.guide?.username || 'Guide' }}</h3>
+  </div>
+</div>
+
+<!-- ✅ ADD THIS NEW SECTION FOR ACTIONS -->
+<div class="action-buttons">
+  <button 
+    class="primary-btn" 
+    type="button" 
+    [disabled]="makingReservation"
+    (click)="makeReservation()">
+    {{ makingReservation ? 'Booking...' : 'Make Reservation' }}
+  </button>
+  <button 
+    class="secondary-btn" 
+    type="button" 
+    (click)="contactGuide()">
+    Contact Guide
+  </button>
+</div>
+
+<!-- ✅ ADD SUCCESS/ERROR MESSAGES -->
+<div class="reservation-feedback" *ngIf="reservationMessage">
+  <p [class.success]="reservationSuccess" [class.error]="!reservationSuccess">
+    {{ reservationMessage }}
+  </p>
+</div>
+
+<div class="reviews">
+  <h3>Traveler reviews</h3>
+  <p *ngIf="!selectedTourReviews.length" class="muted">No reviews yet.</p>
+  <article *ngFor="let review of selectedTourReviews" class="review">
+    <div>
+      <strong>{{ review.user?.username || 'Guest' }}</strong>
+      <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+    </div>
+    <p>{{ review.comment }}</p>
+    <span class="rating">{{ review.rating }}/5</span>
+  </article>
+</div>
+
+
+
+
+       
+        <div class="reviews">
+          <h3>Traveler reviews</h3>
+          <p *ngIf="!selectedTourReviews.length" class="muted">No reviews yet.</p>
+          <article *ngFor="let review of selectedTourReviews" class="review">
+            <div>
+              <strong>{{ review.user?.username || 'Guest' }}</strong>
+              <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+            </div>
+            <p>{{ review.comment }}</p>
+            <span class="rating">{{ review.rating }}/5</span>
+          </article>
+        </div>
       </div>
     </div>
   </div>
 </section>
-
 <app-footer></app-footer>
-
-

@@ -1,10 +1,10 @@
 package com.tuniway.controller;
 
-import com.tuniway.model.Reservation;
-import com.tuniway.model.Client;
-import com.tuniway.model.Guide;
+import com.tuniway.model.*;
 import com.tuniway.model.enums.ReservationStatus;
+import com.tuniway.service.PlaceService;
 import com.tuniway.service.ReservationService;
+import com.tuniway.service.TourPersonnaliseService;
 import com.tuniway.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,13 @@ import java.util.Optional;
 @RequestMapping("/api/reservations")
 @CrossOrigin(origins = "*")
 public class ReservationController {
+
+
+    @Autowired
+    private TourPersonnaliseService tourPersonnaliseService;
+
+    @Autowired
+    private PlaceService placeService;
 
     @Autowired
     private ReservationService reservationService;
@@ -78,6 +85,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+
     // Create new reservation
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequest request) {
@@ -103,10 +111,31 @@ public class ReservationController {
             guide = guideOpt.get();
         }
 
+        // ✅ NEW: Validate tour exists (if provided)
+        TourPersonnalise tour = null;
+        if (request.getTourId() != null) {
+            Optional<TourPersonnalise> tourOpt = tourPersonnaliseService.getTourById(request.getTourId());
+            if (!tourOpt.isPresent()) {
+                return ResponseEntity.badRequest().body("Tour not found");
+            }
+            tour = tourOpt.get();
+        }
+
+        Place place = null;
+        if (request.getPlaceId() != null) {
+            Optional<Place> placeOpt = placeService.getPlaceById(request.getPlaceId());
+            if (!placeOpt.isPresent()) {
+                return ResponseEntity.badRequest().body("Place not found");
+            }
+            place = placeOpt.get();
+        }
+
         // Create reservation
         Reservation reservation = new Reservation();
         reservation.setClient(client.get());
         reservation.setGuide(guide);
+        reservation.setTour(tour);        // ✅ NEW
+        reservation.setPlace(place);      // ✅ NEW
         reservation.setType(request.getType());
         reservation.setDateReservation(LocalDateTime.now());
         reservation.setStatus(ReservationStatus.PENDING);
@@ -114,6 +143,10 @@ public class ReservationController {
         Reservation savedReservation = reservationService.createReservation(reservation);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
+
+
+
+
 
     // Update reservation status
     @PutMapping("/{id}/status")
@@ -212,10 +245,13 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
-    // Inner class for reservation creation request
+
+    // Update the ReservationRequest inner class
     static class ReservationRequest {
         private Long clientId;
         private Long guideId;
+        private Long tourId;  // ✅ ADD THIS
+        private Long placeId; // ✅ ADD THIS
         private com.tuniway.model.enums.ReservationType type;
 
         public Long getClientId() {
@@ -234,6 +270,23 @@ public class ReservationController {
             this.guideId = guideId;
         }
 
+        // ✅ ADD THESE GETTERS/SETTERS
+        public Long getTourId() {
+            return tourId;
+        }
+
+        public void setTourId(Long tourId) {
+            this.tourId = tourId;
+        }
+
+        public Long getPlaceId() {
+            return placeId;
+        }
+
+        public void setPlaceId(Long placeId) {
+            this.placeId = placeId;
+        }
+
         public com.tuniway.model.enums.ReservationType getType() {
             return type;
         }
@@ -243,7 +296,10 @@ public class ReservationController {
         }
     }
 
-    // Inner class for status update
+
+
+
+
     static class StatusUpdate {
         private ReservationStatus status;
 

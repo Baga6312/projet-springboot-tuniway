@@ -505,3 +505,20 @@
     margin-left: 0;
   }
 }
+
+
+
+.badge.pending {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.badge.confirmed {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.badge.cancelled {
+  background-color: #dc3545;
+  color: #fff;
+}

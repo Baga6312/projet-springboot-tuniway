@@ -144,27 +144,60 @@
           </div>
         </div>
 
-        <div *ngSwitchCase="'reservations'" class="list-grid">
-          <h2 class="section-title">Upcoming reservations</h2>
-          <div *ngIf="!reservations.length" class="empty-state">
-            <p>No bookings yet.</p>
-          </div>
-          <article *ngFor="let booking of reservations" class="list-item">
-            <div>
-              <h3>{{ booking.client?.username || 'Traveler' }}</h3>
-              <p class="muted">
-                {{ booking.startDate | date : 'mediumDate' }} - {{ booking.endDate | date : 'mediumDate' }}
-                • {{ booking.status }}
-              </p>
-              <p>
-                {{ booking.tour?.titre || booking.place?.name }}
-              </p>
-            </div>
-            <span class="badge">
-              {{ booking.totalPrice ? (booking.totalPrice | currency : 'TND') : 'Custom quote' }}
-            </span>
-          </article>
-        </div>
+     <div *ngSwitchCase="'reservations'" class="list-grid">
+  <h2 class="section-title">Reservation Requests</h2>
+  <div *ngIf="!reservations.length" class="empty-state">
+    <p>No reservation requests yet.</p>
+  </div>
+  <article *ngFor="let booking of reservations" class="list-item">
+    <div>
+      <h3>{{ booking.client?.username || 'Traveler' }}</h3>
+      <p class="muted">
+        {{ $any(booking).dateReservation | date : 'medium' }}
+        • Status: <strong [class.text-yellow-600]="booking.status === 'PENDING'"
+                         [class.text-green-600]="booking.status === 'CONFIRMED'"
+                         [class.text-red-600]="booking.status === 'CANCELLED'">
+                    {{ booking.status }}
+                  </strong>
+      </p>
+      <p>
+        {{ booking.tour?.titre || booking.place?.name }}
+      </p>
+      <p class="text-sm text-gray-600" *ngIf="booking.tour?.prix">
+        Price: {{ booking.tour?.prix | currency : 'TND' }}
+      </p>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <button 
+        *ngIf="booking.status === 'PENDING'"
+        class="primary-btn"
+        (click)="confirmReservation(booking.id)"
+        [disabled]="processingReservation === booking.id">
+        {{ processingReservation === booking.id ? 'Confirming...' : 'Confirm' }}
+      </button>
+      <button 
+        *ngIf="booking.status === 'PENDING' || booking.status === 'CONFIRMED'"
+        class="secondary-btn bg-red-500 text-white hover:bg-red-600"
+        (click)="cancelReservation(booking.id)"
+        [disabled]="processingReservation === booking.id">
+        {{ processingReservation === booking.id ? 'Cancelling...' : 'Cancel' }}
+      </button>
+      <span 
+        *ngIf="booking.status === 'CONFIRMED'"
+        class="badge bg-green-100 text-green-800">
+        ✓ Confirmed
+      </span>
+      <span 
+        *ngIf="booking.status === 'CANCELLED'"
+        class="badge bg-red-100 text-red-800">
+        ✗ Cancelled
+      </span>
+    </div>
+  </article>
+</div>
+     
 
         <div *ngSwitchCase="'reviews'" class="list-grid">
           <h2 class="section-title">Reviews about you</h2>

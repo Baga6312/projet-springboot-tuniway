@@ -31,6 +31,36 @@ public class Reservation {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "bio", "languages", "availability"})
     private Guide guide;
 
+    @ManyToOne
+    @JoinColumn(name = "tour_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private TourPersonnalise tour;
+
+    @ManyToOne
+    @JoinColumn(name = "place_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Place place;
+
+    // Add getters and setters
+    public TourPersonnalise getTour() {
+        return tour;
+    }
+
+    public void setTour(TourPersonnalise tour) {
+        this.tour = tour;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
+
+
+
     // Getters and Setters
     public Long getId() {
         return id;

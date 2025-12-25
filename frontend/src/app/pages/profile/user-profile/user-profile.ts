@@ -75,13 +75,65 @@ bootstrapUser(): void {
   this.loadUserData();
 }
 
-  loadUserData(): void {
-    // Load reservations, reviews, favorites, etc.
-    // This would normally fetch from backend
-    this.reservations = [];
-    this.reviews = [];
-    this.favoritePlaces = [];
-  }
+
+
+
+loadUserData(): void {
+  if (!this.currentUser) return;
+
+  const token = this.authService.getToken();
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+
+  // Load favorites
+  this.http.get<any[]>('http://localhost:8083/api/favorites', { headers }).subscribe({
+    next: (favorites) => {
+      this.favoritePlaces = favorites;
+      console.log('✅ Loaded favorites:', favorites);
+    },
+    error: (error) => {
+      console.error('❌ Error loading favorites:', error);
+      this.favoritePlaces = [];
+    }
+  });
+
+  // ✅ NEW: Load user's reservations
+  this.http.get<any[]>(`${this.apiUrl}/reservations/client/${this.currentUser.id}`, { headers }).subscribe({
+    next: (reservations) => {
+      this.reservations = reservations;
+      console.log('✅ Loaded reservations:', reservations);
+    },
+    error: (error) => {
+      console.error('❌ Error loading reservations:', error);
+      this.reservations = [];
+    }
+  });
+
+  // Load user's reviews
+  this.http.get<any[]>(`${this.apiUrl}/reviews/user/${this.currentUser.id}`).subscribe({
+    next: (reviews) => {
+      this.reviews = reviews;
+      console.log('✅ Loaded reviews:', reviews);
+      
+      // Calculate average review score
+      if (reviews.length > 0) {
+        const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+        this.averageReviewScore = total / reviews.length;
+      }
+    },
+    error: (error) => {
+      console.error('❌ Error loading reviews:', error);
+      this.reviews = [];
+    }
+  });
+}
+
+
+
+
+
+
 
   // Image upload handler
   onFileSelected(event: Event): void {

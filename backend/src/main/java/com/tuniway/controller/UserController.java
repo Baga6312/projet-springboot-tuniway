@@ -188,10 +188,19 @@ public class UserController {
             if (request.getEmail() != null && !request.getEmail().isEmpty()) {
                 user.setEmail(request.getEmail());
             }
-            if (request.getProfilePicture() != null && !request.getProfilePicture().isEmpty()) {
-                // Store the base64 image directly in database
-                user.setProfilePicture(request.getProfilePicture());
+
+            if (request.getProfilePicture() != null) {
+                if (request.getProfilePicture().isEmpty()) {
+                    user.setProfilePicture(null);
+                } else {
+                    user.setProfilePicture(request.getProfilePicture());
+                }
             }
+
+
+
+
+
 
             // Save updated user
             User updatedUser = userService.updateUser(user);

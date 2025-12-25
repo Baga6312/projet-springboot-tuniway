@@ -13,6 +13,7 @@ import { UserProfile } from './pages/profile/user-profile/user-profile';
 import { GuideProfile } from './pages/profile/guide-profile/guide-profile';
 import { ExplorePage } from './pages/explore/explore';
 import { ToursPage } from './pages/tours/tours';
+import { Messages } from './pages/messages/messages';
 import { OAuth2RedirectComponent } from './pages/oauth2-redirect/oauth2-redirect.component';
 import { authGuard } from './guards/auth.guard';
 
@@ -22,33 +23,22 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'explore', component: ExplorePage },
   { path: 'tours', component: ToursPage },
-  { path: 'oauth2/redirect', component: OAuth2RedirectComponent }, // ✅ NEW ROUTE
-  
-  { 
-    path: 'profile', 
-    component: UserProfile,
-    canActivate: [authGuard]
-  },
-  { 
-    path: 'guide/profile', 
-    component: GuideProfile,
-    canActivate: [authGuard]
-  },
+  { path: 'oauth2/redirect', component: OAuth2RedirectComponent },
+  { path: 'profile', component: UserProfile, canActivate: [authGuard] },
+  { path: 'guide/profile', component: GuideProfile, canActivate: [authGuard], },
+  { path: 'messages',  component: Messages, canActivate: [authGuard] },
 
-  {
-    path: 'admin',
-    component: AdminDashboard,
-    canActivate: [authGuard],
-    children: [
+  { path: 'admin', component: AdminDashboard,
+    canActivate: [authGuard], children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: DashboardOverview },
       { path: 'places', component: PlacesManagement },
       { path: 'users', component: UsersManagement },
       { path: 'guides', component: GuidesManagement },
       { path: 'reviews', component: ReviewsManagement },
-      { path: 'tours', component: ToursManagement }
-    ]
+      { path: 'tours', component: ToursManagement },
+    ],
   },
 
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

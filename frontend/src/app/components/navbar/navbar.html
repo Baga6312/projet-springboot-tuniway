@@ -3,23 +3,49 @@
     
     <!-- Logo -->
     <div>
-      <img src="logo.png" alt="TuniWay Logo" class="h-10">
+      <img src="logo.png" alt="TuniWay Logo" class="h-10 cursor-pointer" routerLink="/">
     </div>
     
-    <!-- Navigation Links -->
-    <div class="hidden md:flex space-x-8">
-       <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" class="font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors">Home</a>
-       <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Explore</a>
-       <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" class="hover:text-tuni-teal capitalize text-gray-700 dark:text-gray-300 transition-colors">Tours</a>
-          
- </div>
-  
+    <div class="hidden md:flex space-x-10 items-center">
+      <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" 
+         class="flex items-center gap-2 font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+         title="Home">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+      </a>
+
+      <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+         title="Explore Places">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+      </a>
+
+      <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+         title="Tours">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+        </svg>
+      </a>
+
+      <a *ngIf="isLoggedIn" routerLink="/messages" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors relative"
+         title="Messages">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </a>
+    </div>
     
     <!-- Right Side: Dark Mode + Auth Buttons -->
     <div class="flex items-center gap-4">
       
       <!-- Dark Mode Toggle -->
-      <button (click)="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+      <button (click)="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Toggle Dark Mode">
         <svg *ngIf="!isDarkMode" class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
         </svg>
@@ -45,12 +71,22 @@
       <ng-container *ngIf="isLoggedIn">
         <!-- User Profile Button with Avatar -->
         <div class="flex items-center gap-8">
-          <img 
-            [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + (currentUser?.username || 'U') + '&background=random&color=fff&size=40&length=1'" 
-            [alt]="currentUser?.username"
-            class="w-10 h-10 rounded-full cursor-pointer border-2 border-tuni-orange"
-            [routerLink]="isGuide() ? '/guide/profile' : '/profile'"
-          />
+          <div class="relative">
+            <img 
+              [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + (currentUser?.username || 'U') + '&background=random&color=fff&size=40&length=1'" 
+              [alt]="currentUser?.username"
+              class="w-10 h-10 rounded-full cursor-pointer border-2 border-tuni-orange hover:border-tuni-teal transition"
+              [routerLink]="isGuide() ? '/guide/profile' : '/profile'"
+              title="Profile"
+            />
+            <!-- ✅ GUIDE BADGE -->
+            <span 
+              *ngIf="isGuide()"
+              class="absolute -top-1 -right-1 bg-tuni-teal text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-lg"
+              title="Guide Account">
+              GUIDE
+            </span>
+          </div>
           
           <!-- Logout Button -->
           <button (click)="logout()" class="border-2 border-red-500 text-red-500 px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition font-semibold">

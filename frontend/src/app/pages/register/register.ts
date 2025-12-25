@@ -40,38 +40,34 @@ export class Register {
     this.isFormValid = !!(name && email && password && password.length >= 6);
   }
 
-  onSubmit() {
-    if (this.isFormValid && !this.isLoading) {
-      this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
-
-      this.authService.register({
-        username: this.name.trim(),
-        email: this.email.trim(),
-        password: this.password,
-        role: this.role as 'CLIENT' | 'GUIDE' | 'ADMIN'
-      }).subscribe({
-        next: (response) => {
-          this.successMessage = 'Registration successful! Redirecting...';
-          this.isLoading = false;
-          
-          setTimeout(() => {
-            if (this.role === 'GUIDE') {
-              this.router.navigate(['/guide/profile']);
-            } else {
-              this.router.navigate(['/profile']);
-            }
-          }, 1000);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
-          console.error('Registration error:', error);
-        }
-      });
-    }
+onSubmit() {
+  if (this.isFormValid && !this.isLoading) {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    
+    this.authService.register({
+      username: this.name.trim(),
+      email: this.email.trim(),
+      password: this.password,
+      role: 'CLIENT' // Always CLIENT now
+    }).subscribe({
+      next: (response) => {
+        this.successMessage = 'Registration successful! Redirecting...';
+        this.isLoading = false;
+        
+        setTimeout(() => {
+          this.router.navigate(['/profile']); // Always redirect to client profile
+        }, 1000);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        console.error('Registration error:', error);
+      }
+    });
   }
+}
 
   // ✅ NEW: OAuth2 Methods
   loginWithGoogle() {

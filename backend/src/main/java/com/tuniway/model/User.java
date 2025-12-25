@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="user",
         uniqueConstraints = {
@@ -47,4 +50,28 @@ public class User {
     @Column(name = "profile_picture", columnDefinition = "LONGTEXT")
     @Lob  // Large Object annotation for JPA
     private String profilePicture;
+
+
+
+    // Add this after the profilePicture field (around line 45)
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_favorite_places",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "place_id")
+    )
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Set<Place> favoritePlaces = new HashSet<>();
+
+    public Set<Place> getFavoritePlaces() {
+        return favoritePlaces;
+    }
+
+    public void setFavoritePlaces(Set<Place> favoritePlaces) {
+        this.favoritePlaces = favoritePlaces;
+    }
+
+
+
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // ✅ ADD
 
 import { Navbar } from '../../../components/navbar/navbar';
 import { Footer } from '../../../components/footer/footer';
@@ -38,13 +39,18 @@ export class GuideProfile implements OnInit, OnDestroy {
   statusMessage = '';
   tourMessage = '';
   loading = true;
+  
+  // ✅ ADD THESE
+  processingReservation: number | null = null;
+  private apiUrl = 'http://localhost:8083/api';
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private readonly portalService: PortalService,
     private readonly authService: authService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly http: HttpClient  // ✅ ADD
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +117,71 @@ export class GuideProfile implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.tours = this.tours.filter(t => t.id !== tourId);
+      });
+  }
+
+  // ✅ ADD THESE METHODS
+  confirmReservation(reservationId?: number): void {
+    if (!reservationId) return;
+    
+    this.processingReservation = reservationId;
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.put(`${this.apiUrl}/reservations/${reservationId}/confirm`, {}, { headers })
+      .subscribe({
+        next: (updatedReservation: any) => {
+          console.log('✅ Reservation confirmed:', updatedReservation);
+          
+          // Update the reservation in the list
+          const index = this.reservations.findIndex(r => r.id === reservationId);
+          if (index !== -1) {
+            this.reservations[index] = updatedReservation;
+          }
+          
+          this.processingReservation = null;
+        },
+        error: (error) => {
+          console.error('❌ Error confirming reservation:', error);
+          alert('Failed to confirm reservation. Please try again.');
+          this.processingReservation = null;
+        }
+      });
+  }
+
+  cancelReservation(reservationId?: number): void {
+    if (!reservationId) return;
+    
+    if (!confirm('Are you sure you want to cancel this reservation?')) {
+      return;
+    }
+    
+    this.processingReservation = reservationId;
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.put(`${this.apiUrl}/reservations/${reservationId}/cancel`, {}, { headers })
+      .subscribe({
+        next: (updatedReservation: any) => {
+          console.log('✅ Reservation cancelled:', updatedReservation);
+          
+          // Update the reservation in the list
+          const index = this.reservations.findIndex(r => r.id === reservationId);
+          if (index !== -1) {
+            this.reservations[index] = updatedReservation;
+          }
+          
+          this.processingReservation = null;
+        },
+        error: (error) => {
+          console.error('❌ Error cancelling reservation:', error);
+          alert('Failed to cancel reservation. Please try again.');
+          this.processingReservation = null;
+        }
       });
   }
 
@@ -198,5 +269,3 @@ export class GuideProfile implements OnInit, OnDestroy {
     return sum / this.guideFeedback.length;
   }
 }
-
-

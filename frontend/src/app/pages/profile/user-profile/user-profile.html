@@ -138,37 +138,48 @@
           </div>
         </div>
 
-        <div *ngSwitchCase="'reservations'" class="list-grid">
-          <h2 class="section-title">Past reservations</h2>
-          <div *ngIf="!reservations.length" class="empty-state">
-            <p>No reservations yet. Start planning your next adventure!</p>
-          </div>
-          <div *ngFor="let reservation of reservations" class="list-item">
-            <div>
-              <h3>{{ reservation.place?.name || reservation.tour?.titre }}</h3>
-              <p class="muted">
-                {{ reservation.startDate || reservation.createdAt | date : 'mediumDate' }} •
-                Status: {{ reservation.status || 'PENDING' }}
-              </p>
-            </div>
-            <span class="badge">{{ reservation.totalPrice ? ('$' + reservation.totalPrice) : 'Custom tour' }}</span>
-          </div>
-        </div>
+       <div *ngSwitchCase="'reservations'" class="list-grid">
+  <h2 class="section-title">Past reservations</h2>
+  <div *ngIf="!reservations.length" class="empty-state">
+    <p>No reservations yet. Start planning your next adventure!</p>
+  </div>
+  <div *ngFor="let reservation of reservations" class="list-item">
+    <div>
+      <h3>{{ reservation.tour?.titre || reservation.place?.name || 'Reservation' }}</h3>
+      <p class="muted">
+        {{ reservation.dateReservation | date : 'medium' }} • 
+        Type: {{ reservation.type }} •
+        Status: {{ reservation.status }}
+      </p>
+      <p class="muted" *ngIf="reservation.guide">
+        Guide: {{ reservation.guide.username }}
+      </p>
+    </div>
+    <span class="badge" [class.pending]="reservation.status === 'PENDING'" 
+                       [class.confirmed]="reservation.status === 'CONFIRMED'"
+                       [class.cancelled]="reservation.status === 'CANCELLED'">
+      {{ reservation.status }}
+    </span>
+  </div>
+</div>
+       
+
 
         <div *ngSwitchCase="'reviews'" class="list-grid">
-          <h2 class="section-title">Your reviews</h2>
-          <div *ngIf="!reviews.length" class="empty-state">
-            <p>You haven't written any reviews yet.</p>
-          </div>
-          <div *ngFor="let review of reviews" class="list-item">
-            <div>
-              <h3>{{ review.place?.name }}</h3>
-              <p class="muted">{{ review.createdAt | date : 'mediumDate' }}</p>
-              <p>{{ review.content }}</p>
-            </div>
-            <span class="rating">⭐ {{ review.rating }}/5</span>
-          </div>
-        </div>
+  <h2 class="section-title">Your reviews</h2>
+  <div *ngIf="!reviews.length" class="empty-state">
+    <p>You haven't written any reviews yet.</p>
+  </div>
+  <div *ngFor="let review of reviews" class="list-item">
+    <div>
+      <h3>{{ review.place?.name }}</h3>
+      <p class="muted">{{ review.datePosted | date : 'mediumDate' }}</p>
+      <p>{{ review.comment }}</p>
+    </div>
+    <span class="rating">⭐ {{ review.rating }}/5</span>
+  </div>
+</div>
+
 
         <div *ngSwitchCase="'favorites'" class="favorite-grid">
           <div *ngIf="!favoritePlaces.length" class="empty-state" style="grid-column: 1/-1">

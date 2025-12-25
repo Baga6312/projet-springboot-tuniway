@@ -1,5 +1,4 @@
 <app-navbar></app-navbar>
-
 <section class="explore-wrapper">
   <div class="container">
     <header class="page-header">
@@ -7,8 +6,7 @@
         <p class="eyebrow">Discover Tunisia</p>
         <h1>Explore curated destinations</h1>
         <p class="muted">
-          Filter by city, category or popularity. Click a card to expand it in-place and see reviews from other
-          travelers.
+          Filter by city, category or popularity. Click a card to see details and reviews from other travelers.
         </p>
       </div>
       <div class="search-bar">
@@ -25,7 +23,6 @@
           <option *ngFor="let category of categories" [value]="category">{{ category | titlecase }}</option>
         </select>
       </label>
-
       <label>
         <span>City</span>
         <select [(ngModel)]="filters.city" (change)="applyFilters()">
@@ -33,7 +30,6 @@
           <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
         </select>
       </label>
-
       <label>
         <span>Popularity</span>
         <select [(ngModel)]="filters.popularity" (change)="applyFilters()">
@@ -48,52 +44,115 @@
       <p>Loading destinations...</p>
     </div>
 
-    <div class="gallery-grid" *ngIf="!loading">
-      <article
-        *ngFor="let place of filteredPlaces"
-        class="gallery-card"
-        [class.expanded]="selectedPlace?.id === place.id"
-        (click)="selectPlace(place)"
-      >
-        <img [src]="place.imageUrl || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600'" [alt]="place.name" />
-        <div class="card-body">
-          <div>
-            <p class="eyebrow">{{ place.category | titlecase }} • {{ place.city }}</p>
-            <h3>{{ place.name }}</h3>
+    <div class="main-content" [class.has-selection]="selectedPlace" *ngIf="!loading">
+      <div class="gallery-grid">
+        <article
+          *ngFor="let place of filteredPlaces"
+          class="gallery-card"
+          [class.active]="selectedPlace?.id === place.id"
+          (click)="selectPlace(place)"
+        >
+          <img [src]="place.imageUrl || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600'" [alt]="place.name" />
+          <div class="card-body">
+            <div>
+              <p class="eyebrow">{{ place.category | titlecase }} • {{ place.city }}</p>
+              <h3>{{ place.name }}</h3>
+            </div>
+            <p>{{ place.description }}</p>
           </div>
-          <p>{{ place.description }}</p>
-        </div>
-        <button class="favorite-btn" (click)="toggleFavorite(place); $event.stopPropagation()">
-          <span [class.filled]="isFavorite(place)">★</span>
-        </button>
-      </article>
-    </div>
-
-    <div class="details-panel" *ngIf="selectedPlace as detail">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">{{ detail.city }} • {{ detail.category | titlecase }}</p>
-          <h2>{{ detail.name }}</h2>
-        </div>
-        <button class="secondary-btn" (click)="clearSelection()">Close</button>
-      </div>
-      <p>{{ detail.description }}</p>
-      <div class="reviews">
-        <h3>Reviews</h3>
-        <p *ngIf="!selectedPlaceReviews.length" class="muted">No reviews yet.</p>
-        <article *ngFor="let review of selectedPlaceReviews" class="review">
-          <div>
-            <strong>{{ review.user?.username || 'Traveler' }}</strong>
-            <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
-          </div>
-          <p>{{ review.comment }}</p>
-          <span class="rating">{{ review.rating }}/5</span>
+          <button class="favorite-btn" (click)="toggleFavorite(place); $event.stopPropagation()">
+            <span [class.filled]="isFavorite(place)">★</span>
+          </button>
         </article>
+      </div>
+
+      <!-- Details panel -->
+      <div class="details-panel" *ngIf="selectedPlace as detail">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">{{ detail.city }} • {{ detail.category | titlecase }}</p>
+            <h2>{{ detail.name }}</h2>
+          </div>
+          <button class="close-btn" (click)="clearSelection()">✕</button>
+        </div>
+        <img [src]="detail.imageUrl || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600'" [alt]="detail.name" class="detail-image" />
+        <p>{{ detail.description }}</p>
+        
+        <!-- ✅ NEW: Write Review Button -->
+        <button class="review-btn" (click)="openReviewModal()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+          Write a Review
+        </button>
+
+        <div class="reviews">
+          <h3>Reviews</h3>
+          <p *ngIf="!selectedPlaceReviews.length" class="muted">No reviews yet. Be the first to review!</p>
+          <article *ngFor="let review of selectedPlaceReviews" class="review">
+            <div>
+              <strong>{{ review.user?.username || 'Traveler' }}</strong>
+              <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
+            </div>
+            <p>{{ review.comment }}</p>
+            <span class="rating">⭐ {{ review.rating }}/5</span>
+          </article>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ✅ NEW: Review Modal -->
+<div class="modal-overlay" *ngIf="showReviewModal" (click)="closeReviewModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Write a Review</h2>
+      <button class="close-btn" (click)="closeReviewModal()">✕</button>
+    </div>
+
+    <form class="review-form" (ngSubmit)="submitReview()">
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="star-rating">
+          <button 
+            type="button"
+            *ngFor="let star of [1,2,3,4,5]" 
+            class="star-btn"
+            [class.filled]="star <= newReview.rating"
+            (click)="setRating(star)"
+          >
+            ★
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Your Review</label>
+        <textarea 
+          [(ngModel)]="newReview.comment"
+          name="comment"
+          rows="5"
+          placeholder="Share your experience..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" (click)="closeReviewModal()">Cancel</button>
+        <button 
+          type="submit" 
+          class="primary-btn" 
+          [disabled]="!newReview.rating || !newReview.comment.trim() || submittingReview"
+        >
+          {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+        </button>
+      </div>
+
+      <div *ngIf="reviewError" class="error-message">{{ reviewError }}</div>
+      <div *ngIf="reviewSuccess" class="success-message">{{ reviewSuccess }}</div>
+    </form>
+  </div>
+</div>
+
 <app-footer></app-footer>
-
-
