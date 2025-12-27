@@ -96,6 +96,22 @@ export class PortalService {
     );
   }
 
+
+  updateTour(tourId: number, payload: Partial<TourPayload>): Observable<Tour> {
+  return this.http.put<Tour>(`${API_BASE_URL}/tours/${tourId}`, payload).pipe(
+    catchError(this.handleError<Tour>({
+      id: tourId,
+      titre: payload.titre || '',
+      description: payload.description,
+      prix: payload.prix || 0,
+      date: payload.date
+    }))
+  );
+}
+
+
+
+
   deleteTour(tourId: number): Observable<void> {
     return this.http
       .delete<void>(`${API_BASE_URL}/tours/${tourId}`)

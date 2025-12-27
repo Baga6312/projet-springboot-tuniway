@@ -7,38 +7,56 @@
     </div>
     
     <div class="hidden md:flex space-x-10 items-center">
-      <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" 
-         class="flex items-center gap-2 font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
-         title="Home">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-        </svg>
-      </a>
+      <!-- ✅ ADMIN: Only show dashboard -->
+      <ng-container *ngIf="isAdmin()">
+        <a routerLink="/admin" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+           class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+           title="Admin Dashboard">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </a>
+      </ng-container>
 
-      <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
-         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
-         title="Explore Places">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-      </a>
+      <!-- ✅ NON-ADMIN: Show regular navigation -->
+      <ng-container *ngIf="!isAdmin()">
+        <a routerLink="/" routerLinkActive="text-tuni-teal dark:text-tuni-teal" [routerLinkActiveOptions]="{exact: true}" 
+           class="flex items-center gap-2 font-semibold hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+           title="Home">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </a>
 
-      <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
-         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
-         title="Tours">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-        </svg>
-      </a>
+        <a routerLink="/explore" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+           class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+           title="Explore Places">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </a>
 
-      <a *ngIf="isLoggedIn" routerLink="/messages" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
-         class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors relative"
-         title="Messages">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-        </svg>
-      </a>
+        <a routerLink="/tours" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+           class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors"
+           title="Tours">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </a>
+
+        <a *ngIf="isLoggedIn" routerLink="/messages" routerLinkActive="text-tuni-teal dark:text-tuni-teal" 
+           class="flex items-center gap-2 hover:text-tuni-teal text-gray-700 dark:text-gray-300 transition-colors relative"
+           title="Messages">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          <span *ngIf="unreadMessageCount > 0" 
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            {{ unreadMessageCount > 9 ? '9+' : unreadMessageCount }}
+          </span>
+        </a>
+      </ng-container>
     </div>
     
     <!-- Right Side: Dark Mode + Auth Buttons -->
@@ -56,12 +74,9 @@
       
       <!-- Show when NOT logged in -->
       <ng-container *ngIf="!isLoggedIn">
-        <!-- Sign In Button -->
         <button routerLink="/login" class="border-2 border-tuni-orange text-tuni-orange px-6 py-2 rounded-md hover:bg-tuni-orange hover:text-white transition font-semibold">
           Sign In
         </button>
-        
-        <!-- Sign Up Button -->
         <button routerLink="/register" class="bg-tuni-orange text-white px-6 py-2 rounded-md hover:bg-orange-600 transition font-semibold">
           Sign Up
         </button>
@@ -69,16 +84,22 @@
       
       <!-- Show when logged in -->
       <ng-container *ngIf="isLoggedIn">
-        <!-- User Profile Button with Avatar -->
         <div class="flex items-center gap-8">
           <div class="relative">
             <img 
               [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + (currentUser?.username || 'U') + '&background=random&color=fff&size=40&length=1'" 
               [alt]="currentUser?.username"
               class="w-10 h-10 rounded-full cursor-pointer border-2 border-tuni-orange hover:border-tuni-teal transition"
-              [routerLink]="isGuide() ? '/guide/profile' : '/profile'"
+              [routerLink]="isAdmin() ? '/admin' : (isGuide() ? '/guide/profile' : '/profile')"
               title="Profile"
             />
+            <!-- ✅ ADMIN BADGE -->
+            <span 
+              *ngIf="isAdmin()"
+              class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-lg"
+              title="Admin Account">
+              ADMIN
+            </span>
             <!-- ✅ GUIDE BADGE -->
             <span 
               *ngIf="isGuide()"
@@ -88,7 +109,6 @@
             </span>
           </div>
           
-          <!-- Logout Button -->
           <button (click)="logout()" class="border-2 border-red-500 text-red-500 px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition font-semibold">
             Logout
           </button>

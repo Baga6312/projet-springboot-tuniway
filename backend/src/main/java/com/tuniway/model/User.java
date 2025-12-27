@@ -47,7 +47,7 @@ public class User {
     private RoleType role;
 
     // UPDATED: Add columnDefinition to handle large base64 images
-    @Column(name = "profile_picture", columnDefinition = "LONGTEXT")
+    @Column(name = "profilePicture ", columnDefinition = "LONGTEXT")
     @Lob  // Large Object annotation for JPA
     private String profilePicture;
 

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // ✅ ADD ActivatedRoute
 import { Subject, takeUntil } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // ✅ ADD
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Navbar } from '../../../components/navbar/navbar';
 import { Footer } from '../../../components/footer/footer';
@@ -40,21 +40,36 @@ export class GuideProfile implements OnInit, OnDestroy {
   tourMessage = '';
   loading = true;
   
-  // ✅ ADD THESE
   processingReservation: number | null = null;
+  editingTourId: number | null = null;
+  
+  // Image upload states
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  uploadingImage: boolean = false;
+  uploadSuccess: boolean = false;
+  uploadError: string | null = null;
+  
   private apiUrl = 'http://localhost:8083/api';
-
   private destroy$ = new Subject<void>();
 
   constructor(
     private readonly portalService: PortalService,
     private readonly authService: authService,
     private readonly router: Router,
-    private readonly http: HttpClient  // ✅ ADD
+    private readonly route: ActivatedRoute, // ✅ ADD THIS
+    private readonly http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.bootstrapGuide();
+    
+    // ✅ ADD THIS: Check for tab query parameter
+    this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        this.setActiveTab(params['tab'] as GuideTab);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -63,6 +78,8 @@ export class GuideProfile implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: GuideTab): void {
+    console.log('Setting active tab to:', tab);
+    console.log('Current tours:', this.tours);
     this.activeTab = tab;
   }
 
@@ -71,16 +88,101 @@ export class GuideProfile implements OnInit, OnDestroy {
       return;
     }
     this.savingProfile = true;
-    this.portalService
-      .updateUserProfile(this.currentUser.id, this.profileForm)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(updated => {
-        this.currentUser = updated;
-        this.authService.updateCurrentUser(updated);
+    
+    const updateData = {
+      username: this.profileForm.username,
+      email: this.profileForm.email,
+      profilePicture: this.profileForm.profilePicture
+    };
+
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    this.http.put(`${this.apiUrl}/users/profile`, updateData, { headers }).subscribe({
+      next: (response: any) => {
+        console.log('Profile updated:', response);
+        
+        this.authService.updateCurrentUser({
+          username: response.username,
+          email: response.email,
+          profilePicture: response.profilePicture
+        });
+        
+        this.currentUser = this.authService.getCurrentUser();
+        this.statusMessage = '✅ Profile updated successfully!';
+        this.uploadSuccess = true;
         this.savingProfile = false;
-        this.statusMessage = 'Profile updated';
-        setTimeout(() => (this.statusMessage = ''), 3000);
-      });
+        
+        setTimeout(() => {
+          this.statusMessage = '';
+          this.uploadSuccess = false;
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Error updating profile:', error);
+        this.uploadError = error.error?.error || 'Failed to update profile';
+        this.savingProfile = false;
+      }
+    });
+  }
+
+  // Image upload handler
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      if (!file.type.startsWith('image/')) {
+        this.uploadError = 'Please select a valid image file';
+        return;
+      }
+      
+      if (file.size > 5 * 1024 * 1024) {
+        this.uploadError = 'Image size must be less than 5MB';
+        return;
+      }
+      
+      this.selectedFile = file;
+      this.uploadError = null;
+      this.uploadSuccess = false;
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+        this.profileForm.profilePicture = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    this.profileForm.profilePicture = '';
+    this.uploadSuccess = false;
+    this.uploadError = null;
+  }
+
+  getProfileImageSrc(): string | null {
+    const profilePicture = this.previewUrl || this.currentUser?.profilePicture || this.profileForm.profilePicture;
+    
+    if (!profilePicture) {
+      return null;
+    }
+    
+    if (profilePicture.startsWith('data:image')) {
+      return profilePicture;
+    }
+    
+    if (profilePicture.startsWith('http://') || profilePicture.startsWith('https://')) {
+      return profilePicture;
+    }
+    
+    return `data:image/jpeg;base64,${profilePicture}`;
   }
 
   createTour(): void {
@@ -108,10 +210,70 @@ export class GuideProfile implements OnInit, OnDestroy {
       });
   }
 
+  editTour(tour: Tour): void {
+    this.editingTourId = tour.id || null;
+    this.newTour = {
+      titre: tour.titre,
+      description: tour.description,
+      prix: tour.prix,
+      date: tour.date ? new Date(tour.date).toISOString().split('T')[0] : ''
+    };
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateTour(): void {
+    if (!this.editingTourId || !this.currentUser?.id || !this.newTour.titre || !this.newTour.prix) {
+      return;
+    }
+    
+    this.publishingTour = true;
+    
+    const payload = {
+      guideId: this.currentUser.id,
+      titre: this.newTour.titre,
+      description: this.newTour.description,
+      prix: Number(this.newTour.prix),
+      date: this.newTour.date || undefined
+    };
+
+    this.portalService
+      .updateTour(this.editingTourId, payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updatedTour) => {
+          const index = this.tours.findIndex(t => t.id === this.editingTourId);
+          if (index !== -1) {
+            this.tours[index] = updatedTour;
+          }
+          
+          this.cancelEdit();
+          this.publishingTour = false;
+          this.tourMessage = 'Tour updated successfully.';
+          setTimeout(() => (this.tourMessage = ''), 3000);
+        },
+        error: (error) => {
+          console.error('Error updating tour:', error);
+          this.publishingTour = false;
+          this.tourMessage = 'Failed to update tour. Please try again.';
+        }
+      });
+  }
+
+  cancelEdit(): void {
+    this.editingTourId = null;
+    this.newTour = { titre: '', description: '', prix: 0, date: '' };
+  }
+
   deleteTour(tourId?: number): void {
     if (!tourId) {
       return;
     }
+    
+    if (!confirm('Are you sure you want to delete this tour?')) {
+      return;
+    }
+    
     this.portalService
       .deleteTour(tourId)
       .pipe(takeUntil(this.destroy$))
@@ -120,7 +282,6 @@ export class GuideProfile implements OnInit, OnDestroy {
       });
   }
 
-  // ✅ ADD THESE METHODS
   confirmReservation(reservationId?: number): void {
     if (!reservationId) return;
     
@@ -135,7 +296,6 @@ export class GuideProfile implements OnInit, OnDestroy {
         next: (updatedReservation: any) => {
           console.log('✅ Reservation confirmed:', updatedReservation);
           
-          // Update the reservation in the list
           const index = this.reservations.findIndex(r => r.id === reservationId);
           if (index !== -1) {
             this.reservations[index] = updatedReservation;
@@ -169,7 +329,6 @@ export class GuideProfile implements OnInit, OnDestroy {
         next: (updatedReservation: any) => {
           console.log('✅ Reservation cancelled:', updatedReservation);
           
-          // Update the reservation in the list
           const index = this.reservations.findIndex(r => r.id === reservationId);
           if (index !== -1) {
             this.reservations[index] = updatedReservation;
@@ -205,6 +364,11 @@ export class GuideProfile implements OnInit, OnDestroy {
     }
     this.currentUser = snapshot;
     this.profileForm = { ...snapshot };
+    
+    // Set preview URL from existing profile picture
+    if (this.currentUser.profilePicture) {
+      this.previewUrl = this.currentUser.profilePicture;
+    }
 
     if (!snapshot.id) {
       this.loading = false;

@@ -24,7 +24,7 @@
       <p>Loading tours...</p>
     </div>
 
-      <div class="main-content" [class.has-selection]="selectedTour" *ngIf="!loading">
+    <div class="main-content" [class.has-selection]="selectedTour" *ngIf="!loading">
       <div class="tours-grid">
         <article
           *ngFor="let tour of filteredTours"
@@ -45,7 +45,7 @@
         </article>
       </div>
 
-      <!-- ✅ NEW: Right side: Details panel -->
+      <!-- Right side: Details panel -->
       <div class="details-panel" *ngIf="selectedTour as tour">
         <div class="panel-header">
           <div>
@@ -56,60 +56,55 @@
         </div>
         <p class="muted">{{ tour.date | date : 'fullDate' }}</p>
         <p>{{ tour.description }}</p>
-       
 
         <div class="detail-meta">
-  <div>
-    <p class="muted">Price</p>
-    <h3>{{ tour.prix | currency : 'TND' }}</h3>
-  </div>
-  <div>
-    <p class="muted">Guide</p>
-    <h3>{{ tour.guide?.username || 'Guide' }}</h3>
-  </div>
-</div>
+          <div>
+            <p class="muted">Price</p>
+            <h3>{{ tour.prix | currency : 'TND' }}</h3>
+          </div>
+          <div>
+            <p class="muted">Guide</p>
+            <h3>{{ tour.guide?.username || 'Guide' }}</h3>
+          </div>
+        </div>
 
-<!-- ✅ ADD THIS NEW SECTION FOR ACTIONS -->
-<div class="action-buttons">
-  <button 
-    class="primary-btn" 
-    type="button" 
-    [disabled]="makingReservation"
-    (click)="makeReservation()">
-    {{ makingReservation ? 'Booking...' : 'Make Reservation' }}
-  </button>
-  <button 
-    class="secondary-btn" 
-    type="button" 
-    (click)="contactGuide()">
-    Contact Guide
-  </button>
-</div>
+        <!-- ✅ Show different buttons based on tour ownership -->
+        <!-- For OTHER people's tours (not yours) -->
+        <div class="action-buttons" *ngIf="!isOwnTour()">
+          <button 
+            class="primary-btn" 
+            type="button" 
+            [disabled]="makingReservation"
+            (click)="makeReservation()">
+            {{ makingReservation ? 'Booking...' : 'Make Reservation' }}
+          </button>
+          <button 
+            class="secondary-btn" 
+            type="button" 
+            (click)="contactGuide()">
+            Contact Guide
+          </button>
+        </div>
 
-<!-- ✅ ADD SUCCESS/ERROR MESSAGES -->
-<div class="reservation-feedback" *ngIf="reservationMessage">
-  <p [class.success]="reservationSuccess" [class.error]="!reservationSuccess">
-    {{ reservationMessage }}
-  </p>
-</div>
+        <!-- ✅ For YOUR OWN tours -->
+        <div class="action-buttons" *ngIf="isOwnTour()">
+          <button 
+            class="primary-btn" 
+            type="button" 
+            (click)="editOwnTour()">
+            📝 Edit This Tour
+          </button>
+          <p class="text-sm text-gray-600" style="margin-top: 0.5rem;">This is your tour</p>
+        </div>
 
-<div class="reviews">
-  <h3>Traveler reviews</h3>
-  <p *ngIf="!selectedTourReviews.length" class="muted">No reviews yet.</p>
-  <article *ngFor="let review of selectedTourReviews" class="review">
-    <div>
-      <strong>{{ review.user?.username || 'Guest' }}</strong>
-      <p class="muted">{{ review.datePosted | date : 'medium' }}</p>
-    </div>
-    <p>{{ review.comment }}</p>
-    <span class="rating">{{ review.rating }}/5</span>
-  </article>
-</div>
+        <!-- Success/Error messages -->
+        <div class="reservation-feedback" *ngIf="reservationMessage">
+          <p [class.success]="reservationSuccess" [class.error]="!reservationSuccess">
+            {{ reservationMessage }}
+          </p>
+        </div>
 
-
-
-
-       
+        <!-- Reviews section -->
         <div class="reviews">
           <h3>Traveler reviews</h3>
           <p *ngIf="!selectedTourReviews.length" class="muted">No reviews yet.</p>

@@ -76,6 +76,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/places/**").permitAll()
                         .requestMatchers("/api/rest/places/**").permitAll()
                         .requestMatchers("/api/reviews/**").permitAll()
+                        .requestMatchers("/api/messages/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/reservations/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")
                         .requestMatchers("/api/tours/**").hasAnyRole("CLIENT", "GUIDE", "ADMIN")

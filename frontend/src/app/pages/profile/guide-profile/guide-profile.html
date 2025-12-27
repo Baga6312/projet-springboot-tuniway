@@ -59,10 +59,54 @@
               <span>Email</span>
               <input type="email" [(ngModel)]="profileForm.email" name="guideEmail" />
             </label>
-            <label class="form-field">
-              <span>Profile picture URL</span>
-              <input type="text" [(ngModel)]="profileForm.profilePicture" name="guideAvatar" />
-            </label>
+            
+            <!-- Image Upload Section -->
+<div class="form-field">
+  <span>Profile Picture</span>
+  
+  <!-- Current/Preview Image -->
+  <div class="image-preview-container" *ngIf="previewUrl || profileForm.profilePicture">
+    <img 
+      [src]="previewUrl || profileForm.profilePicture" 
+      alt="Profile preview"
+      class="image-preview"
+    />
+    <button 
+      type="button" 
+      class="remove-image-btn"
+      (click)="removeImage()">
+      ✕ Remove
+    </button>
+  </div>
+  
+  <!-- Upload Button -->
+  <div class="upload-section">
+    <input 
+      type="file" 
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+      style="display: none"
+      id="imageUpload"
+    />
+    <button 
+      type="button" 
+      class="upload-btn"
+      (click)="fileInput.click()"
+      [disabled]="uploadingImage">
+      <span *ngIf="!uploadingImage">📁 Choose Image</span>
+      <span *ngIf="uploadingImage">⏳ Uploading...</span>
+    </button>
+    <p class="upload-hint">JPG, PNG, GIF or WebP (max 5MB)</p>
+  </div>
+  
+  <p class="upload-status success" *ngIf="uploadSuccess">Image uploaded successfully!</p>
+  <p class="upload-status error" *ngIf="uploadError">{{ uploadError }}</p>
+</div>
+
+
+
+
             <button class="primary-btn" type="submit" [disabled]="savingProfile">
               {{ savingProfile ? 'Saving...' : 'Save profile' }}
             </button>
@@ -96,8 +140,9 @@
         </div>
 
         <div *ngSwitchCase="'tours'" class="space-y-6">
+     
           <div class="tour-form">
-            <h2 class="section-title">Create a new tour</h2>
+            <h2 class="section-title">{{ editingTourId ? 'Edit tour' : 'Create a new tour' }}</h2>
             <div class="grid md:grid-cols-4 gap-4">
               <label class="form-field md:col-span-2">
                 <span>Title</span>
@@ -116,9 +161,14 @@
                 <textarea rows="3" [(ngModel)]="newTour.description" name="tourDescription"></textarea>
               </label>
             </div>
-            <button class="primary-btn" type="button" (click)="createTour()" [disabled]="publishingTour">
-              {{ publishingTour ? 'Publishing...' : 'Publish tour' }}
-            </button>
+            <div class="flex gap-2">
+              <button class="primary-btn" type="button" (click)="editingTourId ? updateTour() : createTour()" [disabled]="publishingTour">
+                {{ publishingTour ? 'Saving...' : (editingTourId ? 'Update tour' : 'Publish tour') }}
+              </button>
+              <button *ngIf="editingTourId" class="secondary-btn" type="button" (click)="cancelEdit()">
+                Cancel
+              </button>
+            </div>
             <p class="status" *ngIf="tourMessage">{{ tourMessage }}</p>
           </div>
 
@@ -139,65 +189,66 @@
                   </p>
                 </div>
               </div>
-              <button class="secondary-btn" (click)="deleteTour(tour.id)">Remove</button>
+              <div class="flex gap-2">
+                <button class="secondary-btn bg-blue-500 text-white hover:bg-blue-600" (click)="editTour(tour)">Edit</button>
+                <button class="secondary-btn bg-red-500 text-white hover:bg-red-600" (click)="deleteTour(tour.id)">Delete</button>
+              </div>
             </article>
           </div>
         </div>
 
-     <div *ngSwitchCase="'reservations'" class="list-grid">
-  <h2 class="section-title">Reservation Requests</h2>
-  <div *ngIf="!reservations.length" class="empty-state">
-    <p>No reservation requests yet.</p>
-  </div>
-  <article *ngFor="let booking of reservations" class="list-item">
-    <div>
-      <h3>{{ booking.client?.username || 'Traveler' }}</h3>
-      <p class="muted">
-        {{ $any(booking).dateReservation | date : 'medium' }}
-        • Status: <strong [class.text-yellow-600]="booking.status === 'PENDING'"
-                         [class.text-green-600]="booking.status === 'CONFIRMED'"
-                         [class.text-red-600]="booking.status === 'CANCELLED'">
-                    {{ booking.status }}
-                  </strong>
-      </p>
-      <p>
-        {{ booking.tour?.titre || booking.place?.name }}
-      </p>
-      <p class="text-sm text-gray-600" *ngIf="booking.tour?.prix">
-        Price: {{ booking.tour?.prix | currency : 'TND' }}
-      </p>
-    </div>
-    
-    <!-- Action Buttons -->
-    <div class="flex gap-2">
-      <button 
-        *ngIf="booking.status === 'PENDING'"
-        class="primary-btn"
-        (click)="confirmReservation(booking.id)"
-        [disabled]="processingReservation === booking.id">
-        {{ processingReservation === booking.id ? 'Confirming...' : 'Confirm' }}
-      </button>
-      <button 
-        *ngIf="booking.status === 'PENDING' || booking.status === 'CONFIRMED'"
-        class="secondary-btn bg-red-500 text-white hover:bg-red-600"
-        (click)="cancelReservation(booking.id)"
-        [disabled]="processingReservation === booking.id">
-        {{ processingReservation === booking.id ? 'Cancelling...' : 'Cancel' }}
-      </button>
-      <span 
-        *ngIf="booking.status === 'CONFIRMED'"
-        class="badge bg-green-100 text-green-800">
-        ✓ Confirmed
-      </span>
-      <span 
-        *ngIf="booking.status === 'CANCELLED'"
-        class="badge bg-red-100 text-red-800">
-        ✗ Cancelled
-      </span>
-    </div>
-  </article>
-</div>
-     
+        <div *ngSwitchCase="'reservations'" class="list-grid">
+          <h2 class="section-title">Reservation Requests</h2>
+          <div *ngIf="!reservations.length" class="empty-state">
+            <p>No reservation requests yet.</p>
+          </div>
+          <article *ngFor="let booking of reservations" class="list-item">
+            <div>
+              <h3>{{ booking.client?.username || 'Traveler' }}</h3>
+              <p class="muted">
+                {{ $any(booking).dateReservation | date : 'medium' }}
+                • Status: <strong [class.text-yellow-600]="booking.status === 'PENDING'"
+                                 [class.text-green-600]="booking.status === 'CONFIRMED'"
+                                 [class.text-red-600]="booking.status === 'CANCELLED'">
+                            {{ booking.status }}
+                          </strong>
+              </p>
+              <p>
+                {{ booking.tour?.titre || booking.place?.name }}
+              </p>
+              <p class="text-sm text-gray-600" *ngIf="booking.tour?.prix">
+                Price: {{ booking.tour?.prix | currency : 'TND' }}
+              </p>
+            </div>
+            
+            <div class="flex gap-2">
+              <button 
+                *ngIf="booking.status === 'PENDING'"
+                class="primary-btn"
+                (click)="confirmReservation(booking.id)"
+                [disabled]="processingReservation === booking.id">
+                {{ processingReservation === booking.id ? 'Confirming...' : 'Confirm' }}
+              </button>
+              <button 
+                *ngIf="booking.status === 'PENDING' || booking.status === 'CONFIRMED'"
+                class="secondary-btn bg-red-500 text-white hover:bg-red-600"
+                (click)="cancelReservation(booking.id)"
+                [disabled]="processingReservation === booking.id">
+                {{ processingReservation === booking.id ? 'Cancelling...' : 'Cancel' }}
+              </button>
+              <span 
+                *ngIf="booking.status === 'CONFIRMED'"
+                class="badge bg-green-100 text-green-800">
+                ✓ Confirmed
+              </span>
+              <span 
+                *ngIf="booking.status === 'CANCELLED'"
+                class="badge bg-red-100 text-red-800">
+                ✗ Cancelled
+              </span>
+            </div>
+          </article>
+        </div>
 
         <div *ngSwitchCase="'reviews'" class="list-grid">
           <h2 class="section-title">Reviews about you</h2>
@@ -219,5 +270,3 @@
 </section>
 
 <app-footer></app-footer>
-
-

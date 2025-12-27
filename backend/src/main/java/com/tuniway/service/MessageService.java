@@ -6,7 +6,10 @@ import com.tuniway.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MessageService {
@@ -22,9 +25,19 @@ public class MessageService {
         return messageRepository.findMessagesBetweenUsers(user1Id, user2Id);
     }
 
+
     public List<User> getConversationParticipants(Long userId) {
-        return messageRepository.findConversationParticipants(userId);
+        List<User> senders = messageRepository.findSendersToUser(userId);
+        List<User> receivers = messageRepository.findReceiversFromUser(userId);
+
+        // Combine and remove duplicates
+        Set<User> allParticipants = new HashSet<>(senders);
+        allParticipants.addAll(receivers);
+
+        return new ArrayList<>(allParticipants);
     }
+
+
 
     public Long countUnreadMessages(Long userId) {
         return messageRepository.countUnreadMessages(userId);

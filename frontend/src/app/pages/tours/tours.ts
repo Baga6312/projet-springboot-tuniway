@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // ✅ ADD HttpClient
-import { Router } from '@angular/router'; // ✅ ADD Router
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
 import { PortalService } from '../../services/portal.service';
-import { authService } from '../../services/auth'; // ✅ ADD authService
+import { authService } from '../../services/auth';
 import { Review, Tour } from '../../services/admin.service';
 
 @Component({
@@ -26,7 +26,6 @@ export class ToursPage implements OnInit, OnDestroy {
   priceOrder: 'asc' | 'desc' = 'asc';
   loading = true;
   
-  // ✅ ADD THESE NEW PROPERTIES
   makingReservation = false;
   reservationMessage = '';
   reservationSuccess = false;
@@ -36,9 +35,9 @@ export class ToursPage implements OnInit, OnDestroy {
 
   constructor(
     private readonly portalService: PortalService,
-    private readonly http: HttpClient,        // ✅ ADD
-    private readonly authService: authService, // ✅ ADD
-    private readonly router: Router           // ✅ ADD
+    private readonly http: HttpClient,
+    private readonly authService: authService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +72,7 @@ export class ToursPage implements OnInit, OnDestroy {
 
   selectTour(tour: Tour): void {
     this.selectedTour = tour;
-    this.reservationMessage = ''; // ✅ Clear previous messages
+    this.reservationMessage = '';
     this.reservationSuccess = false;
     
     if (tour.id) {
@@ -93,7 +92,26 @@ export class ToursPage implements OnInit, OnDestroy {
     this.reservationSuccess = false;
   }
 
-  // ✅ NEW: Make Reservation Function
+  // ✅ Check if current user owns the selected tour
+  isOwnTour(): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !this.selectedTour) {
+      return false;
+    }
+    return this.selectedTour.guide?.id === currentUser.id;
+  }
+
+  isGuide(): boolean {
+    return this.authService.isGuide();
+  }
+
+  // ✅ Edit own tour - navigate to guide profile
+  editOwnTour(): void {
+    this.router.navigate(['/guide/profile'], { 
+      queryParams: { tab: 'tours' }
+    });
+  }
+
   makeReservation(): void {
     const currentUser = this.authService.getCurrentUser();
     
@@ -133,7 +151,6 @@ export class ToursPage implements OnInit, OnDestroy {
         this.reservationSuccess = true;
         this.makingReservation = false;
         
-        // Clear message after 5 seconds
         setTimeout(() => {
           this.reservationMessage = '';
         }, 5000);
@@ -147,27 +164,23 @@ export class ToursPage implements OnInit, OnDestroy {
     });
   }
 
-
-
-
   contactGuide(): void {
-  if (!this.selectedTour?.guide?.id) {
-    this.reservationMessage = '❌ Guide information not available';
-    this.reservationSuccess = false;
-    return;
-  }
+    if (!this.selectedTour?.guide?.id) {
+      this.reservationMessage = '❌ Guide information not available';
+      this.reservationSuccess = false;
+      return;
+    }
 
-  const currentUser = this.authService.getCurrentUser();
-  if (!currentUser) {
-    this.reservationMessage = 'Please login to contact the guide';
-    this.reservationSuccess = false;
-    setTimeout(() => this.router.navigate(['/login']), 2000);
-    return;
-  }
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.reservationMessage = 'Please login to contact the guide';
+      this.reservationSuccess = false;
+      setTimeout(() => this.router.navigate(['/login']), 2000);
+      return;
+    }
 
-  // Navigate to messages page with the guide's userId as a query parameter
-  this.router.navigate(['/messages'], { 
-    queryParams: { userId: this.selectedTour.guide.id }
-  });
-}
+    this.router.navigate(['/messages'], { 
+      queryParams: { userId: this.selectedTour.guide.id }
+    });
+  }
 }

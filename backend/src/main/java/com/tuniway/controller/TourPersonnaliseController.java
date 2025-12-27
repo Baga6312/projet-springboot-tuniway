@@ -3,6 +3,7 @@ package com.tuniway.controller;
 import com.tuniway.model.TourPersonnalise;
 import com.tuniway.model.Client;
 import com.tuniway.model.Guide;
+import com.tuniway.repository.TourPersonnaliseRepository;
 import com.tuniway.service.TourPersonnaliseService;
 import com.tuniway.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class TourPersonnaliseController {
 
+
+    @Autowired
+    private TourPersonnaliseRepository tourPersonnaliseRepository;
     @Autowired
     private TourPersonnaliseService tourPersonnaliseService;
 
@@ -40,19 +44,20 @@ public class TourPersonnaliseController {
     }
 
     // Get tours by guide ID
+    // Get tours by guide ID
     @GetMapping("/guide/{guideId}")
     public ResponseEntity<List<TourPersonnalise>> getToursByGuide(@PathVariable Long guideId) {
-        Optional<Guide> guide = userService.getUserById(guideId)
-                .filter(u -> u instanceof Guide)
-                .map(u -> (Guide) u);
+        System.out.println("===== GET TOURS BY GUIDE =====");
+        System.out.println("Guide ID: " + guideId);
 
-        if (guide.isPresent()) {
-            List<TourPersonnalise> tours = tourPersonnaliseService.getToursByGuide(guide.get());
-            return ResponseEntity.ok(tours);
-        }
+        // ✅ CHANGED: Use guideId directly instead of Guide object
+        List<TourPersonnalise> tours = tourPersonnaliseRepository.findByGuideId(guideId);
 
-        return ResponseEntity.notFound().build();
+        System.out.println("Found " + tours.size() + " tours for guide " + guideId);
+
+        return ResponseEntity.ok(tours);
     }
+
 
     // Get tours by client ID
     @GetMapping("/client/{clientId}")
@@ -69,48 +74,76 @@ public class TourPersonnaliseController {
         return ResponseEntity.notFound().build();
     }
 
+
+
     // Create new tour
     @PostMapping
     public ResponseEntity<?> createTour(@RequestBody TourRequest request) {
+        System.out.println("===== CREATE TOUR CALLED =====");
+        System.out.println("Guide ID: " + request.getGuideId());
+        System.out.println("Client ID: " + request.getClientId());
+        System.out.println("Title: " + request.getTitre());
+        System.out.println("Price: " + request.getPrix());
+
         // Validate guide exists
         Optional<Guide> guide = userService.getUserById(request.getGuideId())
                 .filter(u -> u instanceof Guide)
                 .map(u -> (Guide) u);
 
         if (!guide.isPresent()) {
+            System.out.println("❌ Guide not found");
             return ResponseEntity.badRequest().body("Guide not found");
         }
 
-        // Validate client exists
-        Optional<Client> client = userService.getUserById(request.getClientId())
-                .filter(u -> u instanceof Client)
-                .map(u -> (Client) u);
+        System.out.println("✅ Guide found: " + guide.get().getUsername());
 
-        if (!client.isPresent()) {
-            return ResponseEntity.badRequest().body("Client not found");
+        // ✅ CHANGED: Client is now OPTIONAL for public tours
+        Client client = null;
+        if (request.getClientId() != null) {
+            Optional<Client> clientOpt = userService.getUserById(request.getClientId())
+                    .filter(u -> u instanceof Client)
+                    .map(u -> (Client) u);
+
+            if (!clientOpt.isPresent()) {
+                System.out.println("❌ Client not found");
+                return ResponseEntity.badRequest().body("Client not found");
+            }
+            client = clientOpt.get();
+            System.out.println("✅ Client found: " + client.getUsername());
+        } else {
+            System.out.println("ℹ️ No client specified - creating public tour");
         }
 
         // Validate required fields
         if (request.getTitre() == null || request.getTitre().trim().isEmpty()) {
+            System.out.println("❌ Title is empty");
             return ResponseEntity.badRequest().body("Tour title is required");
         }
 
         if (request.getPrix() == null || request.getPrix() < 0) {
+            System.out.println("❌ Invalid price");
             return ResponseEntity.badRequest().body("Valid price is required");
         }
 
         // Create tour
         TourPersonnalise tour = new TourPersonnalise();
         tour.setGuide(guide.get());
-        tour.setClient(client.get());
+        tour.setClient(client);  // ✅ Can be null for public tours
         tour.setTitre(request.getTitre());
         tour.setDescription(request.getDescription());
         tour.setPrix(request.getPrix());
         tour.setDate(request.getDate());
 
+        System.out.println("💾 Saving tour...");
         TourPersonnalise savedTour = tourPersonnaliseService.createTour(tour);
+        System.out.println("✅ Tour saved with ID: " + savedTour.getId());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTour);
     }
+
+
+
+
 
     // Update tour
     @PutMapping("/{id}")

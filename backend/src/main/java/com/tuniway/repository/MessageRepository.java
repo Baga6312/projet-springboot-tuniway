@@ -19,12 +19,13 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             "ORDER BY m.sentAt ASC")
     List<Message> findMessagesBetweenUsers(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
 
-    // Get all conversations for a user (distinct users they've chatted with)
-    @Query("SELECT DISTINCT CASE " +
-            "WHEN m.sender.id = :userId THEN m.receiver " +
-            "ELSE m.sender END " +
-            "FROM Message m WHERE m.sender.id = :userId OR m.receiver.id = :userId")
-    List<User> findConversationParticipants(@Param("userId") Long userId);
+    // ✅ FIXED: Simpler query - get sender IDs where user is receiver
+    @Query("SELECT DISTINCT m.sender FROM Message m WHERE m.receiver.id = :userId")
+    List<User> findSendersToUser(@Param("userId") Long userId);
+
+    // ✅ FIXED: Get receiver IDs where user is sender
+    @Query("SELECT DISTINCT m.receiver FROM Message m WHERE m.sender.id = :userId")
+    List<User> findReceiversFromUser(@Param("userId") Long userId);
 
     // Count unread messages for a user
     @Query("SELECT COUNT(m) FROM Message m WHERE m.receiver.id = :userId AND m.isRead = false")
