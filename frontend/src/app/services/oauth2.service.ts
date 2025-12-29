@@ -8,16 +8,18 @@ import { authService } from './auth';
   providedIn: 'root'
 })
 export class OAuth2Service {
-  private backendUrl = 'http://localhost:8083';
-
+  // ✅ FIXED: Use your actual backend URL
+  private backendUrl = 'http://tuniway.duckdns.org:8083';
+  
   constructor(
     private router: Router,
     private authService: authService,
-    private http: HttpClient,  // ✅ Add HttpClient
+    private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   loginWithGoogle(): void {
+    // ✅ Remove /api prefix - Spring Security default is /oauth2/authorization
     window.location.href = `${this.backendUrl}/oauth2/authorization/google`;
   }
 
@@ -36,13 +38,12 @@ export class OAuth2Service {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-
     console.log('Handling OAuth2 callback:', { token, username, email, role, id, profilePicture });
     
     // Store JWT token
     localStorage.setItem('jwtToken', token);
     
-    // ✅ Fetch complete user profile from backend to get the profilePicture from database
+    // Fetch complete user profile from backend
     this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
       next: (userProfile) => {
         console.log('✅ Fetched complete user profile from backend:', userProfile);
@@ -52,7 +53,7 @@ export class OAuth2Service {
           username: userProfile.username,
           email: userProfile.email,
           role: userProfile.role as 'CLIENT' | 'GUIDE' | 'ADMIN',
-          profilePicture: userProfile.profilePicture || undefined  // ✅ Use profilePicture from database
+          profilePicture: userProfile.profilePicture || undefined
         };
         
         console.log('✅ Setting user with profilePicture from DB:', user.profilePicture);
@@ -88,3 +89,16 @@ export class OAuth2Service {
     });
   }
 }
+```
+
+## Key Changes:
+1. **Changed `backendUrl`** from `http://localhost:8083` to `http://tuniway.duckdns.org:8083`
+2. **Removed `/api` prefix** - Spring Security's default OAuth2 endpoint is `/oauth2/authorization`, not `/api/oauth2/authorization`
+
+## Next Steps:
+
+After making this change, you also need to **update your Google Cloud Console** OAuth2 configuration:
+
+**Authorized redirect URIs should be:**
+```
+http://tuniway.duckdns.org:8083/login/oauth2/code/google
