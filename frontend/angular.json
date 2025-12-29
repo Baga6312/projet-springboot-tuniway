@@ -61,8 +61,7 @@
           "builder": "@angular/build:dev-server",
           "options": {
             "host": "0.0.0.0",
-            "allowedHosts": ["tuiway.me", "www.tuiway.me", "localhost"],
-            "disableHostCheck": false
+            "allowedHosts": ["tuiway.me", "www.tuiway.me", "localhost"]
           },
           "configurations": {
             "production": {
