@@ -89,7 +89,7 @@ export class OAuth2Service {
     });
   }
 }
-```
+
 
 ## Key Changes:
 1. **Changed `backendUrl`** from `http://localhost:8083` to `http://tuniway.duckdns.org:8083`
