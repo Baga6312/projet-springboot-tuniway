@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder;
+
+    // ✅ Add this to read from application.properties
+    @Value("${app.oauth2.redirect.uri:https://tuiway.me/oauth2/redirect}")
+    private String frontendRedirectUri;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -92,14 +97,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // Generate JWT token
         String token = jwtUtils.generateJwtTokenForUser(user);
 
-        // ✅ Include profilePicture in redirect URL
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:4200/oauth2/redirect")
+        // ✅ Use configurable frontend URL
+        String targetUrl = UriComponentsBuilder.fromUriString(frontendRedirectUri)
                 .queryParam("token", token)
                 .queryParam("username", user.getUsername())
                 .queryParam("email", user.getEmail())
                 .queryParam("role", user.getRole().name())
                 .queryParam("id", user.getId())
-                .queryParam("profilePicture", user.getProfilePicture() != null ? user.getProfilePicture() : "") // ✅ Add profile picture
+                .queryParam("profilePicture", user.getProfilePicture() != null ? user.getProfilePicture() : "")
                 .build().toUriString();
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
