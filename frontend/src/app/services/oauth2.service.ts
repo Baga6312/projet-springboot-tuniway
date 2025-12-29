@@ -91,14 +91,4 @@ export class OAuth2Service {
 }
 
 
-## Key Changes:
-1. **Changed `backendUrl`** from `http://localhost:8083` to `http://tuniway.duckdns.org:8083`
-2. **Removed `/api` prefix** - Spring Security's default OAuth2 endpoint is `/oauth2/authorization`, not `/api/oauth2/authorization`
 
-## Next Steps:
-
-After making this change, you also need to **update your Google Cloud Console** OAuth2 configuration:
-
-**Authorized redirect URIs should be:**
-```
-http://tuniway.duckdns.org:8083/login/oauth2/code/google
