@@ -1,6 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
+  // ✅ Skip adding JWT token for OAuth2 endpoints
+  if (req.url.includes('/oauth2/') || req.url.includes('/login/oauth2/')) {
+    console.log('JWT Interceptor: Skipping OAuth2 request', req.url);
+    return next(req);
+  }
+
   // Check if we're in browser environment
   if (typeof window !== 'undefined' && window.localStorage) {
     const token = localStorage.getItem('jwtToken');
