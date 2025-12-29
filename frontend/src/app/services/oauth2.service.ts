@@ -44,8 +44,8 @@ export class OAuth2Service {
     localStorage.setItem('jwtToken', token);
     
     // Fetch complete user profile from backend
-    this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
-      next: (userProfile) => {
+this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
+    next: (userProfile) => {
         console.log('✅ Fetched complete user profile from backend:', userProfile);
         
         const user = {
