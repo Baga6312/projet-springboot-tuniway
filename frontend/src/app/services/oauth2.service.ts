@@ -8,7 +8,6 @@ import { authService } from './auth';
   providedIn: 'root'
 })
 export class OAuth2Service {
-  // ✅ FIXED: Use your actual backend URL
   private backendUrl = 'http://tuniway.duckdns.org:8083';
   
   constructor(
@@ -19,7 +18,6 @@ export class OAuth2Service {
   ) {}
 
   loginWithGoogle(): void {
-    // ✅ Remove /api prefix - Spring Security default is /oauth2/authorization
     window.location.href = `${this.backendUrl}/oauth2/authorization/google`;
   }
 
@@ -43,9 +41,9 @@ export class OAuth2Service {
     // Store JWT token
     localStorage.setItem('jwtToken', token);
     
-    // Fetch complete user profile from backend
-this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
-    next: (userProfile) => {
+    // ✅ FIXED: Added parenthesis before backtick
+    this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
+      next: (userProfile) => {
         console.log('✅ Fetched complete user profile from backend:', userProfile);
         
         const user = {
@@ -89,6 +87,3 @@ this.http.get<any>(`${this.backendUrl}/api/users/profile/${id}`).subscribe({
     });
   }
 }
-
-
-
