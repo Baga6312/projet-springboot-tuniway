@@ -8,7 +8,7 @@ export interface User {
   username: string;
   email: string;
   role: 'CLIENT' | 'GUIDE' | 'ADMIN';
-  profilePicture?: string; // Base64 image data URI
+  profilePicture?: string;
 }
 
 export interface LoginRequest {
@@ -41,31 +41,31 @@ export class authService {
   private apiUrl = 'http://tuniway.duckdns.org:8083/api/auth';
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
+  private isBrowser: boolean;
 
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
     this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
     this.currentUser$ = this.currentUserSubject.asObservable();
-    console.log('Auth service initialized with user:', this.currentUserSubject.value);
   }
 
   private getUserFromStorage(): User | null {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!this.isBrowser) {
       return null;
     }
 
-    const userStr = localStorage.getItem('currentUser');
-    const token = localStorage.getItem('jwtToken');
-
-    if (userStr && token) {
-      try {
+    try {
+      const userStr = localStorage.getItem('currentUser');
+      const token = localStorage.getItem('jwtToken');
+      
+      if (userStr && token) {
         return JSON.parse(userStr);
-      } catch (e) {
-        console.error('Failed to parse stored user', e);
-        return null;
       }
+    } catch (e) {
+      console.error('Failed to parse stored user', e);
     }
 
     return null;
@@ -82,9 +82,8 @@ export class authService {
           profilePicture: response.profilePicture
         };
         
-        if (isPlatformBrowser(this.platformId)) {
+        if (this.isBrowser) {
           localStorage.setItem('currentUser', JSON.stringify(user));
-          
           const token = response.token || response.accessToken;
           if (token) {
             localStorage.setItem('jwtToken', token);
@@ -107,9 +106,8 @@ export class authService {
           profilePicture: response.profilePicture
         };
         
-        if (isPlatformBrowser(this.platformId)) {
+        if (this.isBrowser) {
           localStorage.setItem('currentUser', JSON.stringify(user));
-          
           const token = response.token || response.accessToken;
           if (token) {
             localStorage.setItem('jwtToken', token);
@@ -122,7 +120,7 @@ export class authService {
   }
 
   logout(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       localStorage.removeItem('currentUser');
       localStorage.removeItem('jwtToken');
     }
@@ -134,7 +132,7 @@ export class authService {
   }
 
   setCurrentUser(user: User): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       localStorage.setItem('currentUser', JSON.stringify(user));
     }
     this.currentUserSubject.next(user);
@@ -144,16 +142,15 @@ export class authService {
     const current = this.currentUserSubject.value;
     if (current) {
       const updated = { ...current, ...patch };
-      if (isPlatformBrowser(this.platformId)) {
+      if (this.isBrowser) {
         localStorage.setItem('currentUser', JSON.stringify(updated));
       }
       this.currentUserSubject.next(updated);
-      console.log('Updated user in auth service:', updated);
     }
   }
 
   getToken(): string | null {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       return localStorage.getItem('jwtToken');
     }
     return null;
