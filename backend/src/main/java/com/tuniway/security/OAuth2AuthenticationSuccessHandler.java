@@ -33,8 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Lazy
     private PasswordEncoder passwordEncoder;
 
-    // ✅ Add this to read from application.properties
-    @Value("${app.oauth2.redirect.uri:https://tuiway.me/oauth2/redirect}")
+    @Value("${app.oauth2.redirect.uri:http://tuniway.me/oauth2/redirect}")
     private String frontendRedirectUri;
 
     @Override
@@ -43,15 +42,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        // Extract user info from OAuth2 provider
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
-        String avatarUrl = oAuth2User.getAttribute("avatar_url"); // ✅ GitHub avatar
+        String avatarUrl = oAuth2User.getAttribute("avatar_url");
         if (avatarUrl == null) {
-            avatarUrl = oAuth2User.getAttribute("picture"); // ✅ Google avatar
+            avatarUrl = oAuth2User.getAttribute("picture");
         }
 
-        // Handle missing email
         if (email == null || email.isBlank()) {
             String login = oAuth2User.getAttribute("login");
             if (login != null && !login.isBlank()) {
@@ -61,7 +58,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             }
         }
 
-        // Find user by email OR username
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty() && name != null && !name.isBlank()) {
@@ -71,22 +67,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         User user;
 
         if (userOptional.isPresent()) {
-            // User already exists - update profile picture if available
             user = userOptional.get();
-
-            // ✅ Update profile picture if it changed
             if (avatarUrl != null && !avatarUrl.isBlank()) {
                 user.setProfilePicture(avatarUrl);
                 userRepository.save(user);
             }
         } else {
-            // Create new user
             user = new Client();
             user.setEmail(email);
             user.setUsername(name != null ? name : email.split("@")[0]);
             user.setPassword(passwordEncoder.encode("OAUTH_USER_" + System.currentTimeMillis()));
 
-            // ✅ Set profile picture for new user
             if (avatarUrl != null && !avatarUrl.isBlank()) {
                 user.setProfilePicture(avatarUrl);
             }
@@ -94,10 +85,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             userRepository.save(user);
         }
 
-        // Generate JWT token
         String token = jwtUtils.generateJwtTokenForUser(user);
 
-        // ✅ Use configurable frontend URL
+        // ✅ FIXED: Properly encode query parameters (especially username with spaces)
         String targetUrl = UriComponentsBuilder.fromUriString(frontendRedirectUri)
                 .queryParam("token", token)
                 .queryParam("username", user.getUsername())
@@ -105,7 +95,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .queryParam("role", user.getRole().name())
                 .queryParam("id", user.getId())
                 .queryParam("profilePicture", user.getProfilePicture() != null ? user.getProfilePicture() : "")
-                .build().toUriString();
+                .encode()  // ✅ This encodes spaces and special characters
+                .build()
+                .toUriString();
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
