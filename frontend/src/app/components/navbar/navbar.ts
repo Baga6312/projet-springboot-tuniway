@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, PLATFORM_ID, inject, afterNextRender } from '@angular/core';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,7 @@ export class Navbar implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isLoggedIn: boolean = false;
   unreadMessageCount: number = 0;
-  isAuthReady: boolean = false; // ✅ ADD THIS - prevents flicker
+  isAuthReady: boolean = false;
   
   private messageCheckSubscription?: Subscription;
 
@@ -29,32 +29,31 @@ export class Navbar implements OnInit, OnDestroy {
     private messageService: MessageService
   ) {
     if (isPlatformBrowser(this.platformId)) {
+      // Dark mode
       const saved = localStorage.getItem('darkMode');
       if (saved !== null) {
         this.isDarkMode = JSON.parse(saved);
       } else {
         this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
       }
-    }
-
-    // ✅ ADD THIS: Only set auth state after client-side render
-    afterNextRender(() => {
+      
+      // Auth state immediately
       this.currentUser = this.authService.getCurrentUser();
       this.isLoggedIn = !!this.currentUser;
-      this.isAuthReady = true; // ✅ Now safe to show buttons
+      this.isAuthReady = true;
       
+      // Start message checking if logged in
       if (this.currentUser) {
-        this.startMessageChecking();
+        setTimeout(() => this.startMessageChecking(), 1000);
       }
-    });
+    }
   }
   
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       this.isLoggedIn = !!user;
-      this.isAuthReady = true; // ✅ Ensure it's set
-      console.log('🔔 Navbar: Auth state changed -', user ? `Logged in as ${user.username}` : 'Logged out');
+      this.isAuthReady = true;
       
       if (user) {
         this.startMessageChecking();
@@ -74,20 +73,18 @@ export class Navbar implements OnInit, OnDestroy {
   private startMessageChecking() {
     if (!this.currentUser?.id) return;
 
-    setTimeout(() => {
-      this.checkUnreadMessages();
+    this.checkUnreadMessages();
 
-      this.messageCheckSubscription = interval(10000)
-        .pipe(switchMap(() => this.messageService.getUnreadCount(this.currentUser!.id)))
-        .subscribe({
-          next: (count) => {
-            this.unreadMessageCount = count;
-          },
-          error: (error) => {
-            console.error('Error checking unread messages:', error);
-          }
-        });
-    }, 1000);
+    this.messageCheckSubscription = interval(10000)
+      .pipe(switchMap(() => this.messageService.getUnreadCount(this.currentUser!.id)))
+      .subscribe({
+        next: (count) => {
+          this.unreadMessageCount = count;
+        },
+        error: (error) => {
+          console.error('Error checking unread messages:', error);
+        }
+      });
   }
 
   private stopMessageChecking() {
@@ -97,20 +94,14 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   private checkUnreadMessages() {
-    if (!this.currentUser?.id) {
-      console.log('❌ No user ID, skipping message check');
-      return;
-    }
-
-    console.log('🔔 Checking unread messages for user:', this.currentUser.id);
+    if (!this.currentUser?.id) return;
 
     this.messageService.getUnreadCount(this.currentUser.id).subscribe({
       next: (count) => {
-        console.log('✅ Unread count received:', count);
         this.unreadMessageCount = count;
       },
       error: (error) => {
-        console.error('❌ Error checking unread messages:', error);
+        console.error('Error checking unread messages:', error);
       }
     });
   }
