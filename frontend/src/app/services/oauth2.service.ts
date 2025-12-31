@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../config/api.config';
   providedIn: 'root'
 })
 export class OAuth2Service {
-  private backendUrl = 'https://api.tuniway.me';
+  private backendUrl = 'https://api.tuniway.me/login';
   
   constructor(
     private router: Router,
