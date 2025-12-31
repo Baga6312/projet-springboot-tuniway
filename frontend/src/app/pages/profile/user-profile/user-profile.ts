@@ -39,7 +39,7 @@ export class UserProfile implements OnInit {
   favoritePlaces: any[] = [];
   averageReviewScore: number | null = null;
 
-  private apiUrl = 'http://localhost:8083/api';
+  private apiUrl = 'http://tuniway.duckdns.org:8083/api';
 
   constructor(
     private authService: authService,
@@ -55,18 +55,15 @@ bootstrapUser(): void {
   this.currentUser = this.authService.getCurrentUser();
   
   if (!this.currentUser) {
-    console.log('No user found, redirecting to login');
     this.router.navigate(['/login']);
     return;
   }
 
-  console.log('User profile loaded:', this.currentUser);
   
   this.profileForm.username = this.currentUser.username;
   this.profileForm.email = this.currentUser.email;
   this.profileForm.profilePicture = this.currentUser.profilePicture || '';
   
-  // ✅ Set preview URL from existing profile picture
   if (this.currentUser.profilePicture) {
     this.previewUrl = this.currentUser.profilePicture;
   }
@@ -90,40 +87,31 @@ loadUserData(): void {
   this.http.get<any[]>('http://localhost:8083/api/favorites', { headers }).subscribe({
     next: (favorites) => {
       this.favoritePlaces = favorites;
-      console.log('✅ Loaded favorites:', favorites);
     },
     error: (error) => {
-      console.error('❌ Error loading favorites:', error);
       this.favoritePlaces = [];
     }
   });
 
-  // ✅ NEW: Load user's reservations
   this.http.get<any[]>(`${this.apiUrl}/reservations/client/${this.currentUser.id}`, { headers }).subscribe({
     next: (reservations) => {
       this.reservations = reservations;
-      console.log('✅ Loaded reservations:', reservations);
     },
     error: (error) => {
-      console.error('❌ Error loading reservations:', error);
       this.reservations = [];
     }
   });
 
-  // Load user's reviews
   this.http.get<any[]>(`${this.apiUrl}/reviews/user/${this.currentUser.id}`).subscribe({
     next: (reviews) => {
       this.reviews = reviews;
-      console.log('✅ Loaded reviews:', reviews);
       
-      // Calculate average review score
       if (reviews.length > 0) {
         const total = reviews.reduce((sum, review) => sum + review.rating, 0);
         this.averageReviewScore = total / reviews.length;
       }
     },
     error: (error) => {
-      console.error('❌ Error loading reviews:', error);
       this.reviews = [];
     }
   });
@@ -198,9 +186,7 @@ loadUserData(): void {
 
     this.http.put(`${this.apiUrl}/users/profile`, updateData, { headers }).subscribe({
       next: (response: any) => {
-        console.log('Profile updated:', response);
         
-        // Update auth service with new user data
         this.authService.updateCurrentUser({
           username: response.username,
           email: response.email,
