@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { authService, User } from '../../../services/auth';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Navbar} from '../../../components/navbar/navbar';
-import { API_BASE_URL } from '../config/api.config';
+import { API_BASE_URL } from '../../../config/api.config';
 
 @Component({
   selector: 'app-user-profile',

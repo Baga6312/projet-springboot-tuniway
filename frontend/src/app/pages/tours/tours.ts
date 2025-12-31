@@ -9,7 +9,7 @@ import { Footer } from '../../components/footer/footer';
 import { PortalService } from '../../services/portal.service';
 import { authService } from '../../services/auth';
 import { Review, Tour } from '../../services/admin.service';
-import { API_BASE_URL } from '../config/api.config';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-tours',

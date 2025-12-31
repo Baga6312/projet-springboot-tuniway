@@ -9,7 +9,7 @@ import { FavoritesService } from '../../services/favorites.service';
 import { GalleryFilters, PortalService } from '../../services/portal.service';
 import { Place, Review } from '../../services/admin.service';
 import { authService } from '../../services/auth';
-import { API_BASE_URL } from '../config/api.config';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-explore',
