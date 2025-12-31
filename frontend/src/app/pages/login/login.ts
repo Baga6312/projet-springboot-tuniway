@@ -54,11 +54,11 @@ export class Login {
           
           setTimeout(() => {
             if (this.authService.isGuide()) {
-              this.router.navigate(['/guide/profile']);
+              this.router.navigate(['/']);
             } else if (this.authService.isAdmin()) {
-              this.router.navigate(['/admin']);
+              this.router.navigate(['/']);
             } else {
-              this.router.navigate(['/profile']);
+              this.router.navigate(['/']);
             }
           }, 1000);
         },
