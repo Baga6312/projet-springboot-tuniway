@@ -9,7 +9,7 @@ import { authService } from './auth';
   providedIn: 'root'
 })
 export class FavoritesService {
-  private readonly apiUrl = 'http://localhost:8083/api/favorites';
+  private readonly apiUrl = 'http://tuniway.duckdns.org:8083/api/favorites';
   private platformId = inject(PLATFORM_ID);
   private favoritesSubject = new BehaviorSubject<number[]>([]);
   favorites$ = this.favoritesSubject.asObservable();
