@@ -72,6 +72,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers("/api/oauth2/**").permitAll()
                         .requestMatchers("/login/oauth2/**").permitAll()
+                        .requestMatchers("/login/oauth2/authorization/google").permitAll()
+                        .requestMatchers("/login/oauth2/authorization/github").permitAll()
                         .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers("/api/rest/chat/**").permitAll()
                         .requestMatchers("/api/places/**").permitAll()
