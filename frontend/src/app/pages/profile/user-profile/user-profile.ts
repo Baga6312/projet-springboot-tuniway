@@ -84,7 +84,7 @@ loadUserData(): void {
   });
 
   // Load favorites
-  this.http.get<any[]>('http://localhost:8083/api/favorites', { headers }).subscribe({
+  this.http.get<any[]>('http://tuniway.duckdns.org:8083/api/favorites', { headers }).subscribe({
     next: (favorites) => {
       this.favoritePlaces = favorites;
     },
