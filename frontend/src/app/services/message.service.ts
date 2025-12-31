@@ -24,7 +24,7 @@ export interface ConversationUser {
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'http://localhost:8083/api/messages';
+  private apiUrl = 'http://tuniway.duckdns.org:8083/api/messages';
 
   constructor(
     private http: HttpClient,
