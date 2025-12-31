@@ -38,7 +38,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class authService {
-  private apiUrl = 'http://tuniway.duckdns.org:8083/api/auth';
+  private apiUrl = 'http://api.tuniway.me:8083/api/auth';
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   private isBrowser: boolean;
