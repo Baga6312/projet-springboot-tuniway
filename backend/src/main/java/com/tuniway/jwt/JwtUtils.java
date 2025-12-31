@@ -83,7 +83,7 @@ public class JwtUtils {
     public String generateJwtTokenForUser(User user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("roles", "ROLE_" + user.getRole().name())
+                .claim("roles",  user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
