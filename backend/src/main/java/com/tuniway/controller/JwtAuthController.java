@@ -170,8 +170,8 @@ public class JwtAuthController {
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    userDetails.getAuthorities().iterator().next().getAuthority(),
-                    user.getProfilePicture()  // ✅ ADD THIS - pass the profilePicture from user
+                    user.getRole().name(),
+                    user.getProfilePicture()  
             ));
         
         } catch (Exception e) {
