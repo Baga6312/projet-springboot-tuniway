@@ -7,6 +7,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
 import { authService } from '../../services/auth';
 import { MessageService, Message, ConversationUser } from '../../services/message.service';
+import { API_BASE_URL } from '../../config/api.config';
 
 interface Conversation {
   user: ConversationUser;
@@ -84,7 +85,7 @@ startConversationWithUser(userId: number): void {
     'Authorization': `Bearer ${token}`
   });
 
-  this.http.get<ConversationUser>(`http://localhost:8083/api/users/${userId}`, { headers }).subscribe({
+  this.http.get<ConversationUser>(`${API_BASE_URL}/users/${userId}`, { headers }).subscribe({
     next: (user) => {
       console.log('✅ Fetched user for new conversation:', user);
       

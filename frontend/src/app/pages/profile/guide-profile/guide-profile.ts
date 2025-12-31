@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'; // ✅ ADD ActivatedRoute
 import { Subject, takeUntil } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { API_BASE_URL } from '../../../config/api.config';
 
 import { Navbar } from '../../../components/navbar/navbar';
 import { Footer } from '../../../components/footer/footer';
@@ -50,7 +51,7 @@ export class GuideProfile implements OnInit, OnDestroy {
   uploadSuccess: boolean = false;
   uploadError: string | null = null;
   
-  private apiUrl = 'http://localhost:8083/api';
+  private apiUrl = `${API_BASE_URL}`;
   private destroy$ = new Subject<void>();
 
   constructor(
