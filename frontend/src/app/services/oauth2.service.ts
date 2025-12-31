@@ -8,7 +8,7 @@ import { authService } from './auth';
   providedIn: 'root'
 })
 export class OAuth2Service {
-  private backendUrl = 'http://tuniway.duckdns.org:8083';
+  private backendUrl = 'http://api.tuniway.me:8083';
   
   constructor(
     private router: Router,
