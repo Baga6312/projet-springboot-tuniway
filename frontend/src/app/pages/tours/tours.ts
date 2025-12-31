@@ -9,6 +9,7 @@ import { Footer } from '../../components/footer/footer';
 import { PortalService } from '../../services/portal.service';
 import { authService } from '../../services/auth';
 import { Review, Tour } from '../../services/admin.service';
+import { API_BASE_URL } from '../config/api.config';
 
 @Component({
   selector: 'app-tours',
@@ -31,7 +32,7 @@ export class ToursPage implements OnInit, OnDestroy {
   reservationSuccess = false;
   
   private destroy$ = new Subject<void>();
-  private apiUrl = 'http://tuniway.duckdns.org:8083/api';
+  private apiUrl = `${API_BASE_URL}`;
 
   constructor(
     private readonly portalService: PortalService,

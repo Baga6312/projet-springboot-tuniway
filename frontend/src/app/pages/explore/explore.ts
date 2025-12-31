@@ -9,6 +9,7 @@ import { FavoritesService } from '../../services/favorites.service';
 import { GalleryFilters, PortalService } from '../../services/portal.service';
 import { Place, Review } from '../../services/admin.service';
 import { authService } from '../../services/auth';
+import { API_BASE_URL } from '../config/api.config';
 
 @Component({
   selector: 'app-explore',
@@ -46,7 +47,7 @@ export class ExplorePage implements OnInit, OnDestroy {
   reviewSuccess = '';
   
   private destroy$ = new Subject<void>();
-  private apiUrl = 'http://tuniway.duckdns.org:8083/api/reviews';
+  private apiUrl = `${API_BASE_URL}/reviews`; 
 
   constructor(
     private readonly portalService: PortalService,

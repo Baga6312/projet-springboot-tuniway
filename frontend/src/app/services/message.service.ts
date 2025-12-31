@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { authService } from './auth';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface Message {
   id?: number;
@@ -24,7 +25,7 @@ export interface ConversationUser {
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'http://tuniway.duckdns.org:8083/api/messages';
+  private apiUrl = `${API_BASE_URL}/messages`;
 
   constructor(
     private http: HttpClient,

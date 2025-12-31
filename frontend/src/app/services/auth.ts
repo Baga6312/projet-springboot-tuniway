@@ -2,6 +2,7 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface User {
   id: number;
@@ -38,7 +39,8 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class authService {
-  private apiUrl = 'http://api.tuniway.me:8083/api/auth';
+  private apiUrl = `${API_BASE_URL}/auth`;
+
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   private isBrowser: boolean;

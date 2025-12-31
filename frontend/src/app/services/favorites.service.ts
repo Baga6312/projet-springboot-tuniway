@@ -4,12 +4,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { authService } from './auth';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavoritesService {
-  private readonly apiUrl = 'http://api.tuniway.me:8083/api/favorites';
+  private readonly apiUrl = `${API_BASE_URL}/favorites`;
   private platformId = inject(PLATFORM_ID);
   private favoritesSubject = new BehaviorSubject<number[]>([]);
   favorites$ = this.favoritesSubject.asObservable();

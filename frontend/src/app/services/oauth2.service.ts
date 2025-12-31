@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { authService } from './auth';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OAuth2Service {
-  private backendUrl = 'http://api.tuniway.me:8083';
+  private backendUrl = `${API_BASE_URL}`;
   
   constructor(
     private router: Router,

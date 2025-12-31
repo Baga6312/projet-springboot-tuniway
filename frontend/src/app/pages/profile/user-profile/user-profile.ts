@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { authService, User } from '../../../services/auth';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Navbar} from '../../../components/navbar/navbar';
+import { API_BASE_URL } from '../config/api.config';
 
 @Component({
   selector: 'app-user-profile',
@@ -39,7 +40,7 @@ export class UserProfile implements OnInit {
   favoritePlaces: any[] = [];
   averageReviewScore: number | null = null;
 
-  private apiUrl = 'http://tuniway.duckdns.org:8083/api';
+  private apiUrl = `${API_BASE_URL}`; 
 
   constructor(
     private authService: authService,
@@ -84,7 +85,7 @@ loadUserData(): void {
   });
 
   // Load favorites
-  this.http.get<any[]>('http://tuniway.duckdns.org:8083/api/favorites', { headers }).subscribe({
+  this.http.get<any[]>(`${this.apiUrl}/favorites`, { headers }).subscribe({
     next: (favorites) => {
       this.favoritePlaces = favorites;
     },
