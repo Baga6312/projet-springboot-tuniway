@@ -46,7 +46,7 @@ export class ExplorePage implements OnInit, OnDestroy {
   reviewSuccess = '';
   
   private destroy$ = new Subject<void>();
-  private apiUrl = 'http://localhost:8083/api/reviews';
+  private apiUrl = 'http://tuniway.duckdns.org:8083/api/reviews';
 
   constructor(
     private readonly portalService: PortalService,
