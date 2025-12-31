@@ -31,7 +31,7 @@ export class ToursPage implements OnInit, OnDestroy {
   reservationSuccess = false;
   
   private destroy$ = new Subject<void>();
-  private apiUrl = 'http://localhost:8083/api';
+  private apiUrl = 'http://tuniway.duckdns.org:8083/api';
 
   constructor(
     private readonly portalService: PortalService,
