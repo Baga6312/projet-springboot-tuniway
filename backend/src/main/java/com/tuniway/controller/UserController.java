@@ -140,31 +140,22 @@ public class UserController {
                 .body("Invalid username or password");
     }
 
-    @PutMapping("/{id}")
+  @PutMapping("/{id}")
 public ResponseEntity<User> updateUser(@PathVariable Long id,
-                                       @RequestBody User userDetails) {
+                                       @RequestBody UpdateUserRequest userDetails) {
     Optional<User> existingUser = userService.getUserById(id);
 
     if (existingUser.isPresent()) {
         User user = existingUser.get();
         
-        // Update username if provided
         if (userDetails.getUsername() != null && !userDetails.getUsername().isEmpty()) {
             user.setUsername(userDetails.getUsername());
         }
         
-        // Update email if provided
         if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
             user.setEmail(userDetails.getEmail());
         }
         
-        // IMPORTANT: Only update password if provided and not blank
-        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-            user.setPassword(userDetails.getPassword());
-        }
-        // If password is null/empty, keep the existing password (don't set it)
-        
-        // Update profile picture
         if (userDetails.getProfilePicture() != null) {
             user.setProfilePicture(userDetails.getProfilePicture());
         }
@@ -176,6 +167,31 @@ public ResponseEntity<User> updateUser(@PathVariable Long id,
     return ResponseEntity.notFound().build();
 }
 
+
+
+    @PutMapping("/{id}/password")
+@PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id)")
+public ResponseEntity<?> updatePassword(@PathVariable Long id,
+                                       @RequestBody Map<String, String> passwordData) {
+    Optional<User> existingUser = userService.getUserById(id);
+
+    if (existingUser.isPresent()) {
+        User user = existingUser.get();
+        String newPassword = passwordData.get("password");
+        
+        if (newPassword != null && !newPassword.isEmpty()) {
+            user.setPassword(newPassword); // Consider encrypting this
+            userService.updateUser(user);
+            return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
+        }
+        
+        return ResponseEntity.badRequest().body(Map.of("error", "Password cannot be empty"));
+    }
+
+    return ResponseEntity.notFound().build();
+}
+
+    
     // ========== NEW: PROFILE UPDATE ENDPOINT ==========
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
