@@ -4,27 +4,38 @@ public class UpdateUserRequest {
     private String username;
     private String email;
     private String profilePicture;
-    // NO password field here
     
-    // Getters and Setters
-    public String getUsername() {
-        return username;
+    // Default constructor
+    public UpdateUserRequest() {
     }
     
-    public void setUsername(String username) {
+    // Constructor with all fields
+    public UpdateUserRequest(String username, String email, String profilePicture) {
         this.username = username;
+        this.email = email;
+        this.profilePicture = profilePicture;
+    }
+    
+    // Getters
+    public String getUsername() {
+        return username;
     }
     
     public String getEmail() {
         return email;
     }
     
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
     public String getProfilePicture() {
         return profilePicture;
+    }
+    
+    // Setters
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
     
     public void setProfilePicture(String profilePicture) {
