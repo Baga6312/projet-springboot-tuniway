@@ -141,23 +141,40 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id,
-                                           @RequestBody User userDetails) {
-        Optional<User> existingUser = userService.getUserById(id);
+public ResponseEntity<User> updateUser(@PathVariable Long id,
+                                       @RequestBody User userDetails) {
+    Optional<User> existingUser = userService.getUserById(id);
 
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
+    if (existingUser.isPresent()) {
+        User user = existingUser.get();
+        
+        // Update username if provided
+        if (userDetails.getUsername() != null && !userDetails.getUsername().isEmpty()) {
             user.setUsername(userDetails.getUsername());
+        }
+        
+        // Update email if provided
+        if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
             user.setEmail(userDetails.getEmail());
+        }
+        
+        // IMPORTANT: Only update password if provided and not blank
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
             user.setPassword(userDetails.getPassword());
+        }
+        // If password is null/empty, keep the existing password (don't set it)
+        
+        // Update profile picture
+        if (userDetails.getProfilePicture() != null) {
             user.setProfilePicture(userDetails.getProfilePicture());
-
-            User updatedUser = userService.updateUser(user);
-            return ResponseEntity.ok(updatedUser);
         }
 
-        return ResponseEntity.notFound().build();
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
     }
+
+    return ResponseEntity.notFound().build();
+}
 
     // ========== NEW: PROFILE UPDATE ENDPOINT ==========
     @PutMapping("/profile")
