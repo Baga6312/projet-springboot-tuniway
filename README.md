@@ -3,7 +3,7 @@
 Application web Spring Boot pour explorer les destinations touristiques et les points d'intérêt en Tunisie.
 
 ## Prérequis
-// redo this shit 
+
 - Java 17 ou supérieur
 - Maven 3.6+
 - MySQL (ou votre base de données préférée)
